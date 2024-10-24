@@ -5,8 +5,6 @@ pubDate: "Oct 24 2024"
 heroImage: "/images/blog-gguf.jpg"
 ---
 
-# Unlocking the Power of GGUF Models Locally with Ollama: A Personal Journey
-
 G'day mates! Today, I want to share my experience diving into the world of large language models (LLMs) and how you can run **GGUF models** locally using **Ollama**. If you're like me and have been keen to harness AI capabilities without relying on cloud services, this guide is for you.
 
 ## Why GGUF and Ollama?
