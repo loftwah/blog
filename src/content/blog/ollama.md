@@ -31,7 +31,7 @@ For macOS users with Homebrew:
 brew install ollama/tap/ollama
 ```
 
-For other platforms, please refer to the [installation guide](https://github.com/ollama/ollama/blob/main/docs/install.md).
+For other platforms, please RTFM [README](https://github.com/ollama/ollama/blob/main/README.md).
 
 ### Step 2: Running a GGUF Model Directly from Hugging Face
 
