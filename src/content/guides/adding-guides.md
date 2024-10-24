@@ -4,7 +4,7 @@ description: "Learn how to extend your Astro blog with a dedicated guides sectio
 difficulty: "intermediate"
 category: "Site Features"
 order: 1
-heroImage: "/images/blog-placeholder-2.jpg"
+heroImage: "/images/guides-xzibit.jpg"
 prerequisites:
   ["Existing Astro Blog", "Basic TypeScript", "Basic Astro Knowledge"]
 ---
