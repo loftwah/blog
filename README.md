@@ -1,0 +1,2 @@
+# blog
+My Astro blog
