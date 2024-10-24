@@ -92,13 +92,13 @@ This command builds the model so it's ready to use.
 Moment of truth! Let's see if it all works:
 
 ```bash
-ollama run mistrallite "What is Grafana?"
+ollama run mistrallite "What is Kubernetes?"
 ```
 
 You should receive an informative response, something along the lines of:
 
 ```plaintext
-Grafana is an open-source platform for monitoring and observability. It allows users to query, visualise, and understand metrics from various data sources.
+Kubernetes is an open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications. It helps organizations manage complex containerized workloads and services.
 ```
 
 Isn't it brilliant to have this power right on your own machine?
