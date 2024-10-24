@@ -2,32 +2,36 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main  # Deploy when pushing to the main branch
+    branches: [ main ] # Trigger the workflow when pushing to the `main` branch
+  workflow_dispatch:    # Allows manual triggering from the GitHub Actions tab
+
+permissions:
+  contents: read        # Read access to the repository contents
+  pages: write          # Write access for GitHub Pages deployment
+  id-token: write       # Token for deployment authentication
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout your repository using git
+        uses: actions/checkout@v4   # Checks out your code
 
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest  # You can adjust this if needed
+      - name: Install, build, and upload your site
+        uses: withastro/action@v3   # Astro action to install dependencies and build the site
+        # Optional customizations:
+        # with:
+        #   path: .                # Root of the Astro project (adjust if needed)
+        #   node-version: 20       # Specify Node version (defaults to 20)
+        #   package-manager: pnpm@latest  # Automatically detected based on your lockfile
 
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build the site
-        run: bun run build
-
-      - name: Disable Jekyll (add .nojekyll)
-        run: touch ./dist/.nojekyll
-
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist  # Ensure you're deploying the correct folder
+        id: deployment
+        uses: actions/deploy-pages@v4  # Deploys to GitHub Pages
