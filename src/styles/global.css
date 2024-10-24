@@ -1,35 +1,36 @@
 /*
-  The CSS in this style tag is based off of Bear Blog's default CSS.
-  https://github.com/HermanMartinus/bearblog/blob/297026a877bc2ab2b3bdfbd6b9f7961c350917dd/templates/styles/blog/default.css
+  Custom Light Theme CSS
   License MIT: https://github.com/HermanMartinus/bearblog/blob/master/LICENSE.md
- */
+*/
 
 :root {
-	--accent: #2337ff;
-	--accent-dark: #000d8a;
+	--accent: #ff6f61; /* Coral accent color */
+	--accent-dark: #e65c50;
 	--black: 15, 18, 25;
 	--gray: 96, 115, 159;
 	--gray-light: 229, 233, 240;
 	--gray-dark: 34, 41, 57;
 	--gray-gradient: rgba(var(--gray-light), 50%), #fff;
-	--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
-		0 16px 32px rgba(var(--gray), 33%);
-}
-@font-face {
+	--box-shadow: 0 2px 6px rgba(var(--gray), 15%), 0 8px 24px rgba(var(--gray), 15%);
+  }
+  
+  @font-face {
 	font-family: 'Atkinson';
 	src: url('/fonts/atkinson-regular.woff') format('woff');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-}
-@font-face {
+  }
+  
+  @font-face {
 	font-family: 'Atkinson';
 	src: url('/fonts/atkinson-bold.woff') format('woff');
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-}
-body {
+  }
+  
+  body {
 	font-family: 'Atkinson', sans-serif;
 	margin: 0;
 	padding: 0;
@@ -39,116 +40,220 @@ body {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: rgb(var(--gray-dark));
-	font-size: 20px;
+	font-size: 18px;
 	line-height: 1.7;
-}
-main {
+  }
+  
+  main {
 	width: 720px;
 	max-width: calc(100% - 2em);
 	margin: auto;
 	padding: 3em 1em;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+  }
+  
+  header {
+	background-color: #fff;
+	box-shadow: 0 2px 8px rgba(var(--gray-dark), 0.1);
+  }
+  
+  header nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 1em;
+  }
+  
+  header h2 {
+	margin: 0;
+	font-size: 1.5em;
+  }
+  
+  header h2 a {
+	text-decoration: none;
+	color: rgb(var(--gray-dark));
+  }
+  
+  .nav-links {
+	display: flex;
+	align-items: center;
+	gap: 1em;
+  }
+  
+  .nav-links a {
+	color: rgb(var(--gray-dark));
+	text-decoration: none;
+	padding: 0.5em;
+	position: relative;
+  }
+  
+  .nav-links a::after {
+	content: '';
+	display: block;
+	width: 0%;
+	height: 2px;
+	background: var(--accent);
+	transition: width 0.3s;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+  }
+  
+  .nav-links a:hover::after {
+	width: 100%;
+  }
+  
+  .nav-links a.active {
+	font-weight: bold;
+	color: var(--accent-dark);
+  }
+  
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
 	margin: 0 0 0.5rem 0;
 	color: rgb(var(--black));
 	line-height: 1.2;
-}
-h1 {
-	font-size: 3.052em;
-}
-h2 {
-	font-size: 2.441em;
-}
-h3 {
-	font-size: 1.953em;
-}
-h4 {
-	font-size: 1.563em;
-}
-h5 {
+  }
+  
+  h1 {
+	font-size: 2.5em;
+  }
+  
+  h2 {
+	font-size: 2em;
+  }
+  
+  h3 {
+	font-size: 1.75em;
+  }
+  
+  h4 {
+	font-size: 1.5em;
+  }
+  
+  h5 {
 	font-size: 1.25em;
-}
-strong,
-b {
+  }
+  
+  h6 {
+	font-size: 1em;
+  }
+  
+  strong,
+  b {
 	font-weight: 700;
-}
-a {
+  }
+  
+  a {
 	color: var(--accent);
-}
-a:hover {
-	color: var(--accent);
-}
-p {
+	text-decoration: none;
+  }
+  
+  a:hover {
+	color: var(--accent-dark);
+  }
+  
+  p {
 	margin-bottom: 1em;
-}
-.prose p {
-	margin-bottom: 2em;
-}
-textarea {
+  }
+  
+  textarea,
+  input {
 	width: 100%;
 	font-size: 16px;
-}
-input {
-	font-size: 16px;
-}
-table {
+  }
+  
+  table {
 	width: 100%;
-}
-img {
+  }
+  
+  img {
 	max-width: 100%;
 	height: auto;
 	border-radius: 8px;
-}
-code {
+	box-shadow: var(--box-shadow);
+  }
+  
+  code {
 	padding: 2px 5px;
-	background-color: rgb(var(--gray-light));
-	border-radius: 2px;
-}
-pre {
+	background-color: rgba(var(--gray-light), 0.5);
+	border-radius: 4px;
+  }
+  
+  pre {
 	padding: 1.5em;
+	background-color: rgba(var(--gray-light), 0.5);
 	border-radius: 8px;
-}
-pre > code {
+	overflow-x: auto;
+  }
+  
+  pre > code {
 	all: unset;
-}
-blockquote {
+  }
+  
+  blockquote {
 	border-left: 4px solid var(--accent);
 	padding: 0 0 0 20px;
-	margin: 0px;
-	font-size: 1.333em;
-}
-hr {
+	margin: 0;
+	font-size: 1.2em;
+  }
+  
+  hr {
 	border: none;
-	border-top: 1px solid rgb(var(--gray-light));
-}
-@media (max-width: 720px) {
+	border-top: 1px solid rgba(var(--gray-light), 1);
+  }
+  
+  footer {
+	padding: 2em 1em;
+	background: linear-gradient(var(--gray-gradient)) no-repeat;
+	color: rgb(var(--gray));
+	text-align: center;
+  }
+  
+  .social-links {
+	display: flex;
+	justify-content: center;
+	gap: 1em;
+	margin-top: 1em;
+  }
+  
+  .social-links a {
+	text-decoration: none;
+	color: rgb(var(--gray));
+  }
+  
+  .social-links a:hover {
+	color: rgb(var(--gray-dark));
+  }
+  
+  @media (max-width: 720px) {
 	body {
-		font-size: 18px;
+	  font-size: 16px;
 	}
 	main {
-		padding: 1em;
+	  padding: 2em 1em;
 	}
-}
-
-.sr-only {
-	border: 0;
-	padding: 0;
-	margin: 0;
+	header nav {
+	  flex-wrap: wrap;
+	}
+	.nav-links {
+	  width: 100%;
+	  justify-content: center;
+	  margin-top: 1em;
+	}
+  }
+  
+  .sr-only {
 	position: absolute !important;
 	height: 1px;
 	width: 1px;
 	overflow: hidden;
-	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
-	clip: rect(1px 1px 1px 1px);
-	/* maybe deprecated but we need to support legacy browsers */
 	clip: rect(1px, 1px, 1px, 1px);
-	/* modern browsers, clip-path works inwards from each corner */
-	clip-path: inset(50%);
-	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
 	white-space: nowrap;
-}
+  }
+  
