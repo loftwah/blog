@@ -1,8 +1,8 @@
 ---
-title: 'Unlocking the Power of GGUF Models Locally'
-description: 'Unlocking the Power of GGUF Models Locally with Ollama: A Personal Journey'
-pubDate: 'Oct 24 2024'
-heroImage: '/images/blog-gguf.jpg'
+title: "Unlocking the Power of GGUF Models Locally with Ollama"
+description: "Harnessing the Power of GGUF Models Locally with Ollama: A Personal Journey"
+pubDate: "Oct 24 2024"
+heroImage: "/images/blog-gguf.jpg"
 ---
 
 # Unlocking the Power of GGUF Models Locally with Ollama: A Personal Journey
@@ -11,51 +11,115 @@ G'day mates! Today, I want to share my experience diving into the world of large
 
 ## Why GGUF and Ollama?
 
-First off, let's talk about **GGUF** (GPT-Generated Unified Format). It's quickly become the go-to standard for running LLMs on personal machines. With an ever-growing collection of GGUF models available on Hugging Face—thanks to legends like **TheBloke**—it's never been easier to get started.
+First off, let's talk about **GGUF** (GPT-Generated Unified Format). It's quickly become the go-to standard for running LLMs on personal machines. With an ever-growing collection of GGUF models available on Hugging Face—thanks to legends like **TheBloke** and many other contributors—it's never been easier to get started.
 
-Then there's **Ollama**, a fantastic tool that simplifies running these models locally. Combining GGUF models with Ollama allows you to leverage powerful AI models without the need for hefty cloud-based solutions.
+Then there's **Ollama**, a fantastic tool based on `llama.cpp` that simplifies running these models locally. Combining GGUF models with Ollama allows you to leverage powerful AI models without the need for hefty cloud-based solutions.
 
-## Getting Started: Installing the Hugging Face CLI
+## The Game Changer: Running GGUF Models Directly from Hugging Face via Ollama
 
-Before we can dive into downloading models, we'll need the Hugging Face command-line interface (CLI). It's straightforward:
+In the past, running GGUF models with Ollama involved downloading the models manually and setting up Modelfiles. But now, Ollama has introduced a brilliant feature that lets you run any GGUF model available on Hugging Face directly, without the need for manual downloads or Modelfiles. This has been a game-changer in simplifying the workflow.
+
+### How It Works
+
+At the time of writing, there are over 45,000 public GGUF checkpoints on the Hugging Face Hub that you can run with a single `ollama run` command. Here's how you can do it.
+
+### Step 1: Install Ollama
+
+If you haven't installed Ollama yet, you can do so by following the instructions on their [GitHub repository](https://github.com/ollama/ollama).
+
+For macOS users with Homebrew:
+
+```bash
+brew install ollama/tap/ollama
+```
+
+For other platforms, please refer to the [installation guide](https://github.com/ollama/ollama/blob/main/docs/install.md).
+
+### Step 2: Running a GGUF Model Directly from Hugging Face
+
+To run a GGUF model directly from Hugging Face, use the following command:
+
+```bash
+ollama run hf.co/{username}/{repository}
+```
+
+For example, to run the **Llama-3.2-1B-Instruct-GGUF** model:
+
+```bash
+ollama run hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF
+```
+
+This command tells Ollama to fetch the model directly from Hugging Face, download it if necessary, and then run it. No need to manually download files or set up Modelfiles!
+
+### Examples of Models You Can Try
+
+Here are some models you can try running directly:
+
+```bash
+ollama run hf.co/bartowski/Llama-3.2-1B-Instruct-GGUF
+ollama run hf.co/mlabonne/Meta-Llama-3.1-8B-Instruct-abliterated-GGUF
+ollama run hf.co/arcee-ai/SuperNova-Medius-GGUF
+ollama run hf.co/bartowski/Humanish-LLama3-8B-Instruct-GGUF
+```
+
+### Custom Quantization
+
+By default, Ollama uses the `Q4_K_M` quantization scheme when it's present inside the model repository. If not, it picks a reasonable default. However, you can specify a different quantization scheme directly in the command:
+
+```bash
+ollama run hf.co/{username}/{repository}:{quantization}
+```
+
+For example:
+
+```bash
+ollama run hf.co/bartowski/Llama-3.2-3B-Instruct-GGUF:IQ3_M
+ollama run hf.co/bartowski/Llama-3.2-3B-Instruct-GGUF:Q8_0
+
+# Quantization names are case-insensitive
+ollama run hf.co/bartowski/Llama-3.2-3B-Instruct-GGUF:iq3_m
+
+# You can also use the full filename as a tag
+ollama run hf.co/bartowski/Llama-3.2-3B-Instruct-GGUF:Llama-3.2-3B-Instruct-IQ3_M.gguf
+```
+
+### Custom Chat Template and Parameters
+
+If you want to customize the chat template or sampling parameters, you can create files named `template`, `system`, or `params` in the model repository on Hugging Face. However, for most users, the default settings work just fine.
+
+### References
+
+- [Ollama Documentation](https://github.com/ollama/ollama/blob/main/docs/README.md)
+- [Hugging Face GGUF Documentation](https://huggingface.co/docs/hub/en/gguf)
+
+## The Traditional Method: Downloading GGUF Models Manually
+
+While running models directly from Hugging Face is incredibly convenient, you might still want to download models manually in certain scenarios—like if you need to modify them or use custom Modelfiles for advanced configurations.
+
+### Step 1: Install the Hugging Face CLI
+
+First, ensure you have the Hugging Face CLI installed:
 
 ```bash
 pip install huggingface_hub
 ```
 
-This will set you up with the necessary tools to interact with Hugging Face repositories directly from your terminal.
+### Step 2: Download a GGUF Model
 
-## Downloading a GGUF Model
+Not all models are available in GGUF format, so you need to ensure you're downloading the correct files.
 
-Now, here's where the rubber meets the road. Not all models are created equal, and we need to ensure we're grabbing ones compatible with Ollama. Specifically, we're after models in the **.gguf** format.
+#### Checking the Model Files on Hugging Face
 
-### Checking the Model Files on Hugging Face
-
-1. **Visit the Model's Page**: Head over to Hugging Face and find a model that piques your interest. For example, **huihui-ai/Llama-3.2-3B-Instruct** or **TheBloke/MistralLite-7B-GGUF** are great choices.
+1. **Visit the Model's Page**: Go to the Hugging Face page of the model you're interested in, such as **huihui-ai/Llama-3.2-3B-Instruct** or **TheBloke/MistralLite-7B-GGUF**.
 
 2. **Navigate to "Files and Versions"**:
 
-   - Don't just skim the Model Card; it often only provides general info.
-   - Look for files ending with `.gguf`. These are the ones we need.
+   - Look for files ending with `.gguf`. These are the ones compatible with Ollama.
+   - Avoid files like `.safetensors` or `.bin`, as they require conversion.
 
-   For instance, you might see:
+#### Downloading the GGUF Model
 
-   ```plaintext
-   mistrallite.Q4_K_M.gguf 4.37 GB
-   ```
-
-   Avoid files like:
-
-   ```plaintext
-   model-00001-of-00002.safetensors    4.97 GB
-   model-00002-of-00002.safetensors    2.25 GB
-   ```
-
-   The `.safetensors` or `.bin` files aren't compatible with Ollama without conversion, which can be a headache.
-
-### Downloading the GGUF Model
-
-Once you've found the right file, it's time to download. Let's use **TheBloke/MistralLite-7B-GGUF** as our example:
+Once you've identified the correct GGUF file, download it using the Hugging Face CLI:
 
 ```bash
 huggingface-cli download \
@@ -64,58 +128,52 @@ huggingface-cli download \
   --local-dir downloads
 ```
 
-**Heads up**: Make sure you specify the exact GGUF file to avoid pulling down incompatible formats. This file is a hefty 4GB+, so maybe grab a cuppa while it downloads.
+**Note**: Be sure to specify the exact GGUF file to avoid downloading incompatible formats.
 
-## Creating a Modelfile
+### Step 3: Creating a Modelfile
 
-With the model downloaded, we need to tell Ollama where to find it. Create a file named `Modelfile` with the following content:
+After downloading, create a `Modelfile` to point Ollama to your local model:
 
 ```bash
 # Modelfile
 FROM ./downloads/mistrallite.Q4_K_M.gguf
 ```
 
-This simple directive points Ollama to the GGUF model we've just downloaded.
+### Step 4: Building the Model with Ollama
 
-## Building the Model with Ollama
-
-Now, let's get Ollama to recognise and prepare the model:
+Build the model using:
 
 ```bash
 ollama create mistrallite -f Modelfile
 ```
 
-This command builds the model so it's ready to use.
+### Step 5: Running the Model
 
-## Running the Model
-
-Moment of truth! Let's see if it all works:
+Now, you can run the model:
 
 ```bash
 ollama run mistrallite "What is Kubernetes?"
 ```
 
-You should receive an informative response, something along the lines of:
+You should receive an informative response, like:
 
 ```plaintext
-Kubernetes is an open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications. It helps organizations manage complex containerized workloads and services.
+Kubernetes is an open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications. It helps organizations manage complex workloads and services.
 ```
-
-Isn't it brilliant to have this power right on your own machine?
 
 ## Handling Models in Other Formats
 
-Now, I ran into this myself: sometimes the model you want isn't available in GGUF format. If you only see `.safetensors` or `.bin` files, you've got a couple of options:
+If the model you want isn't available in GGUF format and only provides `.safetensors` or `.bin` files, you have a couple of options:
 
 1. **Search for a GGUF Version**: Often, someone else has converted the model and shared it under a different repository.
 
 2. **Convert the Model Yourself**: This can be a bit of a process and may require additional tools like `transformers` and `gguf-converter`.
 
-Personally, I prefer to hunt down a GGUF version to save time.
+Personally, I prefer to find a GGUF version to save time.
 
 ## Cleaning Up: Managing Your Models
 
-Over time, you might accumulate a few models and want to tidy up.
+Over time, you might accumulate several models and want to tidy up.
 
 ### Listing Installed Models
 
@@ -136,8 +194,6 @@ Or, to remove specific models (e.g., those containing 'llama'):
 ```bash
 ollama list | awk 'NR>1 {print $1}' | grep 'llama' | xargs ollama rm
 ```
-
-This helps keep your system lean and avoids clutter.
 
 ## Building Custom Models for Code Reviews
 
@@ -168,7 +224,7 @@ You're a senior developer tasked with code reviews:
 Build the model:
 
 ```bash
-ollama create mycoder -f ./custom-coder.modelfile
+ollama create mycoder -f custom-coder.modelfile
 ```
 
 Now, you can use it to review code:
@@ -296,7 +352,7 @@ Use that last command cautiously; it's a nuclear option.
 
 ## Wrapping Up
 
-Running GGUF models locally with Ollama has been a game-changer for me. It empowers you to experiment, develop, and leverage AI models without the constraints of cloud services or hefty fees.
+Running GGUF models locally with Ollama has been a game-changer for me. With the new ability to run models directly from Hugging Face, it's never been easier to experiment and develop with powerful AI models right on your own machine.
 
 I hope this guide helps you on your journey. Feel free to share your experiences or ask questions—I'm always keen to chat about this stuff!
 
