@@ -1,17 +1,17 @@
 ---
 // src/pages/guides/[slug].astro
 import { type CollectionEntry, getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import BaseHead from '../../components/BaseHead.astro';
 import { SITE_TITLE } from '../../consts';
 
 export async function getStaticPaths() {
-    const guides = await getCollection('guides');
-    return guides.map((guide) => ({
-        params: { slug: guide.slug },
-        props: guide,
-    }));
+  const guides = await getCollection('guides');
+  return guides.map((guide) => ({
+    params: { slug: guide.slug },
+    props: guide,
+  }));
 }
 type Props = CollectionEntry<'guides'>;
 
@@ -20,83 +20,98 @@ const { Content } = await guide.render();
 ---
 
 <html lang="en">
-    <head>
-        <BaseHead title={`${guide.data.title} - ${SITE_TITLE}`} description={guide.data.description} />
-        <style>
-            main {
-                width: 960px;
-                max-width: calc(100% - 2em);
-                margin: 0 auto;
-                padding: 3em 1em;
-            }
-            .prose {
-                width: 720px;
-                max-width: calc(100% - 2em);
-                margin: auto;
-            }
-            .title {
-                margin-bottom: 1em;
-                padding: 1em 0;
-                text-align: center;
-                line-height: 1;
-            }
-            .title h1 {
-                margin: 0 0 0.5em 0;
-            }
-            .difficulty {
-                display: inline-block;
-                padding: 0.25rem 0.5rem;
-                border-radius: 4px;
-                font-size: 0.875rem;
-                margin: 0.5rem 0;
-            }
-            .difficulty.beginner { background: #e0f2f1; color: #004d40; }
-            .difficulty.intermediate { background: #fff3e0; color: #e65100; }
-            .difficulty.advanced { background: #fce4ec; color: #880e4f; }
-            .metadata {
-                margin-bottom: 2em;
-                text-align: center;
-            }
-            .prerequisites {
-                background: #f5f5f5;
-                padding: 1em;
-                border-radius: 8px;
-                margin-bottom: 2em;
-            }
-            .prerequisites h3 {
-                margin-top: 0;
-            }
-        </style>
-    </head>
+  <head>
+    <BaseHead title={`${guide.data.title} - ${SITE_TITLE}`} description={guide.data.description} />
+    <style>
+      main {
+        width: 960px;
+        max-width: calc(100% - 2em);
+        margin: 0 auto;
+        padding: 3em 1em;
+      }
+      .prose {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+      }
+      .hero-image {
+        width: 100%;
+        max-width: 720px;
+        margin: 0 auto 2rem;
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+      }
+      .title {
+        margin-bottom: 1em;
+        padding: 1em 0;
+        text-align: center;
+        line-height: 1;
+      }
+      .title h1 {
+        margin: 0 0 0.5em 0;
+      }
+      .difficulty {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        margin: 0.5rem 0;
+      }
+      .difficulty.beginner { background: #e0f2f1; color: #004d40; }
+      .difficulty.intermediate { background: #fff3e0; color: #e65100; }
+      .difficulty.advanced { background: #fce4ec; color: #880e4f; }
+      .metadata {
+        margin-bottom: 2em;
+        text-align: center;
+      }
+      .prerequisites {
+        background: #f5f5f5;
+        padding: 1em;
+        border-radius: 8px;
+        margin-bottom: 2em;
+      }
+      .prerequisites h3 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
 
-    <body>
-        <Header />
-        <main>
-            <article class="prose">
-                <div class="title">
-                    <h1>{guide.data.title}</h1>
-                    <div class="metadata">
-                        <span class={`difficulty ${guide.data.difficulty}`}>
-                            {guide.data.difficulty.charAt(0).toUpperCase() + guide.data.difficulty.slice(1)}
-                        </span>
-                        <div>Category: {guide.data.category}</div>
-                    </div>
-                </div>
+  <body>
+    <Header />
+    <main>
+      <article class="prose">
+        <!-- Display Hero Image at the top -->
+        {guide.data.heroImage && (
+          <div class="hero-image">
+            <img src={guide.data.heroImage} alt="" />
+          </div>
+        )}
 
-                {guide.data.prerequisites && guide.data.prerequisites.length > 0 && (
-                    <div class="prerequisites">
-                        <h3>Prerequisites</h3>
-                        <ul>
-                            {guide.data.prerequisites.map(prereq => (
-                                <li>{prereq}</li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
+        <div class="title">
+          <h1>{guide.data.title}</h1>
+          <div class="metadata">
+            <span class={`difficulty ${guide.data.difficulty}`}>
+              {guide.data.difficulty.charAt(0).toUpperCase() + guide.data.difficulty.slice(1)}
+            </span>
+            <div>Category: {guide.data.category}</div>
+          </div>
+        </div>
 
-                <Content />
-            </article>
-        </main>
-        <Footer />
-    </body>
+        {guide.data.prerequisites && guide.data.prerequisites.length > 0 && (
+          <div class="prerequisites">
+            <h3>Prerequisites</h3>
+            <ul>
+              {guide.data.prerequisites.map(prereq => (
+                <li>{prereq}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <!-- Guide content -->
+        <Content />
+      </article>
+    </main>
+    <Footer />
+  </body>
 </html>
