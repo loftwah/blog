@@ -2,7 +2,7 @@
 title: 'Unlocking the Power of GGUF Models Locally'
 description: 'Unlocking the Power of GGUF Models Locally with Ollama: A Personal Journey'
 pubDate: 'Oct 24 2024'
-heroImage: '/blog-placeholder-2.jpg'
+heroImage: '/images/blog-gguf.jpg'
 ---
 
 # Unlocking the Power of GGUF Models Locally with Ollama: A Personal Journey
