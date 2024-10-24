@@ -1,68 +1,93 @@
-# Astro Starter Kit: Blog
+# Dean "Loftwah" Lofts Blog
 
-```sh
-npm create astro@latest -- --template blog
-```
+Welcome to the blog of Dean "Loftwah" Lofts. This project is built with [Astro](https://astro.build/) and deployed using GitHub Pages. It features blog posts about tech, beats, and innovation.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+## 🚀 Project Overview
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+This site is hosted on a custom domain: [https://blog.deanlofts.xyz](https://blog.deanlofts.xyz).
 
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
+### Key Features
 
-Features:
+- **Built with Astro**: Lightweight and fast static site generation.
+- **MDX Support**: Write posts with Markdown and MDX.
+- **Sitemap & SEO**: Automatically generated sitemap and OpenGraph metadata for SEO.
+- **GitHub Pages Deployment**: Automated deploys on the `main` branch using GitHub Actions.
+- **Custom Domain**: Uses a custom domain (`blog.deanlofts.xyz`).
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+## 🧑‍💻 Installation and Setup
 
-## 🚀 Project Structure
+1. Clone the repository:
 
-Inside of your Astro project, you'll see the following folders and files:
+   ```bash
+   git clone https://github.com/loftwah/blog.git
+   cd blog
+   ```
+
+2. Install dependencies with Bun:
+
+   ```bash
+   bun install
+   ```
+
+3. Run the local development server:
+
+   ```bash
+   bun run dev
+   ```
+
+4. To build the site:
+
+   ```bash
+   bun run build
+   ```
+
+5. Preview the production build:
+
+   ```bash
+   bun run preview
+   ```
+
+## 📂 Project Structure
 
 ```text
 ├── public/
+│   └── CNAME                   # Custom domain file
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+│   ├── components/             # Reusable components (e.g., Header, Footer)
+│   ├── content/                # Blog posts in Markdown/MDX
+│   ├── layouts/                # Layouts for pages and posts
+│   ├── pages/                  # Main pages (index, blog, about)
+│   └── styles/                 # Global CSS
+├── astro.config.mjs            # Astro configuration file
+├── package.json                # Project dependencies and scripts
+├── tsconfig.json               # TypeScript configuration
+└── .github/workflows/deploy.yml # GitHub Actions for deployment
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## ⚙️ Configuration
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- **Custom Domain**: The file `public/CNAME` contains the custom domain `blog.deanlofts.xyz`. This is used for GitHub Pages deployment.
+- **Astro Config**: Located in `astro.config.mjs`, the configuration includes site metadata and integrations like MDX and sitemap.
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+## 🚀 Deployment
 
-Any static assets, like images, can be placed in the `public/` directory.
+Deployment is automated using GitHub Actions. Every push to the `main` branch triggers the build and deploy process:
 
-## 🧞 Commands
+1. The site is built using the `withastro/action@v3`.
+2. The output is pushed to GitHub Pages.
 
-All commands are run from the root of the project, from a terminal:
+### GitHub Actions Workflow
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+The workflow file is located at `.github/workflows/deploy.yml`. It handles the entire deployment process to GitHub Pages.
 
-## 👀 Want to learn more?
+## 📚 Blog Posts
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+All blog content is written in Markdown or MDX and located in the `src/content/blog/` directory. Each post is a Markdown file with frontmatter for metadata (title, description, date, etc.).
 
-## Credit
+## License
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+This project is licensed under the [MIT License](./LICENSE).
+
+---
+
+Feel free to explore the site at [https://blog.deanlofts.xyz](https://blog.deanlofts.xyz).
