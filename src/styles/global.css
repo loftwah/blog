@@ -227,7 +227,7 @@
 	color: rgb(var(--gray));
   }
   
-  .social-links a:hover {
+  social-links a:hover {
 	color: rgb(var(--gray-dark));
   }
   
@@ -255,5 +255,12 @@
 	overflow: hidden;
 	clip: rect(1px, 1px, 1px, 1px);
 	white-space: nowrap;
+  }
+  
+  /* Added media query to adjust h1 font size on mobile devices */
+  @media (max-width: 600px) {
+	h1 {
+	  font-size: 2em;
+	}
   }
   
