@@ -1,13 +1,12 @@
 ---
-
-**Title:** Adding Guides to Your Astro Blog  
-**Description:** Learn how to extend your Astro blog with a dedicated guides section, complete with categories, difficulty levels, and prerequisites.  
-**Difficulty:** Intermediate  
-**Category:** Site Features  
-**Order:** 1  
-**HeroImage:** `/images/guides-xzibit.jpg`  
-**Prerequisites:** ["Existing Astro Blog", "Basic TypeScript", "Basic Astro Knowledge"]
-
+title: "Adding Guides to Your Astro Blog"
+description: "Learn how to extend your Astro blog with a dedicated guides section, complete with categories, difficulty levels, and prerequisites."
+difficulty: "intermediate"
+category: "Site Features"
+order: 1
+heroImage: "/images/guides-xzibit.jpg"
+prerequisites:
+  ["Existing Astro Blog", "Basic TypeScript", "Basic Astro Knowledge"]
 ---
 
 # Adding Guides to Your Astro Blog
