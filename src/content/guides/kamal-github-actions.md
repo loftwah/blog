@@ -6,7 +6,11 @@ category: "Deployment Automation"
 order: 1
 heroImage: "/images/guide-linkarooie-deployment.jpg"
 prerequisites:
-  ["Existing Kamal setup", "Basic GitHub Actions knowledge", "Familiarity with Docker and Redis"]
+  [
+    "Existing Kamal setup",
+    "Basic GitHub Actions knowledge",
+    "Familiarity with Docker and Redis",
+  ]
 ---
 
 # Automating Linkarooie Deployment with Kamal and GitHub Actions
@@ -26,19 +30,19 @@ image: loftwah/linkarooie
 # Servers for deployment
 servers:
   web:
-    - <%= ENV['KAMAL_HOST'] %>  # Set the KAMAL_HOST as an environment variable
+    - <%= ENV['KAMAL_HOST'] %> # Set the KAMAL_HOST as an environment variable
 
   # Sidekiq server for background jobs
   job:
     hosts:
       - <%= ENV['KAMAL_HOST'] %>
-    cmd: bundle exec sidekiq  # Command to start Sidekiq
+    cmd: bundle exec sidekiq # Command to start Sidekiq
 
 # SSL and proxy configuration
 proxy:
-  ssl: true  # Enable SSL via Let's Encrypt
-  host: linkarooie.com  # Domain for the app
-  app_port: 3000  # The port your app listens to inside the container
+  ssl: true # Enable SSL via Let's Encrypt
+  host: linkarooie.com # Domain for the app
+  app_port: 3000 # The port your app listens to inside the container
 
 # Docker registry credentials
 registry:
@@ -54,8 +58,8 @@ builder:
 # Environment variables
 env:
   clear:
-    KAMAL_HOST: <%= ENV['KAMAL_HOST'] %>  # Host for the deployment
-    REDIS_URL: redis://redis-linkarooie:6379/0  # URL for Redis
+    KAMAL_HOST: <%= ENV['KAMAL_HOST'] %> # Host for the deployment
+    REDIS_URL: redis://redis-linkarooie:6379/0 # URL for Redis
   secret:
     - KAMAL_REGISTRY_USERNAME
     - KAMAL_REGISTRY_PASSWORD
@@ -86,8 +90,8 @@ accessories:
 
 # Rolling deploys
 boot:
-  limit: 10  # Number of servers to restart at once
-  wait: 2    # Seconds to wait between restarts
+  limit: 10 # Number of servers to restart at once
+  wait: 2 # Seconds to wait between restarts
 
 # Aliases for common commands
 aliases:
@@ -95,6 +99,7 @@ aliases:
 ```
 
 ### Key Points to Note:
+
 - **Services**: You are deploying both a **web service** and a **Sidekiq service** for background jobs.
 - **Proxy and SSL**: This setup includes SSL through **Let's Encrypt** for the domain `linkarooie.com`.
 - **Docker Registry**: Images are pulled from GitHub's **Container Registry (ghcr.io)**.
@@ -285,7 +290,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-     
+
 
  - name: Setup Environment
         uses: ./.github/workflows/setup/action.yml
@@ -316,6 +321,7 @@ jobs:
 As per your `deploy.yml`, the following secrets and environment variables need to be securely managed:
 
 #### Secrets to Add in GitHub
+
 - `KAMAL_REGISTRY_PASSWORD`
 - `DATABASE_URL`
 - `REDIS_URL`
@@ -336,10 +342,17 @@ You can add these secrets in **GitHub** by going to **Settings → Secrets → A
 ## Conclusion
 
 This complete guide ties your **Linkarooie `deploy.yml`** directly into the **GitHub Actions** workflows, including:
+
 - **Automatic and manual deployments**.
 - Handling of **Redis**, **Sidekiq**, and **SSL**.
 - Securely managing all the **secrets** and **environment variables** from the `deploy.yml`.
 
 Now your deployments are fully automated and aligned with the configuration you’ve set up in **Kamal**.
 
---- 
+---
+
+## Acknowledgments
+
+A special thank you to [Igor Alexandrov](https://github.com/igor-alexandrov) for creating and maintaining [Kamal GitHub Actions](https://github.com/igor-alexandrov/kamal-github-actions), which made automating the deployment of Linkarooie much easier.
+
+---
