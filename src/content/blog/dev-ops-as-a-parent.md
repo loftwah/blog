@@ -73,7 +73,3 @@ I still grapple with vulnerability and self-doubt, but I’m learning to focus o
 In sharing this, I hope others in similar situations realise they’re not alone. The tech industry can be demanding, but it’s also filled with opportunities for those willing to navigate its complexities—especially when you’re doing it not just for yourself, but for the people who depend on you. Whether it’s through contributing to open-source projects like **Linkarooie** (which you can find on GitHub), or simply sharing experiences, we can all grow and support each other on this journey.
 
 ---
-
-*If you found this story relatable or insightful, feel free to share your thoughts or experiences in the comments below. Let's support each other on this journey.*
-
----
