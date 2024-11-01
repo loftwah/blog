@@ -3,7 +3,7 @@ title: "Effectively Leveraging Twitter/X Data: Insights and Strategies"
 description: "Learn how to analyze and leverage Twitter/X followers and following data that you've collected, identify common trends, and find great accounts to follow."
 difficulty: "advanced"
 category: "Data Analysis & Strategy"
-order: 3
+order: 6
 heroImage: "/images/twitter-data-analysis.jpg"
 prerequisites:
   [

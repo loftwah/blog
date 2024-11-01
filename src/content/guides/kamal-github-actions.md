@@ -3,7 +3,7 @@ title: "Automating Linkarooie Deployment with Kamal and GitHub Actions"
 description: "A complete guide to automating the deployment of the Linkarooie application using Kamal and GitHub Actions, covering secrets, Redis, Sidekiq, and SSL configuration."
 difficulty: "intermediate"
 category: "Deployment Automation"
-order: 1
+order: 10
 heroImage: "/images/guide-linkarooie-deployment.jpg"
 prerequisites:
   [

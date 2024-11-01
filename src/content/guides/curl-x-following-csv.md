@@ -3,7 +3,7 @@ title: "Loftwah's Ultimate Guide to Collecting Twitter/X Following Data Using Ba
 description: "Learn how to use Bash scripts with the SocialData API to retrieve all the Twitter/X profiles that a particular user is following, complete with pagination, test mode, and output flexibility."
 difficulty: "intermediate"
 category: "Data Collection & Automation"
-order: 1
+order: 8
 heroImage: "/images/socialdata-tools.jpg"
 prerequisites:
   ["API Key from SocialData.tools", "Basic Bash Scripting", "Basic JSON Handling"]

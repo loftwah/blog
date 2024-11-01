@@ -3,7 +3,7 @@ title: "Leveraging Repopack for Easy Repository Management"
 description: "A beginner's guide to using Repopack with NPX for efficient repository management, covering handling hidden files and protecting secrets during analysis."
 difficulty: "beginner"
 category: "Repository Management"
-order: 1
+order: 9
 heroImage: "/images/guide-repopack.jpg"
 prerequisites:
   [
