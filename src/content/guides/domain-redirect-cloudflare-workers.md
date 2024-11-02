@@ -38,7 +38,7 @@ During setup, select the following options:
 
 - **What would you like to start with?**: **Hello World example**
 - **Which template would you like to use?**: **Hello World Worker**
-- **Which language do you want to use?**: **JavaScript**
+- **Which language do you want to use?**: **TypeScript**
 - **Do you want to use git for version control?**: **Yes**
 - **Do you want to deploy your application?**: **No**
 
