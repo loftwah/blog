@@ -1,6 +1,6 @@
 ---
-title: "Setting Up Cloudflare Workers for Flexible Domain Redirects"
-description: "Learn how to manage domain redirects with Cloudflare Workers, including HTTPS enforcement, path preservation, and structured DNS configuration."
+title: "Real-World Domain Redirects with Cloudflare Workers: A Journey"
+description: "A detailed walkthrough of implementing domain redirects using Cloudflare Workers, based on actual experience with troubleshooting and lessons learned."
 difficulty: "intermediate"
 category: "Web Infrastructure & DNS Management"
 order: 5
@@ -9,67 +9,100 @@ prerequisites:
   [
     "Cloudflare account with domains managed on Cloudflare",
     "Access to the Workers & Pages section",
-    "Ability to add custom domains",
     "Basic JavaScript/TypeScript knowledge",
-    "Understanding of DNS and SSL/TLS settings",
+    "Patience for DNS propagation",
   ]
 ---
 
-# Cloudflare Workers: Setting Up Domain Redirects with Wrangler CLI
+# Setting Up Domain Redirects with Cloudflare Workers: My Implementation Story
 
-This guide walks you through creating a Cloudflare Worker for flexible domain redirects with path and query preservation, using Wrangler CLI for setup and deployment.
+This guide documents my journey setting up domain redirects using Cloudflare Workers. While it might seem straightforward at first, there were several valuable lessons learned about DNS propagation, worker environments, and the importance of patience. I'm sharing my experience to help others avoid the same pitfalls I encountered.
+
+## My Use Case
+
+I needed to set up redirects for multiple domains:
+
+- Redirect both `deanlofts.xyz` and its www subdomain to my blog at `blog.deanlofts.xyz`
+- Redirect both `loftwah.com` and its www subdomain to my Linkaroo profile at `linkarooie.com/loftwah`
+
+This seemed simple enough, but there were several important lessons along the way.
 
 ## Prerequisites
 
-1. [Cloudflare Account](https://dash.cloudflare.com/sign-up)
-2. Node.js installed (we recommend a Node version manager for easier version management)
+Before you start, make sure you have:
+
+1. A Cloudflare account with your domains already added and configured
+2. Node.js/Bun installed on your system (I prefer Bun for its speed)
+3. Your domains properly configured on Cloudflare
+4. Most importantly: **patience**. DNS changes take time, and rushing to change configurations because "it's not working" can lead to confusion
 
 ---
 
-### Step 1: Create a New Worker Project with Wrangler
+### Step 1: Setting Up Your Worker Project
 
-In your terminal, create a new Cloudflare Worker project:
+First, we'll create a new Worker project. I'm using Bun, but npm works just as well:
 
 ```bash
 bun create cloudflare@latest my-domain-redirect-worker
 ```
 
-During setup, select the following options:
+During the setup process, you'll be asked several questions. Here's what I chose and why:
 
-- **What would you like to start with?**: **Hello World example**
-- **Which template would you like to use?**: **Hello World Worker**
-- **Which language do you want to use?**: **TypeScript**
-- **Do you want to use git for version control?**: **Yes**
-- **Do you want to deploy your application?**: **No**
+- **What would you like to start with?**: Choose "Hello World example" - it gives us a clean slate
+- **Which template would you like to use?**: "Hello World Worker" - perfect for our needs
+- **Which language do you want to use?**: "TypeScript" - gives us better type safety
+- **Do you want to use git for version control?**: "Yes" - always good practice
+- **Do you want to deploy your application?**: "No" - we'll deploy manually later
 
-Once the setup is complete, navigate to the project folder:
+After creation, navigate to your project and install Wrangler as a development dependency:
 
 ```bash
 cd my-domain-redirect-worker
-```
-
----
-
-### Step 2: Install Wrangler Locally
-
-To keep Wrangler scoped to your project, install it as a development dependency:
-
-```bash
 bun install wrangler --save-dev
 ```
 
-Now, you can run Wrangler commands via `npx`.
+This keeps Wrangler scoped to your project, which is a better practice than installing it globally.
 
 ---
 
-### Step 3: Add Redirect Logic in `src/index.ts`
+### Step 2: Configuring Your Worker
 
-Open `src/index.ts` and replace the contents with the following code to define simple redirect rules:
+Create a `wrangler.toml` file in your project root. This is where I learned my first important lesson about worker environments:
+
+```toml
+name = "my-domain-redirect-worker"
+main = "src/index.ts"
+compatibility_date = "2024-10-22"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true  # This is crucial for troubleshooting!
+
+[env.production]
+account_id = "YOUR_ACCOUNT_ID"  # Get this from your Cloudflare dashboard
+
+routes = [
+  { pattern = "deanlofts.xyz/*", zone_id = "YOUR_ZONE_ID_1" },
+  { pattern = "www.deanlofts.xyz/*", zone_id = "YOUR_ZONE_ID_1" },
+  { pattern = "loftwah.com/*", zone_id = "YOUR_ZONE_ID_2" },
+  { pattern = "www.loftwah.com/*", zone_id = "YOUR_ZONE_ID_2" }
+]
+```
+
+Finding your IDs:
+
+- Account ID: Found in your Cloudflare dashboard under Account Home
+- Zone IDs: Found in the Overview section of each domain in your Cloudflare dashboard
+
+**Important**: Never share or commit your real account ID or zone IDs. I learned this the hard way - always use environment variables or keep these in a separate, git-ignored file for production.
+
+---
+
+### Step 3: Setting Up the Redirect Logic
+
+Create your `src/index.ts` file. I added extensive logging to help with troubleshooting:
 
 ```typescript
-// src/index.ts
-
-// Define the redirect mappings: source domains -> target URLs
 const redirectRules: Record<string, string> = {
   "deanlofts.xyz": "https://blog.deanlofts.xyz",
   "www.deanlofts.xyz": "https://blog.deanlofts.xyz",
@@ -80,85 +113,167 @@ const redirectRules: Record<string, string> = {
 export default {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
+    console.log("Incoming request:", {
+      url: url.toString(),
+      hostname: url.hostname,
+      pathname: url.pathname,
+    });
+
     const target = redirectRules[url.hostname];
+    console.log("Target URL:", target);
 
     if (!target) {
+      console.log("No target found for hostname:", url.hostname);
       return new Response("Domain not found", { status: 404 });
     }
 
-    // Redirect with preserved path and query parameters
-    return Response.redirect(`${target}${url.pathname}${url.search}`, 301);
+    const redirectUrl = `${target}${url.pathname}${url.search}`;
+    console.log("Redirecting to:", redirectUrl);
+
+    return Response.redirect(redirectUrl, 301);
   },
 };
 ```
 
-### Explanation:
-
-- **Redirect Rules**: `redirectRules` maps source domains to destination URLs.
-- **Path & Query Preservation**: Paths and query parameters from the original URL are appended to the redirect URL.
-- **SEO-Friendly**: 301 permanent redirects ensure search engines update their links.
+The logging here proved invaluable during troubleshooting. It helped me understand exactly what the Worker was seeing and doing with each request.
 
 ---
 
-### Step 4: Develop Locally with Wrangler
+### Step 4: DNS Configuration - More Important Than You Might Think
 
-To test the Worker locally, use:
+For each domain, you need to set up A records in Cloudflare. This seems simple but requires attention to detail:
 
-```bash
-npx wrangler dev
-```
+For each domain (`deanlofts.xyz` and `loftwah.com`):
 
-Visit `http://localhost:8787` in your browser to preview the Worker. Wrangler will prompt you to log in to Cloudflare if it’s your first time using it.
+1. Go to DNS management in Cloudflare
+2. Add two A records:
+   ```
+   Type  Name   Content     Proxy status   TTL
+   A     @      192.0.2.1   Proxied       Auto
+   A     www    192.0.2.1   Proxied       Auto
+   ```
+
+**Critical Points I Learned**:
+
+- The proxy status MUST be enabled (orange cloud icon)
+- The IP address (192.0.2.1) is just a placeholder - Cloudflare handles the actual routing
+- Both root (@) and www records are needed for complete coverage
+- Auto TTL is fine - let Cloudflare handle this
 
 ---
 
-### Step 5: Deploy Your Worker
+### Step 5: The Deployment Process - A Tale of Two Workers
 
-When ready to deploy your Worker to a Cloudflare-managed subdomain, run:
+This is where I encountered my biggest gotcha. There are two ways to deploy, and using the wrong one caused confusion:
 
 ```bash
+# DON'T do this (creates a worker without routes):
 npx wrangler deploy
+
+# DO this instead (creates the production worker with routes):
+npx wrangler deploy --env production
 ```
 
-Wrangler will prompt you to set up a subdomain if it’s your first deployment.
+If you accidentally created both workers like I did, here's how to fix it:
+
+```bash
+# First, remove the non-production worker
+npx wrangler delete my-domain-redirect-worker
+
+# Then deploy only to production
+npx wrangler deploy --env production
+```
+
+**Why This Matters**: Having two workers running simultaneously can cause confusion about which one is handling requests. Always check your Workers & Pages dashboard to ensure you only have one worker running.
 
 ---
 
-### Step 6: Set Up Custom Domains for Redirects
+### Step 6: Testing and the Art of Patience
 
-1. In the Cloudflare dashboard, go to **Workers & Pages**.
-2. Find your Worker (e.g., `my-domain-redirect-worker`) and select **Add Custom Domain**.
-3. Add each domain listed in your `redirectRules`:
-   - `deanlofts.xyz`
-   - `www.deanlofts.xyz`
-   - `loftwah.com`
-   - `www.loftwah.com`
+This was perhaps the most important lesson: DNS propagation takes time, and different domains propagate at different rates. Here's what I experienced:
 
-### DNS Setup for Redirect Domains
+Testing with curl:
 
-1. In the **DNS** tab of your Cloudflare dashboard, add an **A record** for each domain you want to redirect.
-   - Use a placeholder IP (e.g., `192.0.2.1`).
-   - Set the proxy status to **Proxied** (orange cloud icon).
+```bash
+# Test the redirects
+curl -I https://deanlofts.xyz
+curl -I https://www.loftwah.com
+```
 
----
+What I learned:
 
-### Step 7: Test and Verify Redirects
-
-Test each domain to ensure that redirects are working:
-
-1. **Basic redirect**:
-   - Visit: `https://deanlofts.xyz`
-   - **Expected**: Redirects to `https://blog.deanlofts.xyz`
-2. **Path preservation**:
-   - Visit: `https://deanlofts.xyz/example?q=1`
-   - **Expected**: Redirects to `https://blog.deanlofts.xyz/example?q=1`
+1. Curl might show success before browsers work
+2. Different domains propagate at different speeds
+3. Just because one domain works doesn't mean they all will immediately
+4. **Patience is crucial** - I initially thought something was wrong, but everything started working after giving DNS time to propagate
 
 ---
 
-### Troubleshooting
+### Troubleshooting Guide - Based on Real Experience
 
-- **DNS Settings**: Confirm that each domain is set to **Proxied** in the DNS tab.
-- **Custom Domains**: Verify all necessary custom domains are added in the Worker configuration.
-- **Cache**: Clear your browser’s cache or use incognito mode if redirects do not update as expected.
+When things aren't working, check these in order:
+
+1. **Worker Environment Issues**:
+
+   - Check Workers & Pages dashboard
+   - Make sure only the production worker exists
+   - Verify routes are properly configured
+   - Always use `--env production` when deploying
+
+2. **DNS Configuration**:
+
+   - Verify A records exist for both @ and www
+   - Confirm orange cloud (proxy) is enabled
+   - Check zone IDs match your domains
+
+3. **SSL/TLS Settings**:
+
+   - Set SSL/TLS to "Full"
+   - Verify Edge Certificates are on "Automatic"
+   - Check for any Page Rules that might interfere
+
+4. **Testing Methods**:
+
+   ```bash
+   # Check DNS propagation
+   dig +short yourdomain.com
+
+   # Test redirects (might work before browsers)
+   curl -I https://yourdomain.com
+
+   # Follow redirects to verify full path
+   curl -L -I https://yourdomain.com
+   ```
+
+5. **The Waiting Game**:
+   - Give DNS changes at least 30 minutes
+   - Use incognito mode to avoid cache issues
+   - Test from different networks if possible
+   - Monitor Workers logs for request handling
+
+---
+
+### Success Indicators
+
+You know everything is working correctly when:
+
+1. curl shows 301 redirect responses
+2. Browsers successfully redirect to target URLs
+3. Both www and root domains redirect properly
+4. Path and query parameters are preserved in redirects
+
+In my case, perfect functionality arrived gradually as DNS propagated, even though all configurations were correct from the start.
+
+---
+
+### Lessons Learned
+
+1. **Patience is Key**: DNS propagation takes time. Don't rush to change configurations.
+2. **Environment Matters**: Always use `--env production` for deployment.
+3. **Logging Helps**: Extensive logging in your Worker code helps troubleshooting.
+4. **Security First**: Never expose real account or zone IDs.
+5. **DNS Details**: The orange cloud (proxy) status is crucial for Workers.
+
+Remember: If curl shows it's working but browsers don't, wait longer. DNS propagation can take time, but if your configuration is correct, it will work!
 
 ---
