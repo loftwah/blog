@@ -15,344 +15,273 @@ prerequisites:
 
 # Automating Linkarooie Deployment with Kamal and GitHub Actions
 
-This guide will walk you through automating the deployment of your **Linkarooie** application using **Kamal** and **GitHub Actions**. We will focus on using **composite actions** for setup, deploying both web and Sidekiq services, handling **Redis**, **SSL via Let's Encrypt**, and rolling deploys. Importantly, we will also show how to securely manage all the **secrets** and environment variables from your **`deploy.yml`**.
+This guide is tailored to automate the deployment of **Linkarooie** using **Kamal** and **GitHub Actions**, based on a CI-driven workflow with clear deployment stages. This configuration supports both automatic and manual deployments with concurrency controls, ensuring stable and conflict-free releases.
 
 ---
 
-## Step 1: Understanding the `deploy.yml`
+## Workflow Overview
 
-Here’s a breakdown of your **Linkarooie** `deploy.yml` configuration:
+Your deployment follows this critical sequence:
 
-```yaml
-service: linkarooie
-image: loftwah/linkarooie
+**Push code to branch → CI runs on branch → Merge to main → Deploy from main**
 
-# Servers for deployment
-servers:
-  web:
-    - <%= ENV['KAMAL_HOST'] %> # Set the KAMAL_HOST as an environment variable
+With this flow, code is rigorously tested before deployment, minimizing risks in production. Here’s a breakdown of the five essential files that support this process:
 
-  # Sidekiq server for background jobs
-  job:
-    hosts:
-      - <%= ENV['KAMAL_HOST'] %>
-    cmd: bundle exec sidekiq # Command to start Sidekiq
+1. **Automatic Deployment Workflow** (Triggered by main branch)
+2. **Manual Deployment Workflow** (Triggered on demand)
+3. **Kamal Command Runner Workflow** (For specific commands)
+4. **Setup Composite Action** (Configures environment)
+5. **Kamal Deploy Composite Action** (Handles deployment)
 
-# SSL and proxy configuration
-proxy:
-  ssl: true # Enable SSL via Let's Encrypt
-  host: linkarooie.com # Domain for the app
-  app_port: 3000 # The port your app listens to inside the container
+### Folder Structure
 
-# Docker registry credentials
-registry:
-  server: ghcr.io
-  username: loftwah
-  password:
-    - KAMAL_REGISTRY_PASSWORD
-
-# Specify the builder architecture
-builder:
-  arch: amd64
-
-# Environment variables
-env:
-  clear:
-    KAMAL_HOST: <%= ENV['KAMAL_HOST'] %> # Host for the deployment
-    REDIS_URL: redis://redis-linkarooie:6379/0 # URL for Redis
-  secret:
-    - KAMAL_REGISTRY_USERNAME
-    - KAMAL_REGISTRY_PASSWORD
-    - SECRET_KEY_BASE
-    - AXIOM_API_KEY
-    - DO_TOKEN
-    - SPACES_REGION
-    - SPACES_BUCKET_NAME
-    - SPACES_BUCKET_CONTENT
-    - SPACES_ACCESS_KEY_ID
-    - SPACES_SECRET_ACCESS_KEY
-    - RAILS_MASTER_KEY
-
-# Volumes for persistent storage
-volumes:
-  - data_storage:/rails/storage
-
-# Accessories for additional services
-accessories:
-  redis:
-    service: linkarooie
-    image: redis:6-alpine
-    host: <%= ENV['KAMAL_HOST'] %>
-    volumes:
-      - redis_data:/data
-    options:
-      name: redis-linkarooie
-
-# Rolling deploys
-boot:
-  limit: 10 # Number of servers to restart at once
-  wait: 2 # Seconds to wait between restarts
-
-# Aliases for common commands
-aliases:
-  shell: app exec --interactive --reuse "bash"
+```plaintext
+.github/
+└── workflows/
+    ├── 01-deploy-to-production.yml
+    ├── 02-deploy-manually.yml
+    ├── 03-kamal-run-command.yml
+    ├── setup/
+    │   └── action.yml
+    └── kamal-deploy/
+        └── action.yml
 ```
 
-### Key Points to Note:
+---
 
-- **Services**: You are deploying both a **web service** and a **Sidekiq service** for background jobs.
-- **Proxy and SSL**: This setup includes SSL through **Let's Encrypt** for the domain `linkarooie.com`.
-- **Docker Registry**: Images are pulled from GitHub's **Container Registry (ghcr.io)**.
-- **Redis**: Configured as an accessory service with a **persistent data volume**.
-- **Secrets and Environment Variables**: Key secrets like `KAMAL_REGISTRY_PASSWORD`, `SECRET_KEY_BASE`, and others are managed securely.
+## Prerequisites
 
-Now, let’s move on to **GitHub Actions** to automate the deployment.
+Before starting, ensure you have:
+
+- **Kamal** set up on the server
+- Familiarity with **GitHub Actions**
+- Basic knowledge of **Docker** and **Redis**
 
 ---
 
-## Step 2: Setting Up GitHub Actions for Deployment
+## Step 1: Setting Up Secrets in GitHub
 
-### A. Composite Action for Setup
+Configure the following secrets under **Settings → Secrets → Actions** in your GitHub repository:
 
-We begin by setting up **Ruby**, **Docker**, and **SSH**. This composite action ensures that you don't repeat these steps across different workflows.
+- `DROPLET_SSH_PRIVATE_KEY`
+- `KAMAL_HOST`
+- `KAMAL_REGISTRY_USERNAME`
+- `KAMAL_REGISTRY_PASSWORD`
+- `SECRET_KEY_BASE`
+- `AXIOM_API_KEY`
+- `DO_TOKEN`
+- `SPACES_REGION`
+- `SPACES_BUCKET_NAME`
+- `SPACES_BUCKET_CONTENT`
+- `SPACES_ACCESS_KEY_ID`
+- `SPACES_SECRET_ACCESS_KEY`
+- `RAILS_MASTER_KEY`
 
-Create a file at `.github/workflows/setup/action.yml`:
-
-```yaml
-name: Setup Environment
-
-inputs:
-  ssh-private-key:
-    description: SSH Private Key
-    required: true
-
-runs:
-  using: "composite"
-  steps:
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version-file: .ruby-version
-
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v3
-
-    - name: Set up SSH agent
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: ${{ inputs.ssh-private-key }}
-```
-
-This reusable **composite action** will be called by both the automatic and manual deployment workflows.
+These secrets ensure secure access to credentials and essential environment variables across workflows.
 
 ---
 
-### B. Composite Action for Kamal Deploy
+## Step 2: Workflow Files and Deployment Configuration
 
-This composite action handles the actual deployment using **Kamal**. It will be used to deploy both the **web service** and the **Sidekiq service**.
+### 1. Automatic Deployment Workflow (01-deploy-to-production.yml)
 
-Create the file `.github/workflows/kamal-deploy/action.yaml`:
-
-```yaml
-name: Kamal Deploy
-
-inputs:
-  environment:
-    description: Deployment environment (e.g., production, staging)
-    required: true
-  kamal-registry-password:
-    description: Kamal Docker Registry Password
-    required: true
-  database-url:
-    description: Database URL
-    required: true
-  redis-url:
-    description: Redis URL
-    required: true
-  rails-master-key:
-    description: Rails Master Key
-    required: true
-  secret-key-base:
-    description: Rails Secret Key Base
-    required: true
-  axiom-api-key:
-    description: Axiom API Key
-    required: false
-  do-token:
-    description: DigitalOcean Token
-    required: false
-  spaces-region:
-    description: Spaces Region
-    required: false
-  spaces-bucket-name:
-    description: Spaces Bucket Name
-    required: false
-  spaces-access-key-id:
-    description: Spaces Access Key ID
-    required: false
-  spaces-secret-access-key:
-    description: Spaces Secret Access Key
-    required: false
-
-runs:
-  using: "composite"
-  steps:
-    - name: Deploy with Kamal
-      shell: bash
-      run: |
-        ./bin/kamal deploy --destination=${{ inputs.environment }}
-      env:
-        KAMAL_REGISTRY_PASSWORD: ${{ inputs.kamal-registry-password }}
-        DATABASE_URL: ${{ inputs.database-url }}
-        REDIS_URL: ${{ inputs.redis-url }}
-        RAILS_MASTER_KEY: ${{ inputs.rails-master-key }}
-        SECRET_KEY_BASE: ${{ inputs.secret-key-base }}
-        AXIOM_API_KEY: ${{ inputs.axiom-api-key }}
-        DO_TOKEN: ${{ inputs.do-token }}
-        SPACES_REGION: ${{ inputs.spaces-region }}
-        SPACES_BUCKET_NAME: ${{ inputs.spaces-bucket-name }}
-        SPACES_ACCESS_KEY_ID: ${{ inputs.spaces-access-key-id }}
-        SPACES_SECRET_ACCESS_KEY: ${{ inputs.spaces-secret-access-key }}
-```
-
-This action will **deploy the web and Sidekiq services** and configure **Redis** as defined in your `deploy.yml`.
-
----
-
-### C. Automatic Deployment Workflow
-
-Now, let's set up a workflow that triggers **automatic deployment** whenever you push to the `main` branch.
-
-Create the file `.github/workflows/01.deploy_production.yaml`:
+Triggered when code is merged into the **main** branch, after CI passes. This workflow includes concurrency checks to prevent conflicting deployments.
 
 ```yaml
-name: Deploy to Production
+name: 01. Deploy to Production
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
 
 on:
   push:
     branches:
       - main
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
 
 jobs:
-  deploy:
+  deploy-production:
     runs-on: ubuntu-latest
-
+    concurrency:
+      group: production_environment
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Environment
         uses: ./.github/workflows/setup/action.yml
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
 
       - name: Deploy with Kamal
-        uses: ./.github/workflows/kamal-deploy/action.yaml
+        uses: ./.github/workflows/kamal-deploy/action.yml
         with:
           environment: production
-          kamal-registry-password: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
-          database-url: ${{ secrets.DATABASE_URL }}
-          redis-url: ${{ secrets.REDIS_URL }}
-          rails-master-key: ${{ secrets.RAILS_MASTER_KEY }}
-          secret-key-base: ${{ secrets.SECRET_KEY_BASE }}
-          axiom-api-key: ${{ secrets.AXIOM_API_KEY }}
-          do-token: ${{ secrets.DO_TOKEN }}
-          spaces-region: ${{ secrets.SPACES_REGION }}
-          spaces-bucket-name: ${{ secrets.SPACES_BUCKET_NAME }}
-          spaces-access-key-id: ${{ secrets.SPACES_ACCESS_KEY_ID }}
-          spaces-secret-access-key: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+          kamal-host: ${{ secrets.KAMAL_HOST }}
+          # ... (other secrets)
 ```
 
-### D. Manual Deployment Workflow
+### 2. Manual Deployment Workflow (02-deploy-manually.yml)
 
-For manual deployments, you can trigger them directly from GitHub’s interface.
-
-Create the file `.github/workflows/02.deploy_manually.yaml`:
+Manually triggered for deploying specific environments, like staging or testing.
 
 ```yaml
-name: Deploy Manually
+name: 02. Deploy Manually
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: Deployment Environment
+        description: "Deployment Environment"
         required: true
-        default: "production"
         type: choice
         options:
           - production
           - staging
 
 jobs:
-  deploy:
+  deploy-manual:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-
-
- - name: Setup Environment
+      - name: Setup Environment
         uses: ./.github/workflows/setup/action.yml
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
 
-      - name: Deploy with Kamal
-        uses: ./.github/workflows/kamal-deploy/action.yaml
+      - name: Kamal Deploy
+        uses: ./.github/workflows/kamal-deploy/action.yml
         with:
           environment: ${{ github.event.inputs.environment }}
-          kamal-registry-password: ${{ secrets.KAMAL_REGISTRY_PASSWORD }}
-          database-url: ${{ secrets.DATABASE_URL }}
-          redis-url: ${{ secrets.REDIS_URL }}
-          rails-master-key: ${{ secrets.RAILS_MASTER_KEY }}
-          secret-key-base: ${{ secrets.SECRET_KEY_BASE }}
-          axiom-api-key: ${{ secrets.AXIOM_API_KEY }}
-          do-token: ${{ secrets.DO_TOKEN }}
-          spaces-region: ${{ secrets.SPACES_REGION }}
-          spaces-bucket-name: ${{ secrets.SPACES_BUCKET_NAME }}
-          spaces-access-key-id: ${{ secrets.SPACES_ACCESS_KEY_ID }}
-          spaces-secret-access-key: ${{ secrets.SPACES_SECRET_ACCESS_KEY }}
+          kamal-host: ${{ secrets.KAMAL_HOST }}
+          # ... (other secrets)
+```
+
+### 3. Kamal Command Runner Workflow (03-kamal-run-command.yml)
+
+Use this workflow to run commands like **proxy reboot** or **upgrade** for production management.
+
+```yaml
+name: 03. Kamal Run Command
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Command to Run"
+        required: true
+        type: choice
+        options:
+          - proxy reboot --rolling -y
+          - upgrade --rolling -y
+
+jobs:
+  kamal_run_command:
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Kamal Command
+        env:
+          KAMAL_HOST: ${{ secrets.KAMAL_HOST }}
+        run: ./bin/kamal ${{ github.event.inputs.command }} --destination=production
 ```
 
 ---
 
-### Step 3: Managing Secrets and Environment Variables
+## Step 3: Defining Reusable Actions
 
-As per your `deploy.yml`, the following secrets and environment variables need to be securely managed:
+### A. Setup Action (setup/action.yml)
 
-#### Secrets to Add in GitHub
+This composite action prepares the environment by configuring **Ruby**, **Docker**, and **SSH**.
 
-- `KAMAL_REGISTRY_PASSWORD`
-- `DATABASE_URL`
-- `REDIS_URL`
-- `SECRET_KEY_BASE`
-- `AXIOM_API_KEY`
-- `DO_TOKEN`
-- `SPACES_REGION`
-- `SPACES_BUCKET_NAME`
-- `SPACES_ACCESS_KEY_ID`
-- `SPACES_SECRET_ACCESS_KEY`
-- `RAILS_MASTER_KEY`
-- `SSH_PRIVATE_KEY`
+```yaml
+name: Setup Environment
 
-You can add these secrets in **GitHub** by going to **Settings → Secrets → Actions**.
+inputs:
+  ssh-private-key:
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: ruby/setup-ruby@v1
+    - uses: docker/setup-buildx-action@v3
+    - uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ inputs.ssh-private-key }}
+```
+
+### B. Kamal Deploy Action (kamal-deploy/action.yml)
+
+Handles the deployment process, setting all required environment variables.
+
+```yaml
+name: Kamal Deploy
+
+inputs:
+  environment:
+    description: "Deployment Environment"
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Deploy with Kamal
+      run: ./bin/kamal deploy --destination=${{ inputs.environment }}
+```
 
 ---
 
-## Conclusion
+## Example Branch Workflow
 
-This complete guide ties your **Linkarooie `deploy.yml`** directly into the **GitHub Actions** workflows, including:
+1. **Feature Development**: Push changes to a feature branch.
+2. **CI Testing**: Run tests and checks on the feature branch.
+3. **Merge to Main**: Upon successful tests, merge to **main**.
+4. **Deployment**: The main branch triggers the automatic deployment to production.
 
-- **Automatic and manual deployments**.
-- Handling of **Redis**, **Sidekiq**, and **SSL**.
-- Securely managing all the **secrets** and **environment variables** from the `deploy.yml`.
+This flow ensures only fully tested code is deployed.
 
-Now your deployments are fully automated and aligned with the configuration you’ve set up in **Kamal**.
+---
+
+## Concurrency and Safety Checks
+
+To avoid deployment conflicts, each job includes a **concurrency** setting. This setup prevents multiple deployments from running simultaneously, ensuring only one deployment per environment at a time:
+
+```yaml
+concurrency:
+  group: production_environment
+  cancel-in-progress: true
+```
+
+By cancelling in-progress jobs, this setting prevents overlapping or redundant deployments, preserving system stability.
+
+---
+
+## Testing Your Workflows
+
+Since GitHub Actions cannot be fully tested locally, use branches to verify workflow configurations. Test with **manual triggers** when necessary and monitor the **Actions** tab for any issues.
+
+---
+
+## Security and Best Practices
+
+- **Secret Management**: Store sensitive data in **GitHub Secrets**.
+- **SSH Handling**: Use **ssh-agent** for secure key management.
+- **Concurrency Controls**: Prevent conflicting deployments with concurrency settings.
+- **Explicit Permissions**: Only enable necessary permissions for each workflow.
 
 ---
 
 ## Acknowledgments
 
-A special thank you to [Igor Alexandrov](https://github.com/igor-alexandrov) for creating and maintaining [Kamal GitHub Actions](https://github.com/igor-alexandrov/kamal-github-actions), which made automating the deployment of Linkarooie much easier.
+Thanks to [Igor Alexandrov](https://github.com/igor-alexandrov) for developing Kamal GitHub Actions, simplifying the automation of Linkarooie’s deployment.
+
+This guide aligns with your working setup, ensuring a consistent and streamlined deployment process using Kamal and GitHub Actions. With this setup, you can focus on development, knowing that your code is deployed reliably and securely.
 
 ---
