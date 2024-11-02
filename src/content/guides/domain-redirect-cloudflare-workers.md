@@ -31,7 +31,7 @@ This guide walks you through creating a Cloudflare Worker for flexible domain re
 In your terminal, create a new Cloudflare Worker project:
 
 ```bash
-npm create cloudflare@latest -- my-domain-redirect-worker
+bun create cloudflare@latest my-domain-redirect-worker
 ```
 
 During setup, select the following options:
