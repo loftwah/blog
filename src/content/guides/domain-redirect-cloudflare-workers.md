@@ -55,7 +55,7 @@ cd my-domain-redirect-worker
 To keep Wrangler scoped to your project, install it as a development dependency:
 
 ```bash
-npm install wrangler --save-dev
+bun install wrangler --save-dev
 ```
 
 Now, you can run Wrangler commands via `npx`.
