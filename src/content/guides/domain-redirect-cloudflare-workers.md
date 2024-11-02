@@ -15,114 +15,150 @@ prerequisites:
   ]
 ---
 
-# Setting Up Domain Redirects with Cloudflare Workers
+# Cloudflare Workers: Setting Up Domain Redirects with Wrangler CLI
 
-This guide walks you through setting up domain redirects using Cloudflare Workers. We’ll configure a simple worker to handle redirects across multiple domains, preserving paths and query parameters.
+This guide walks you through creating a Cloudflare Worker for flexible domain redirects with path and query preservation, using Wrangler CLI for setup and deployment.
 
 ## Prerequisites
 
-1. **Cloudflare account** with:
-   - Access to the **Workers & Pages** section
-   - Ability to add custom domains
-2. **Domains** set to use **Cloudflare's nameservers**
-3. **Basic JavaScript/TypeScript knowledge**
+1. [Cloudflare Account](https://dash.cloudflare.com/sign-up)
+2. Node.js installed (we recommend a Node version manager for easier version management)
 
-## Step 1: DNS Setup
+---
 
-1. In the Cloudflare Dashboard, go to **DNS**.
-2. For each domain you want to redirect, add an **A record**:
-   - Point to any IP address (e.g., `192.0.2.1`) as a placeholder.
-   - Set the proxy status to **Proxied** (orange cloud icon).
+### Step 1: Create a New Worker Project with Wrangler
 
-## Step 2: Create the Worker
+In your terminal, create a new Cloudflare Worker project:
 
-1. In the Cloudflare Dashboard, go to **Workers & Pages**.
-2. Click **Create Application**.
-3. Select **Create Worker** and name it (e.g., `domain-redirect`).
+```bash
+npm create cloudflare@latest -- my-domain-redirect-worker
+```
 
-## Step 3: Add the Code
+During setup, select the following options:
 
-Replace the default worker code with the following:
+- **What would you like to start with?**: **Hello World example**
+- **Which template would you like to use?**: **Hello World Worker**
+- **Which language do you want to use?**: **JavaScript**
+- **Do you want to use git for version control?**: **Yes**
+- **Do you want to deploy your application?**: **No**
+
+Once the setup is complete, navigate to the project folder:
+
+```bash
+cd my-domain-redirect-worker
+```
+
+---
+
+### Step 2: Install Wrangler Locally
+
+To keep Wrangler scoped to your project, install it as a development dependency:
+
+```bash
+npm install wrangler --save-dev
+```
+
+Now, you can run Wrangler commands via `npx`.
+
+---
+
+### Step 3: Add Redirect Logic in `src/index.ts`
+
+Open `src/index.ts` and replace the contents with the following code to define simple redirect rules:
 
 ```typescript
-type RedirectRules = Record<string, string>;
+// src/index.ts
 
-// Define your redirects: source -> target
-const redirectRules: RedirectRules = {
-  "deanlofts.xyz": "blog.deanlofts.xyz",
-  "www.deanlofts.xyz": "blog.deanlofts.xyz",
-  "loftwah.com": "linkarooie.com/loftwah",
-  "www.loftwah.com": "linkarooie.com/loftwah",
+// Define the redirect mappings: source domains -> target URLs
+const redirectRules: Record<string, string> = {
+  "deanlofts.xyz": "https://blog.deanlofts.xyz",
+  "www.deanlofts.xyz": "https://blog.deanlofts.xyz",
+  "loftwah.com": "https://linkarooie.com/loftwah",
+  "www.loftwah.com": "https://linkarooie.com/loftwah",
 };
 
 export default {
-  async fetch(request) {
+  async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
-    const { pathname, search, hostname } = url;
+    const target = redirectRules[url.hostname];
 
-    const target = redirectRules[hostname];
     if (!target) {
-      return new Response("Not Found", {
-        status: 404,
-        headers: { "Content-Type": "text/plain" },
-      });
+      return new Response("Domain not found", { status: 404 });
     }
 
-    return Response.redirect(`https://${target}${pathname}${search}`, 301);
+    // Redirect with preserved path and query parameters
+    return Response.redirect(`${target}${url.pathname}${url.search}`, 301);
   },
 };
 ```
 
-### Code Explanation
+### Explanation:
 
-- **Domain Mapping**: The `redirectRules` object maps source domains to target domains.
-- **Path and Query Preservation**: Paths and query parameters from the original request are appended to the redirect URL.
-- **SEO-Friendly Redirects**: Permanent 301 redirects are used for search engine optimisation.
-- **Unknown Domains**: If a domain isn’t listed, a 404 response is returned.
+- **Redirect Rules**: `redirectRules` maps source domains to destination URLs.
+- **Path & Query Preservation**: Paths and query parameters from the original URL are appended to the redirect URL.
+- **SEO-Friendly**: 301 permanent redirects ensure search engines update their links.
 
-## Step 4: Add Custom Domains
+---
 
-1. In **Workers**, find your worker (e.g., `domain-redirect`).
-2. Click **Add Custom Domain**.
-3. Add each domain in your `redirectRules`:
+### Step 4: Develop Locally with Wrangler
+
+To test the Worker locally, use:
+
+```bash
+npx wrangler dev
+```
+
+Visit `http://localhost:8787` in your browser to preview the Worker. Wrangler will prompt you to log in to Cloudflare if it’s your first time using it.
+
+---
+
+### Step 5: Deploy Your Worker
+
+When ready to deploy your Worker to a Cloudflare-managed subdomain, run:
+
+```bash
+npx wrangler deploy
+```
+
+Wrangler will prompt you to set up a subdomain if it’s your first deployment.
+
+---
+
+### Step 6: Set Up Custom Domains for Redirects
+
+1. In the Cloudflare dashboard, go to **Workers & Pages**.
+2. Find your Worker (e.g., `my-domain-redirect-worker`) and select **Add Custom Domain**.
+3. Add each domain listed in your `redirectRules`:
    - `deanlofts.xyz`
    - `www.deanlofts.xyz`
    - `loftwah.com`
    - `www.loftwah.com`
 
-## Testing
+### DNS Setup for Redirect Domains
 
-Test your redirects by visiting:
+1. In the **DNS** tab of your Cloudflare dashboard, add an **A record** for each domain you want to redirect.
+   - Use a placeholder IP (e.g., `192.0.2.1`).
+   - Set the proxy status to **Proxied** (orange cloud icon).
+
+---
+
+### Step 7: Test and Verify Redirects
+
+Test each domain to ensure that redirects are working:
 
 1. **Basic redirect**:
    - Visit: `https://deanlofts.xyz`
    - **Expected**: Redirects to `https://blog.deanlofts.xyz`
 2. **Path preservation**:
+   - Visit: `https://deanlofts.xyz/example?q=1`
+   - **Expected**: Redirects to `https://blog.deanlofts.xyz/example?q=1`
 
-   - Visit: `https://deanlofts.xyz/test?q=1`
-   - **Expected**: Redirects to `https://blog.deanlofts.xyz/test?q=1`
+---
 
-3. **Alternate domain**:
-   - Visit: `https://loftwah.com`
-   - **Expected**: Redirects to `https://linkarooie.com/loftwah`
+### Troubleshooting
 
-## Troubleshooting
+- **DNS Settings**: Confirm that each domain is set to **Proxied** in the DNS tab.
+- **Custom Domains**: Verify all necessary custom domains are added in the Worker configuration.
+- **Cache**: Clear your browser’s cache or use incognito mode if redirects do not update as expected.
 
-If the redirects aren’t working as expected:
-
-1. **Check DNS Settings**: Ensure each domain is set to **Proxied** in the DNS tab.
-2. **Verify Custom Domains**: Confirm all necessary custom domains are added to the worker.
-3. **Clear Cache**: Clear your browser’s cache or try testing in an incognito window.
-
-## Customising the Worker
-
-To add additional redirects, simply update the `redirectRules` object with more source-target pairs:
-
-```typescript
-const redirectRules: RedirectRules = {
-  "olddomain.com": "newdomain.com",
-  "www.olddomain.com": "newdomain.com",
-};
-```
-
-And that’s it! Your domains should now be properly redirected as configured.
+---
