@@ -139,30 +139,7 @@ The logging here proved invaluable during troubleshooting. It helped me understa
 
 ---
 
-### Step 4: DNS Configuration - More Important Than You Might Think
-
-For each domain, you need to set up A records in Cloudflare. This seems simple but requires attention to detail:
-
-For each domain (`deanlofts.xyz` and `loftwah.com`):
-
-1. Go to DNS management in Cloudflare
-2. Add two A records:
-   ```
-   Type  Name   Content     Proxy status   TTL
-   A     @      192.0.2.1   Proxied       Auto
-   A     www    192.0.2.1   Proxied       Auto
-   ```
-
-**Critical Points I Learned**:
-
-- The proxy status MUST be enabled (orange cloud icon)
-- The IP address (192.0.2.1) is just a placeholder - Cloudflare handles the actual routing
-- Both root (@) and www records are needed for complete coverage
-- Auto TTL is fine - let Cloudflare handle this
-
----
-
-### Step 5: The Deployment Process - A Tale of Two Workers
+### Step 4: The Deployment Process - A Tale of Two Workers
 
 This is where I encountered my biggest gotcha. There are two ways to deploy, and using the wrong one caused confusion:
 
@@ -188,7 +165,7 @@ npx wrangler deploy --env production
 
 ---
 
-### Step 6: Testing and the Art of Patience
+### Step 5: Testing and the Art of Patience
 
 This was perhaps the most important lesson: DNS propagation takes time, and different domains propagate at different rates. Here's what I experienced:
 
