@@ -96,8 +96,8 @@ Bluesky provides robust moderation tools to tailor your experience:
 
 ## Additional Resources
 
-- [Bluesky Documentation](https://bsky.app/docs)
-- [Community Guidelines](https://bsky.app/guidelines)
+- [Bluesky Documentation](https://docs.bsky.app/)
+- [Community Guidelines](https://bsky.social/about/support/community-guidelines)
 
 **Last updated**: 5th of November, 2024
 
