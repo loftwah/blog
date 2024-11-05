@@ -237,7 +237,7 @@ name: DNS Monitor
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight
+    - cron: "0 0 * * *" # Runs daily at midnight
   workflow_dispatch:
 
 jobs:
@@ -245,7 +245,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run DNS Records Script
         run: |
@@ -269,7 +269,7 @@ jobs:
 
       - name: Upload Diff Artifact
         if: exists('dns_diff.txt')
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dns_diff
           path: dns_diff.txt
@@ -289,6 +289,8 @@ jobs:
               {
                 "filename": "dns_diff.txt",
                 "content": "'"$(base64 dns_diff.txt)"'",
+
+
                 "content_type": "text/plain"
               }
             ]
@@ -359,7 +361,7 @@ Modify your GitHub Actions workflow to generate reports weekly.
 ```yaml
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Runs weekly on Sundays at midnight
+    - cron: "0 0 * * 0" # Runs weekly on Sundays at midnight
 ```
 
 #### Step 2: Add Report Generation Step
@@ -371,7 +373,7 @@ on:
     ./dns_to_csv.sh
 
 - name: Upload DNS Report
-  uses: actions/upload-artifact@v3
+  uses: actions/upload-artifact@v4
   with:
     name: dns_report
     path: dns_records.csv
@@ -435,7 +437,7 @@ If you prefer not to use email notifications, you can integrate other services l
 ```yaml
 - name: Send Slack Notification
   if: exists('dns_diff.txt')
-  uses: slackapi/slack-github-action@v1.23.0
+  uses: slackapi/slack-github-action@v1.27.0
   with:
     payload: |
       {
