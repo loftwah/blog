@@ -24,9 +24,8 @@ Bluesky is an emerging social platform designed for tech enthusiasts, developers
 Start your journey on Bluesky by:
 
 1. Visiting [bsky.app](https://bsky.app) and signing up.
-2. Entering your email and waiting for the invitation code.
-3. Choosing a handle that reflects your brand (e.g., `loftwah.bsky.social`).
-4. Creating a strong password.
+2. Choosing a handle that reflects your brand (e.g., `loftwah.bsky.social`).
+3. Creating a strong password.
 
 ## 2. Setting Up Your Profile
 
@@ -92,7 +91,6 @@ Bluesky provides robust moderation tools to tailor your experience:
 
 ## Troubleshooting Common Issues
 
-- **Invite Code Delays**: Check your spam folder.
 - **Domain Verification**: Ensure your `_atproto` record is set correctly.
 - **Handle Availability**: Add context like your profession if your preferred handle is taken.
 
