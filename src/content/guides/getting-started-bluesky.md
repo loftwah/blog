@@ -36,6 +36,17 @@ Your profile is your calling card. Make it stand out:
 - **Bio**: Highlight who you are, what you do, and why people should follow you.
 - **Key Links**: Include links to your GitHub, portfolio, or your [Linkarooie](https://linkarooie.com) profile.
 
+### Adding Your Pronouns
+
+If you’re new here, it’s recommended to add your pronouns to help others address you correctly. Follow [@pronouns.adorable.mom](https://bsky.app/profile/pronouns.adorable.mom) and:
+
+1. **Subscribe** to their account.
+2. **Like the posts that match your pronouns**. You can add up to four different pronoun labels by liking multiple posts.
+3. To find the pronoun posts, visit the **Posts tab** on [@pronouns.adorable.mom](https://bsky.app/profile/pronouns.adorable.mom) or use the search function.
+4. If you need to remove any pronoun labels, see the pinned post on [@pronouns.adorable.mom](https://bsky.app/profile/pronouns.adorable.mom) for instructions.
+
+![Screenshot of Pronouns account](/images/bluesky-pronouns.jpg)
+
 ## 3. Exploring Starter Packs
 
 One of the most exciting features of Bluesky is the Starter Packs. They help you find the best people to follow and dive straight into relevant conversations. Here’s a curated list of standout packs for different tech interests:
@@ -57,6 +68,8 @@ One of the most exciting features of Bluesky is the Starter Packs. They help you
 13. **Retro FPS GameDev** by [@uk-resistant.bsky.social](https://bsky.app/starter-pack-short/2HPFAbA)
 14. **Sentry and Friends** by [@sentry.io](https://bsky.app/starter-pack/sentry.io/3la4aiq4ga62y)
 
+For a complete list of packs, visit [Bluesky Directory](https://blueskydirectory.com/starter-packs/all) or check this [Bluesky post on starter packs](https://bsky.app/profile/danawoodman.com/post/3l7yeqhnopp2s).
+
 ![Screenshot of Bluesky starter packs](/images/bluesky-starterpacks.jpg)
 
 ## 4. Custom Domain Setup
@@ -71,6 +84,16 @@ One of the standout features on Bluesky is the ability to use your own domain as
    - **Type**: `TXT`
    - **Value**: `did=did:plc:YOUR_DID_HERE`
 3. **Verify**: Go back to **Settings → Account → Custom Domain** and click **Verify**.
+
+If you don't have your own domain but use GitHub, you can configure GitHub Pages for this purpose:
+
+1. **Enable GitHub Pages**: In your GitHub repository, go to **Settings → Pages** and select a branch to serve content from.
+2. **Add a DID File**: Create a `.well-known` folder in your repo, add an `atproto-did` file inside, and place your DID in this file.
+3. **Include the Folder**: Create a `_config.yml` in the root directory with:
+   ```yml
+   include: [".well-known"]
+   ```
+4. **Example Repository**: For reference, check this [GitHub repo example](https://github.com/w3cj/w3cj.github.io).
 
 ![Custom domain setup on Bluesky](/images/bluesky-custom-domain.jpg)
 
@@ -99,6 +122,6 @@ Bluesky provides robust moderation tools to tailor your experience:
 - [Bluesky Documentation](https://docs.bsky.app/)
 - [Community Guidelines](https://bsky.social/about/support/community-guidelines)
 
-**Last updated**: 5th of November, 2024
+**Last updated**: 9th of November, 2024
 
----
+--- 
