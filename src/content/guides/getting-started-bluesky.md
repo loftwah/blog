@@ -72,28 +72,51 @@ For a complete list of packs, visit [Bluesky Directory](https://blueskydirectory
 
 ![Screenshot of Bluesky starter packs](/images/bluesky-starterpacks.jpg)
 
+You're absolutely correct; this section is handling two distinct setups—one for a custom domain and another for using GitHub Pages as a handle. Let’s structure it so each setup is clearly separated, without redundant steps. Here’s a revised version that distinguishes between the two approaches:
+
+---
+
 ## 4. Custom Domain Setup
 
-One of the standout features on Bluesky is the ability to use your own domain as your handle, giving your profile a professional edge. Here’s how to set it up with a domain like `loftwah.com`:
+Bluesky allows you to use a custom domain as your handle, giving your profile a professional edge. You can either set up a domain you own (like `loftwah.com`) or use GitHub Pages (like `loftwah.github.io`) if you don’t have a personal domain.
 
-### How to Set It Up
+### Option 1: Using a Custom Domain (e.g., `loftwah.com`)
 
-1. **Get Your DID**: Go to **Settings → Account → Custom Domain** to find your unique DID (e.g., `did:plc:abc123xyz`).
-2. **Configure Your DNS**: Add a **TXT** record in your DNS settings.
+If you have a custom domain, you can link it to your Bluesky handle in just a few steps.
+
+1. **Locate Your DID**: In Bluesky, go to **Settings → Change Handle → Custom Domain**. Your DID (Decentralized Identifier) will be displayed here (e.g., `did:plc:axc7n2yjep6ggdz7fuztluc4`).
+2. **Configure Your DNS**: Go to your domain’s DNS settings and add a **TXT** record with the following details:
    - **Host/Name**: `_atproto`
    - **Type**: `TXT`
-   - **Value**: `did=did:plc:YOUR_DID_HERE`
-3. **Verify**: Go back to **Settings → Account → Custom Domain** and click **Verify**.
+   - **Value**: `did=did:plc:YOUR_DID_HERE` (replace `YOUR_DID_HERE` with the DID displayed in Bluesky)
+3. **Verify**: Return to **Settings → Change Handle → Custom Domain** in Bluesky and click **Verify**.
 
-If you don't have your own domain but use GitHub, you can configure GitHub Pages for this purpose:
+This will set your Bluesky handle to your custom domain.
 
-1. **Enable GitHub Pages**: In your GitHub repository, go to **Settings → Pages** and select a branch to serve content from.
-2. **Add a DID File**: Create a `.well-known` folder in your repo, add an `atproto-did` file inside, and place your DID in this file.
-3. **Include the Folder**: Create a `_config.yml` in the root directory with:
-   ```yml
-   include: [".well-known"]
-   ```
-4. **Example Repository**: For reference, check this [GitHub repo example](https://github.com/w3cj/w3cj.github.io).
+### Option 2: Using GitHub Pages as Your Handle (e.g., `loftwah.github.io`)
+
+If you don’t have a custom domain, you can use GitHub Pages to create a professional handle. Here’s how:
+
+1. **Enable GitHub Pages**:
+   - Go to your GitHub repository for the site you want to use as your handle (e.g., `loftwah.github.io`).
+   - In **Settings → Pages**, select a branch to publish from, typically `main` or `master`, and save.
+
+2. **Create the `.well-known` Folder**:
+   - In your repository, create a folder named `.well-known`.
+   - Inside this folder, add a file named `atproto-did`. In this file, enter your DID as shown in Bluesky (e.g., `did:plc:axc7n2yjep6ggdz7fuztluc4`).
+
+3. **Add `_config.yml` to Include `.well-known`**:
+   - In the root of your repository, create a file named `_config.yml`.
+   - Add the following to include `.well-known` in the GitHub Pages build:
+     ```yml
+     include: [".well-known"]
+     ```
+
+4. **Publish and Verify**:
+   - Once your GitHub Pages site is live at `https://loftwah.github.io`, go to **Settings → Change Handle → Custom Domain** in Bluesky, and enter `loftwah.github.io` as your custom domain.
+   - Click **Verify** to complete the setup.
+
+For a working example, you can reference this helpful [GitHub repo example](https://github.com/w3cj/w3cj.github.io).
 
 ![Custom domain setup on Bluesky](/images/bluesky-custom-domain.jpg)
 
