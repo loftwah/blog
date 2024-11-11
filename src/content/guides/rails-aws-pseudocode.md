@@ -19,7 +19,7 @@ prerequisites:
 
 ## Introduction
 
-Deploying applications to AWS Elastic Container Service (ECS) can be complex, especially when dealing with different system architectures like x86 and ARM. Writing and testing pseudocode is a powerful strategy to manage this complexity. By leveraging Large Language Models (LLMs) like GPT-4, you can enhance this process, making it more efficient and tailored to your specific needs.
+Deploying applications to AWS Elastic Container Service (ECS) can be complex, especially when dealing with different system architectures like x86 and ARM. Writing and testing pseudocode is a powerful strategy to manage this complexity. By leveraging Large Language Models (LLMs) like GPT-4o and Claude Sonnet 3.5, you can enhance this process, making it more efficient and tailored to your specific needs.
 
 This guide teaches you how to effectively use pseudocode and collaborate with LLMs to deploy a Ruby on Rails application to AWS ECS. We'll focus on using Docker Buildx for multi-architecture builds, ensuring your application can be built for x86 architecture from both x86 and ARM systems. We'll also make it personal by setting `ap-southeast-2` as the default AWS region, reflecting common preferences in that locale.
 
