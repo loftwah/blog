@@ -187,6 +187,81 @@ Bluesky provides robust moderation tools to tailor your experience:
 
 ![Bluesky moderation settings](/images/bluesky-moderation.jpg)
 
+---
+
+## 6. Setting Up the GitHub Labeler Bot
+
+The GitHub Labeler bot (`@github-labeler.bsky.social`) helps you automatically add labels to repositories you contribute to. Here’s how to set it up correctly, step-by-step.
+
+### Setup Instructions
+
+1. **Follow the Labeler Bot**:
+
+   * Go to the labeler’s profile: [github-labeler.bsky.social](https://bsky.app/profile/did:plc:xpxsa5aviwecd7cv6bzbmr5n).
+   * Click on the **"..." menu** and select **Follow** to initiate the setup.
+
+2. **Subscribe to the Labeler Bot**:
+
+   * Go back to the labeler’s profile and select **Subscribe**. This confirms your agreement to allow the bot to interact with your repositories.
+
+3. **Like the Labeler’s Profile**:
+
+   * **Like** the labeler’s profile by tapping the heart icon. This step sends a direct message to the bot to confirm setup, allowing it to proceed with verification.
+
+> **Important**: Make sure to follow these steps in the exact order above. If the order is incorrect, you may need to start over by unfollowing and then refollowing the bot to reset the process.
+
+### Verifying Your GitHub Account
+
+Once the initial steps are complete, the bot will prompt you to verify your GitHub account. Here’s what to do:
+
+1. **Update Your GitHub Profile**:
+
+   * Add your Bluesky handle to your GitHub profile bio. This step is necessary for the bot to verify your GitHub account.
+
+2. **Send Your GitHub Username**:
+
+   * In the chat with the bot, type your GitHub username in the format:
+
+     ```plaintext
+     github: loftwah
+     ```
+
+3. **Confirmation**:
+
+   * The bot should respond with a success message once your account is verified.
+
+### Linking a GitHub Repository
+
+After verifying your GitHub account, you can link a repository to add labels. Here’s how:
+
+1. **Send the Repository Name**:
+
+   * In the chat with the bot, type the repository name in the format:
+
+     ```plaintext
+     repo: loftwah/linkarooie
+     ```
+
+2. **Wait for Confirmation**:
+
+   * The bot will verify your ownership or contributor status for the specified repository and confirm that it qualifies for label management.
+
+3. **Label Assignment**:
+
+   * It may take a few minutes for the label to appear on the specified repository. The bot will automatically handle label updates going forward.
+
+### Troubleshooting Tips
+
+* **Incorrect Setup Order**: If you make a mistake during setup, you can **unfollow** the bot, then follow the steps again from the beginning.
+* **Profile Verification Error**: Make sure your GitHub profile includes your Bluesky handle; otherwise, the bot can’t verify your account.
+* **Repo Access Issues**: Only public repositories you own or contribute to can be managed by the labeler.
+
+This setup gives your repositories a professional edge with automated label management on GitHub. Now you’re ready to stay organized with labels for your contributions!
+
+![GitHub Labeller Profile](/images/bsky-github-labeller.jpg)
+
+---
+
 ## Best Practices
 
 - **Engage Authentically**: Make meaningful connections by sharing projects and insights.
