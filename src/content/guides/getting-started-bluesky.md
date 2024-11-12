@@ -98,14 +98,17 @@ This will set your Bluesky handle to your custom domain.
 If you don’t have a custom domain, you can use GitHub Pages to create a professional handle. Here’s how:
 
 1. **Enable GitHub Pages**:
+
    - Go to your GitHub repository for the site you want to use as your handle (e.g., `loftwah.github.io`).
    - In **Settings → Pages**, select a branch to publish from, typically `main` or `master`, and save.
 
 2. **Create the `.well-known` Folder**:
+
    - In your repository, create a folder named `.well-known`.
    - Inside this folder, add a file named `atproto-did`. In this file, enter your DID as shown in Bluesky (e.g., `did:plc:axc7n2yjep6ggdz7fuztluc4`).
 
 3. **Add `_config.yml` to Include `.well-known`**:
+
    - In the root of your repository, create a file named `_config.yml`.
    - Add the following to include `.well-known` in the GitHub Pages build:
      ```yml
@@ -117,6 +120,61 @@ If you don’t have a custom domain, you can use GitHub Pages to create a profes
    - Click **Verify** to complete the setup.
 
 For a working example, you can reference this helpful [GitHub repo example](https://github.com/w3cj/w3cj.github.io).
+
+### Option 3: Using GitLab Pages as Your Handle (e.g., `your-username.gitlab.io/your-repo-name`)
+
+If you prefer GitLab Pages, you can set it up similarly to GitHub Pages.
+
+1. **Enable GitLab Pages**:
+
+   - Create a public repository in GitLab (e.g., `loftwah`) and clone it to your local machine.
+
+   - In the repository, create a `.gitlab-ci.yml` file in the root to enable GitLab Pages:
+
+     ```yaml
+     pages:
+       stage: deploy
+       script:
+         - mkdir -p public
+         - cp -r .well-known public/
+       artifacts:
+         paths:
+           - public
+     ```
+
+2. **Create the `.well-known` Folder**:
+
+   - Inside the cloned repository, create a folder named `.well-known`.
+   - In `.well-known`, create a file named `atproto-did`, and add your DID as shown in Bluesky (e.g., `did:plc:axc7n2yjep6ggdz7fuztluc4`).
+
+3. **Commit and Push Changes to GitLab**:
+
+   - Save the files, commit, and push your changes:
+
+     ```bash
+     git add .
+     git commit -m "Add DID verification for GitLab Pages"
+     git push origin main
+     ```
+
+4. **Find and Use Your GitLab Pages URL**:
+
+   - Once your site is deployed, GitLab will provide a URL like `https://your-username.gitlab.io/your-repo-name`.
+   - Go to **Settings → Change Handle → Custom Domain** in Bluesky and enter your GitLab Pages URL as your custom domain.
+
+5. **Verify**:
+
+   - Once GitLab Pages is live, click **Verify** in Bluesky to complete the setup.
+
+---
+
+For more information on GitLab Pages, check out GitLab’s documentation [here](https://docs.gitlab.com/ee/user/project/pages/). This setup allows you to use GitLab Pages as your handle in Bluesky without needing a custom domain.
+
+---
+
+For a working example, you can reference this helpful [GitLab repo example](https://gitlab.com/loftwah/loftwah.gitlab.io).
+
+---
 
 ![Custom domain setup on Bluesky](/images/bluesky-custom-domain.jpg)
 
@@ -147,4 +205,4 @@ Bluesky provides robust moderation tools to tailor your experience:
 
 **Last updated**: 9th of November, 2024
 
---- 
+---
