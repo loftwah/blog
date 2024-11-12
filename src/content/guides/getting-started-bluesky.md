@@ -203,6 +203,6 @@ Bluesky provides robust moderation tools to tailor your experience:
 - [Bluesky Documentation](https://docs.bsky.app/)
 - [Community Guidelines](https://bsky.social/about/support/community-guidelines)
 
-**Last updated**: 9th of November, 2024
+**Last updated**: 12th of November, 2024
 
 ---
