@@ -164,7 +164,7 @@ This project pushed me to rethink how we package and deliver audio services with
 
 Creating a streaming service may not have been the straightforward task I envisioned, but the result was a robust, Dockerized solution that handles on-hold music securely and reliably. If you’re considering a similar setup, know that while there will be challenges, each solution learned is an asset you can carry forward.
 
-Got questions about setting up streaming services? Drop a comment below, and I’ll be happy to share more details on configurations, troubleshooting, or DevOps strategies.
+Got questions about setting up streaming services? Hit me up on socials, and I’ll be happy to share more details on configurations, troubleshooting, or DevOps strategies.
 
 ---
 
