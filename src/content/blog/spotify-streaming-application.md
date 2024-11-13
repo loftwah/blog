@@ -86,7 +86,7 @@ For Mopidy to stream Spotify playlists, I added the necessary configuration in `
 [spotify]
 client_id = <YOUR_CLIENT_ID>
 client_secret = <YOUR_CLIENT_SECRET>
-output = lamemp3enc ! shout2send mount=schoolstatus-jams ip=127.0.0.1 port=8000 password=password
+output = lamemp3enc ! shout2send mount=loftwah-jams ip=127.0.0.1 port=8000 password=password
 ```
 
 This setup ensures Mopidy streams directly to Icecast, allowing real-time playback on the on-hold line.
@@ -105,7 +105,7 @@ Configuring Icecast to listen on port `8000` and relay Mopidy’s output require
         <admin-password>password</admin-password>
     </authentication>
     <mount>
-        <mount-name>/schoolstatus-jams</mount-name>
+        <mount-name>/loftwah-jams</mount-name>
     </mount>
 </icecast>
 ```
