@@ -8,160 +8,158 @@ author: "Dean Lofts (Loftwah)"
 
 **Building an On-Hold Music Streaming Service with Spotify, Mopidy, and Icecast in Docker**
 
-*Exploring the setup, integration, and deployment of an on-hold music solution using open-source tools and Docker.*
+_From Ubuntu version challenges to authentication and performance tuning, here’s the technical journey of creating a reliable, Dockerized on-hold music streaming service._
 
 ---
 
-As a DevOps engineer, I’m no stranger to handling complex builds. When the opportunity came to develop an on-hold music streaming solution—combining Spotify playlists with Icecast streaming in Docker—I was intrigued. It seemed straightforward at first, but what followed was a deep dive into dependencies, troubleshooting, and quality control. Here’s the journey, the setup, and insights on overcoming technical hurdles.
+When I was asked to build an on-hold music streaming service for a VoIP system, it started like many DevOps projects—a seemingly straightforward task that unfolded into a journey of technical discoveries, Docker troubleshooting, and insights about how music streaming actually works. Here’s the full story, complete with the technical hurdles, solutions, and lessons learned.
 
 ---
 
-## System Architecture
+## The Initial Challenge
 
-To give a high-level overview of the setup:
+The request was clear: create a service that streams curated Spotify playlists for callers on hold. What made it interesting was realizing that on-hold music actually impacts customer experience more than expected—positive feedback was common. Not something I expected, but it added an extra incentive to get it right.
 
-1. **Spotify**: Provides the curated playlist for on-hold music.
-2. **Mopidy**: Acts as the main music server, interfacing with Spotify to pull in the audio and stream it locally within the container.
-3. **Icecast**: Relays the stream from Mopidy to a public URL accessible to our VoIP system (OnSIP).
-4. **Docker Container**: Encapsulates everything, simplifying deployment on compatible infrastructure (e.g., AWS).
+## First Attempts and Early Lessons
 
-This setup runs within Docker, which keeps the system modular and portable. Each component is isolated, making it easy to replace or update parts without overhauling the entire system.
+I started with **Ubuntu 24.04 LTS**, thinking the latest version would make installation smoother. That assumption hit a wall fast when I ran into compatibility issues with Mopidy and Icecast dependencies. Dropping back to **Ubuntu 22.04** solved these issues—a solid reminder that newer isn’t always better when stability and compatibility are top priorities.
 
----
+## Understanding Mopidy and MPD
 
-## Building the System: Docker, Mopidy, and Icecast Configuration
-
-### Setting Up the Docker Environment
-
-To containerize the project, I created a Dockerfile to manage Mopidy and Icecast along with their dependencies:
-
-```dockerfile
-FROM ubuntu:22.04
-
-# Install dependencies
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y \
-    wget gnupg2 gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
-    python3-pip icecast2 ffmpeg mpc netcat \
-    && wget -q -O /etc/apt/keyrings/mopidy.gpg https://apt.mopidy.com/mopidy.gpg \
-    && apt-get update && apt-get install -y mopidy
-
-# Copy config files and set entrypoint
-COPY mopidy.conf.template /root/.config/mopidy/mopidy.conf
-COPY icecast.xml /etc/icecast2/icecast.xml
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Expose Icecast and Mopidy ports
-EXPOSE 8000 6680
-ENTRYPOINT ["/entrypoint.sh"]
-```
-
-This configuration installs Mopidy and Icecast with all necessary plugins for Spotify integration, creating a containerized music server ready for deployment.
-
-### Stream Management and Entrypoint
-
-The `entrypoint.sh` file orchestrates service startup, checking that Icecast and Mopidy are running before streaming the configured Spotify playlist. Here’s the structure:
+One of the biggest technical discoveries was understanding how Mopidy and MPD (Music Player Daemon) work together. Initially, I thought Mopidy was just MPD, but it turns out that **Mopidy acts like MPD** through the `mopidy-mpd` plugin. This realization was crucial; it meant I could use MPD commands to control Spotify playback:
 
 ```bash
-#!/bin/bash
-set -e
-service icecast2 start
-mopidy &
-
-# Wait and start the playlist
 mpc add spotify:playlist:63TTU7Wm4CuSSBfHeswCmR
 mpc play
+mpc status  # Check if Spotify is streaming correctly
 ```
 
-This script ensures both services are live before streaming the playlist, with Mopidy managing the Spotify connection.
+## Docker Build: Trial, Error, and Iteration
 
----
+Here’s what my terminal history looked like as I iterated through Docker builds, tests, and fixes:
 
-## Key Configuration Files
+```bash
+# Initial build and run attempts
+docker buildx build --platform linux/amd64 --progress=plain --load -t streaming-service .
+docker run -d --name streaming-service -p 8000:8000 -p 6680:6680 streaming-service
 
-### Mopidy Configuration
+# Debugging and log checking
+docker logs streaming-service
+docker exec -it streaming-service /bin/bash
 
-To link Mopidy to Spotify, `mopidy.conf.template` includes the necessary Spotify client ID and secret. Initially, I tested with hardcoded credentials, but production-ready setup uses environment variables for security:
+# Service status verification
+docker exec streaming-service service icecast2 status
+docker exec streaming-service cat /var/log/icecast2/error.log
+docker exec streaming-service journalctl -u mopidy
+```
+
+Every rebuild and test revealed something new about how Mopidy and Icecast needed to interact, refining my understanding of each component and how they integrated.
+
+## Spotify Integration: The Authentication Challenge
+
+Getting Spotify playback to work initially was simple enough, but _proper_ authentication required understanding Mopidy’s OAuth flow. I started with hardcoded credentials for speed, but moved to **environment variables** in the production setup:
 
 ```ini
 [spotify]
 client_id = ${SPOTIFY_CLIENT_ID}
 client_secret = ${SPOTIFY_CLIENT_SECRET}
-output = lamemp3enc ! shout2send mount=loftwah-jams ip=127.0.0.1 port=8000 password=password
+output = lamemp3enc ! shout2send mount=/stream ip=127.0.0.1 port=8000 password=password
 ```
 
-This setup directs Mopidy’s output to Icecast, where it can be accessed via the public mount point.
+With Mopidy handling OAuth refresh tokens automatically, this setup saved me a lot of manual token management headaches.
 
-### Icecast Configuration
+## Stream Testing and Verification
 
-Icecast is configured to listen on port `8000` and relay Mopidy’s stream. The `icecast.xml` file specifies mount points, streaming limits, and authentication:
+Testing the stream required a multi-step approach, using both direct commands and media players:
 
-```xml
-<icecast>
-    <limits>
-        <clients>100</clients>
-    </limits>
-    <authentication>
-        <source-password>password</source-password>
-        <admin-password>password</admin-password>
-    </authentication>
-    <mount>
-        <mount-name>/loftwah-jams</mount-name>
-    </mount>
-</icecast>
+```bash
+# Basic connection testing
+curl -I http://localhost:8000/stream
+
+# Playback testing with VLC
+vlc http://localhost:8000/stream
+
+# Port verification
+docker exec streaming-service netstat -tulpn | grep 8000
 ```
 
-The public mount point lets the VoIP system access the stream, delivering Spotify’s music directly to callers.
+## The Entrypoint Script Evolution
+
+Getting services to start in the right order was key for reliability. The entrypoint script went through a few iterations before reaching a final, dependable setup:
+
+```bash
+#!/bin/bash
+set -e
+
+# Start Icecast first
+service icecast2 start
+
+# Wait for Icecast to be ready
+echo "Waiting for Icecast..."
+while ! nc -z localhost 8000; do
+  sleep 1
+done
+
+# Start Mopidy and wait
+mopidy &
+echo "Waiting for Mopidy..."
+while ! nc -z localhost 6680; do
+  sleep 1
+done
+
+# Set up the playlist
+mpc add spotify:playlist:63TTU7Wm4CuSSBfHeswCmR
+mpc play
+```
+
+This sequence ensured the necessary services were live before initiating playback, reducing failed starts.
+
+## Production Deployment and Performance Tuning
+
+Once deployed, I learned just how resource-intensive streaming can be. Key monitoring points became essential for keeping it stable:
+
+### Health Checks
+
+Using health checks allowed me to quickly verify service health:
+
+```yaml
+healthcheck:
+  test: ["CMD-SHELL", "nc -z localhost 8000 && nc -z localhost 6680"]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+```
+
+### Resource Monitoring
+
+Tracking CPU, memory, and network bandwidth became critical for stable streaming, especially during peak usage. Prometheus and Grafana were valuable for monitoring:
+
+- CPU usage patterns during peak streaming times
+- Memory footprint with multiple listeners
+- Bandwidth requirements for smooth playback
+
+### Stream Quality Management
+
+I adjusted bitrate to optimize the balance between quality and performance, and set buffer settings to prevent any playback glitches.
 
 ---
 
-## Monitoring and Alerts
+## Key Lessons and Takeaways
 
-For high availability, I integrated health checks and alerting into the system’s configuration. Here’s what’s in place:
+1. **Environment Matters**: Ubuntu 22.04 was a better choice than 24.04 for the specific needs of streaming services.
+2. **Service Interaction**: Understanding Mopidy’s MPD compatibility was crucial for smooth playlist control.
+3. **Resource Demands**: Streaming services need a tighter focus on resource management than typical web applications.
+4. **Testing Tools**: Using curl, VLC, and netstat together provided confidence in the stream’s reliability.
+5. **Startup Order**: Orchestrating services in the right order through the entrypoint script was key to reliable operation.
 
-1. **Health Checks**: Regular checks on ports `8000` (Icecast) and `6680` (Mopidy) to confirm service availability.
-   - With Docker Compose, here’s a sample configuration:
-     ```yaml
-     healthcheck:
-       test: ["CMD-SHELL", "nc -z localhost 8000 && nc -z localhost 6680"]
-       interval: 30s
-       timeout: 10s
-       retries: 3
-     ```
+## Final Thoughts and Future Improvements
 
-2. **Resource Monitoring**: Using Prometheus and Grafana to track CPU, memory, and network usage, alerting on potential performance issues due to high load or network congestion.
+The final system reliably streams Spotify playlists for on-hold callers, with monitoring and performance checks in place. Future improvements could include:
 
-3. **Log Monitoring**: Icecast and Mopidy logs are monitored with the ELK Stack, detecting errors such as stream drops, unauthorized access, or disconnections.
+- Automated playlist updates
+- Enhanced health checks and monitoring dashboards
+- Failover capabilities for added resilience
 
----
-
-## Expected Performance Metrics
-
-In production, several performance metrics are tracked to maintain a seamless caller experience:
-
-1. **Latency**: Spotify playback to Icecast stream delay kept under 1 second for smooth playback.
-2. **Uptime**: Ensuring 99.9% uptime for both services, as on-hold music affects customer perception.
-3. **Stream Quality**: Targeting 320 kbps bitrate with minimal buffering, ensuring high-quality audio for callers.
-4. **Resource Utilization**: CPU < 70% and memory < 60% are aimed to prevent overloads during peak hours.
-
-These metrics ensure the system remains reliable and performant in production.
-
----
-
-## Final Thoughts and Lessons Learned
-
-This project challenged me to consider new ways to package and deliver audio services within Docker. Here are my main takeaways:
-
-1. **Early Production Testing is Key**: There’s often a gap between local and production environments, especially for resource-heavy streaming services.
-2. **Credential Security is Crucial**: Hardcoding credentials is convenient for testing but should be replaced with environment variables or secrets management in production.
-3. **Optimizing User Experience**: On-hold music contributes significantly to customer perception. Small improvements in stream quality and availability make a big difference.
-
-Creating this streaming service required deeper troubleshooting than anticipated, but it resulted in a resilient, Dockerized solution that securely manages on-hold music playback. If you’re interested in setting up something similar or have questions on configurations, hit me up on socials—I'm happy to share insights on streaming services, Docker, or DevOps strategies.
-
----
-
-**Dean Lofts (Loftwah)**  
-DevOps Engineer, Music Producer, and Author
+If you’re building a similar service, focus first on understanding the service integrations (Mopidy, MPD, Spotify), then scale up your monitoring. These technical challenges were worth it, knowing callers now have a better experience while waiting.
 
 ---
