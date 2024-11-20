@@ -1,0 +1,146 @@
+[
+    {
+        "id": "q12",
+        "question": "Which keyword is used to define a TypeScript type alias?",
+        "options": [
+            "interface",
+            "type",
+            "class",
+            "declare"
+        ],
+        "answer": 1,
+        "image": "/images/quiz/typescript.png",
+        "explanation": {
+            "text": "The 'type' keyword in TypeScript is used to define a type alias, providing a name for any type.",
+            "url": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html",
+            "urlText": "TypeScript Type Aliases Documentation",
+            "codeExample": {
+                "code": "type CrewMember = {\n  name: string;\n  role: 'captain' | 'firstMate';\n};",
+                "language": "typescript"
+            }
+        },
+        "tags": ["typescript", "programming"],
+        "difficulty": "easy",
+        "category": "programming"
+    },
+    {
+        "id": "q13",
+        "question": "What is the purpose of 'Math.floor()' in JavaScript/TypeScript?",
+        "options": [
+            "To round a number to the nearest integer",
+            "To round a number down to the nearest integer",
+            "To find the square root of a number",
+            "To calculate the modulus of a number"
+        ],
+        "answer": 1,
+        "image": "/images/quiz/code-screenshot2.png",
+        "explanation": {
+            "text": "The 'Math.floor()' function rounds a number down to the nearest integer, useful for distributing whole numbers like plunder shares.",
+            "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor",
+            "urlText": "MDN Math.floor Documentation",
+            "codeExample": {
+                "code": "const share = Math.floor(1000 / 3); // 333",
+                "language": "javascript"
+            }
+        },
+        "tags": ["javascript", "math"],
+        "difficulty": "easy",
+        "category": "programming"
+    },
+    {
+        "id": "q14",
+        "question": "In TypeScript, how do you define a property as optional?",
+        "options": [
+            "By using a default value",
+            "By adding 'optional' keyword",
+            "By appending a question mark (?)",
+            "By leaving it undefined"
+        ],
+        "answer": 2,
+        "image": "/images/quiz/typescript2.png",
+        "explanation": {
+            "text": "In TypeScript, a property is marked optional by appending a '?' after the property name in a type or interface definition.",
+            "url": "https://www.typescriptlang.org/docs/handbook/2/objects.html",
+            "urlText": "TypeScript Optional Properties",
+            "codeExample": {
+                "code": "interface CrewMember {\n  name: string;\n  email?: string;\n}",
+                "language": "typescript"
+            }
+        },
+        "tags": ["typescript", "programming"],
+        "difficulty": "medium",
+        "category": "programming"
+    },
+    {
+        "id": "q15",
+        "question": "What is the default SQLite data type for storing a timestamp?",
+        "options": [
+            "TEXT",
+            "DATETIME",
+            "TIMESTAMP",
+            "DATE"
+        ],
+        "answer": 0,
+        "image": "/images/quiz/terraform2.png",
+        "explanation": {
+            "text": "In SQLite, timestamps are typically stored as TEXT to maintain flexibility with ISO 8601 date format strings.",
+            "url": "https://www.sqlite.org/datatype3.html",
+            "urlText": "SQLite Data Types Documentation",
+            "codeExample": {
+                "code": "CREATE TABLE log (\n  id INTEGER PRIMARY KEY,\n  created_at TEXT\n);",
+                "language": "sql"
+            }
+        },
+        "tags": ["sqlite", "databases"],
+        "difficulty": "medium",
+        "category": "databases"
+    },
+    {
+        "id": "q16",
+        "question": "What TypeScript feature allows defining a property that can accept multiple types?",
+        "options": [
+            "Union types",
+            "Generics",
+            "Intersection types",
+            "Any type"
+        ],
+        "answer": 0,
+        "image": "/images/quiz/code-screenshot.png",
+        "explanation": {
+            "text": "Union types in TypeScript allow a property to accept multiple types by separating them with a pipe (|).",
+            "url": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types",
+            "urlText": "TypeScript Union Types",
+            "codeExample": {
+                "code": "type Role = 'captain' | 'firstMate';\nconst crewRole: Role = 'captain';",
+                "language": "typescript"
+            }
+        },
+        "tags": ["typescript", "programming"],
+        "difficulty": "medium",
+        "category": "programming"
+    },
+    {
+        "id": "q17",
+        "question": "Which Bun feature provides built-in support for SQLite?",
+        "options": [
+            "bun:sqlite",
+            "bun:database",
+            "bun:sql",
+            "bun:db"
+        ],
+        "answer": 0,
+        "image": "/images/quiz/bash.png",
+        "explanation": {
+            "text": "Bun provides the 'bun:sqlite' module for seamless SQLite integration, enabling developers to interact with databases directly within Bun projects.",
+            "url": "https://bun.sh/docs/api/sqlite",
+            "urlText": "Bun SQLite Documentation",
+            "codeExample": {
+                "code": "import { Database } from 'bun:sqlite';\nconst db = new Database('logbook.db');",
+                "language": "typescript"
+            }
+        },
+        "tags": ["bun", "sqlite", "databases"],
+        "difficulty": "easy",
+        "category": "frameworks"
+    }
+]

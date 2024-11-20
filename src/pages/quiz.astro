@@ -11,6 +11,7 @@ import '../styles/quiz.css';
 import quiz1 from '../data/quiz1.json';
 import quiz2 from '../data/quiz2.json';
 import quiz3 from '../data/quiz3.json';
+import quiz4 from '../data/quiz4.json';
 
 // Validate and transform the questions
 const validateDifficulty = (difficulty: string): 'easy' | 'medium' | 'hard' => {
@@ -26,7 +27,7 @@ const validateQuestion = (q: any): Question => ({
 });
 
 // Combine and validate all questions
-const allQuestions: Question[] = [...quiz1, ...quiz2, ...quiz3].map(validateQuestion);
+const allQuestions: Question[] = [...quiz1, ...quiz2, ...quiz3, ...quiz4].map(validateQuestion);
 ---
 
 <html lang="en">
