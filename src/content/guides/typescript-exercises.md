@@ -81,6 +81,47 @@ type CrewMember = {
 - `skills` is an array of strings (`string[]`).
 - This type can now be used to ensure that any object representing a crew member adheres to this structure.
 
+**How to Use the Type:**
+
+You can now use the `CrewMember` type to define variables or function parameters.
+
+```typescript
+const crewMember: CrewMember = {
+  name: "Jack Sparrow",
+  role: "captain",
+  yearsAtSea: 15,
+  skills: ["sword fighting", "navigation", "charisma"],
+  isActive: true,
+};
+
+// Function that accepts a CrewMember
+function introduceCrewMember(member: CrewMember) {
+  console.log(`Ahoy! I'm ${member.name}, the ${member.role} of this ship.`);
+}
+
+introduceCrewMember(crewMember);
+// Output: Ahoy! I'm Jack Sparrow, the captain of this ship.
+```
+
+**Validating Your Implementation:**
+
+To validate that your type definition is correct:
+
+- Try creating an object of type `CrewMember` as shown above.
+- TypeScript should enforce the correct types and allowed values.
+- If you try to assign an invalid value to `role`, TypeScript should give you an error.
+
+```typescript
+// This should cause a TypeScript error
+const invalidCrewMember: CrewMember = {
+  name: "Will Turner",
+  role: "pirate", // Error: Type '"pirate"' is not assignable to type '"captain" | "firstMate" | "navigator" | "cook"'.
+  yearsAtSea: 5,
+  skills: ["sword fighting", "blacksmithing"],
+  isActive: true,
+};
+```
+
 ---
 
 ### Exercise 2: Ship's Cargo
@@ -117,6 +158,51 @@ type CargoHold = CargoItem[];
 - `CargoItem` is defined as a type with the specified properties.
 - `CargoHold` is an array of `CargoItem` (`CargoItem[]`), representing the ship's cargo hold.
 - This structure allows us to manage collections of cargo items with type safety.
+
+**How to Use the Types:**
+
+You can create cargo items and a cargo hold as follows:
+
+```typescript
+const item1: CargoItem = {
+  weight: 100,
+  value: 5000,
+  isFragile: false,
+  destination: "Port Royal",
+};
+
+const item2: CargoItem = {
+  weight: 20,
+  value: 20000,
+  isFragile: true,
+  destination: "Tortuga",
+};
+
+const cargoHold: CargoHold = [item1, item2];
+
+// Function to calculate total cargo value
+function calculateTotalValue(cargo: CargoHold): number {
+  return cargo.reduce((total, item) => total + item.value, 0);
+}
+
+console.log(`Total cargo value: ${calculateTotalValue(cargoHold)}`);
+// Output: Total cargo value: 25000
+```
+
+**Validating Your Implementation:**
+
+- Create instances of `CargoItem` and ensure that all properties are correctly typed.
+- Attempt to add an item with incorrect property types to see if TypeScript catches the error.
+
+```typescript
+// This should cause a TypeScript error
+const invalidItem: CargoItem = {
+  weight: "heavy", // Error: Type 'string' is not assignable to type 'number'.
+  value: 1000,
+  isFragile: false,
+  destination: "Nassau",
+};
+```
 
 ---
 
@@ -160,6 +246,40 @@ function calculatePlunderShare(treasureValue: number, crewCount: number): number
 - Uses `Math.floor` to ensure the share is an integer.
 - Throws meaningful errors to help identify issues when the function is used.
 
+**How to Use the Function:**
+
+```typescript
+try {
+  const share = calculatePlunderShare(10000, 5);
+  console.log(`Each crew member gets ${share} gold coins.`);
+  // Output: Each crew member gets 2000 gold coins.
+} catch (error) {
+  console.error(error.message);
+}
+
+try {
+  const share = calculatePlunderShare(-5000, 5);
+  // This will throw an error
+} catch (error) {
+  console.error(error.message);
+  // Output: Arr! Can't have negative treasure!
+}
+
+try {
+  const share = calculatePlunderShare(10000, 0);
+  // This will throw an error
+} catch (error) {
+  console.error(error.message);
+  // Output: Need at least one crew member to share the booty!
+}
+```
+
+**Validating Your Implementation:**
+
+- Test the function with valid inputs to see if it returns the correct share.
+- Test the function with invalid inputs to ensure it throws the appropriate errors.
+- Ensure that error messages are clear and helpful.
+
 ---
 
 <a name="advanced-maneuvers"></a>
@@ -197,6 +317,12 @@ const sampleEvents: BlueskyEvent[] = [
     did: "user2",
     createdAt: "2024-03-14T12:00:00Z",
   },
+  {
+    type: "post",
+    uri: "ghi",
+    did: "user3",
+    createdAt: "2024-03-16T09:30:00Z",
+  },
   // Add more sample events as needed...
 ];
 ```
@@ -227,14 +353,22 @@ function filterEvents(
 }
 
 // Example usage:
-const filteredEvents = filterEvents(
-  sampleEvents,
-  "post",
-  new Date("2024-03-14T00:00:00Z"),
-  new Date("2024-03-16T00:00:00Z")
-);
+const startDate = new Date("2024-03-14T00:00:00Z");
+const endDate = new Date("2024-03-16T00:00:00Z");
+const filteredEvents = filterEvents(sampleEvents, "post", startDate, endDate);
 
-console.log(filteredEvents);
+console.log("Filtered Events:", filteredEvents);
+/*
+Output:
+Filtered Events: [
+  {
+    type: "post",
+    uri: "abc",
+    did: "user1",
+    createdAt: "2024-03-15T12:00:00Z",
+  }
+]
+*/
 ```
 
 **Explanation:**
@@ -243,6 +377,12 @@ console.log(filteredEvents);
 - Converts `createdAt` strings to `Date` objects for accurate comparison.
 - Returns a new array containing only the events that meet the criteria.
 - The example usage demonstrates how to call the function and output the results.
+
+**Validating Your Implementation:**
+
+- Test the function with different event types and date ranges.
+- Ensure that it correctly includes or excludes events based on the criteria.
+- Check edge cases where events occur exactly at the start or end date.
 
 ---
 
@@ -287,22 +427,36 @@ db.run(`
 `);
 
 // 2. Insert entry
-db.run(
-  "INSERT INTO ship_log (date, entry, status) VALUES (?, ?, ?);",
-  "2024-03-15",
-  "Spotted a Kraken off the starboard bow!",
-  "Open"
-);
+const insertEntry = db.prepare(`
+  INSERT INTO ship_log (date, entry, status)
+  VALUES (?, ?, ?);
+`);
 
-// 3. Retrieve entries by date
-const entries = db.query("SELECT * FROM ship_log WHERE date = ?;").all("2024-03-15");
-console.log(entries);
+insertEntry.run("2024-03-15", "Spotted a Kraken off the starboard bow!", "Open");
+
+// 3. Get entries by date
+const getEntries = db.prepare(`
+  SELECT * FROM ship_log
+  WHERE date = ?;
+`);
+
+const entries = getEntries.all("2024-03-15");
+console.log("Entries for 2024-03-15:", entries);
 
 // 4. Update status
-db.run("UPDATE ship_log SET status = ? WHERE id = ?;", "Closed", 1);
+const updateStatus = db.prepare(`
+  UPDATE ship_log
+  SET status = ?
+  WHERE id = ?;
+`);
 
-// 5. Delete entries older than 30 days
-db.run("DELETE FROM ship_log WHERE date < date('now', '-30 days');");
+updateStatus.run("Closed", 1);
+
+// 5. Delete old entries
+db.run(`
+  DELETE FROM ship_log
+  WHERE date < date('now', '-30 days');
+`);
 ```
 
 **Explanation:**
@@ -312,6 +466,12 @@ db.run("DELETE FROM ship_log WHERE date < date('now', '-30 days');");
 - **Retrieve Entries:** Queries the database for entries matching a specific date.
 - **Update Status:** Updates the `status` field of a specific log entry.
 - **Delete Old Entries:** Removes entries older than 30 days from the current date.
+
+**How to Validate Your Implementation:**
+
+- Run the script and check that the entries are correctly inserted, retrieved, updated, and deleted.
+- Use `console.log` to output the results of queries.
+- Verify that the database file `ship_log.db` is created and contains the expected data.
 
 ---
 
@@ -347,6 +507,8 @@ It's time to combine what you've learned into a small project.
 
 ```typescript
 import { Database } from "bun:sqlite";
+// Optional: Import a library for colorful output
+// import chalk from "chalk";
 
 // Initialize the database
 const db = new Database("logbook.db");
@@ -360,31 +522,52 @@ db.run(`
   );
 `);
 
+// Get command-line arguments
 const args = process.argv.slice(2);
 const command = args[0];
 
 switch (command) {
   case "add":
-    // Command: add <date> <weather> <entry>
-    const date = args[1];
-    const weather = args[2];
-    const entry = args.slice(3).join(" ");
-    addEntry(date, entry, weather);
+    addEntryCommand(args.slice(1));
     break;
-
   case "search":
-    // Command: search <date>
-    const searchDate = args[1];
-    searchEntries(searchDate);
+    searchEntriesCommand(args.slice(1));
     break;
-
   case "list":
-    // Command: list
-    listEntries();
+    listEntriesCommand();
     break;
-
   default:
-    console.log("Unknown command. Available commands: add, search, list");
+    displayHelp();
+}
+
+function addEntryCommand(args: string[]) {
+  if (args.length < 3) {
+    console.error("Usage: add <date> <weather> <entry>");
+    return;
+  }
+  const [date, weather, ...entryParts] = args;
+  const entry = entryParts.join(" ");
+  addEntry(date, entry, weather);
+}
+
+function searchEntriesCommand(args: string[]) {
+  if (args.length !== 1) {
+    console.error("Usage: search <date>");
+    return;
+  }
+  const date = args[0];
+  searchEntries(date);
+}
+
+function listEntriesCommand() {
+  listEntries();
+}
+
+function displayHelp() {
+  console.log("Pirate's Logbook Commands:");
+  console.log("  add <date> <weather> <entry>   - Add a new log entry");
+  console.log("  search <date>                  - Search entries by date");
+  console.log("  list                           - List all entries");
 }
 
 function addEntry(date: string, entry: string, weather: string) {
@@ -438,11 +621,67 @@ function listEntries() {
   - `listEntries`: Displays all entries.
 - **Database Operations:** Interacts with the SQLite database using Bun's built-in module.
 
+**How to Run and Validate the Application:**
+
+1. **Add an Entry:**
+
+```bash
+bun run pirate-logbook.ts add 2024-03-15 Sunny "Set sail towards the Caribbean."
+```
+
+- Check that it outputs: "🏴‍☠️ Yarr! Entry added to the logbook!"
+
+2. **Search Entries by Date:**
+
+```bash
+bun run pirate-logbook.ts search 2024-03-15
+```
+
+- Should display the entry you just added.
+
+3. **List All Entries:**
+
+```bash
+bun run pirate-logbook.ts list
+```
+
+- Should list all entries in the logbook.
+
+**Validating Your Implementation:**
+
+- Try adding multiple entries and searching for different dates.
+- Ensure that the application handles incorrect inputs gracefully.
+- Check the `logbook.db` file to confirm that entries are being stored.
+
 **Bonus Implementations:**
 
-- **Colorful Output:** You can use the `chalk` library (or similar) to add colors.
-- **ASCII Art:** Include pirate-themed ASCII art when the application starts or after certain commands.
-- **Pirate Messages:** Customize success and error messages with pirate lingo.
+- **Colorful Output:** Use a library like `chalk` to colorize the console output.
+
+```typescript
+// import chalk from "chalk";
+
+// In your functions, use chalk to style text
+console.log(chalk.green("🏴‍☠️ Yarr! Entry added to the logbook!"));
+```
+
+- **ASCII Art:** Add ASCII art when the application starts or after certain commands.
+
+```typescript
+function displayBanner() {
+  console.log(`
+    ____  _     _     _       _           
+   |  _ \\| |__ (_) __| | __ _| |_ ___  ___ 
+   | |_) | '_ \\| |/ _\` |/ _\` | __/ _ \\/ __|
+   |  __/| | | | | (_| | (_| | ||  __/\\__ \\
+   |_|   |_| |_|_|\\__,_|\\__,_|\\__\\___||___/
+  `);
+}
+
+// Call displayBanner() at the start of the application
+displayBanner();
+```
+
+- **Pirate Messages:** Customize messages throughout the application to enhance the theme.
 
 ---
 
@@ -531,13 +770,11 @@ Now, let's tackle a higher-level challenge focused on system architecture.
 Designing a scalable system for multiple ships involves balancing performance, scalability, and consistency. By sharding the database, implementing appropriate concurrency controls, and using caching effectively, we can build a robust system capable of handling large amounts of data while maintaining integrity and performance.
 ```
 
-**Explanation:**
+**Validating Your Implementation:**
 
-- **Database Sharding:** Proposes sharding by `ship_id` to distribute load.
-- **Concurrent Updates:** Suggests optimistic concurrency control to handle simultaneous data modifications.
-- **Caching Strategy:** Recommends using distributed caching to enhance read performance.
-- **Data Consistency:** Discusses strong vs. eventual consistency and replication strategies.
-- **Additional Considerations:** Highlights the importance of system architecture, monitoring, and logging.
+- Review your proposal to ensure that it covers all points.
+- Compare your reasoning with best practices in system design.
+- Discuss your design with peers or mentors to get feedback.
 
 ---
 
@@ -610,20 +847,21 @@ As this is a comprehensive project, here's an outline to guide you:
 
 7. **Documentation:**
 
-   - Provide clear instructions on how to set up and run the application.
+   - Write clear setup instructions in a `README.md` file.
    - Include information about configuration and dependencies.
 
-8. **Bonus Implementations:**
+**How to Validate Your Implementation:**
 
-   - **Unit Tests:** Write tests for key functions using a testing framework.
-   - **Caching:** Implement in-memory caching or use Redis for frequently accessed data.
-   - **Deployment:** Containerize the application with Docker and deploy it to a cloud service.
+- **Testing:** Write tests for your functions and ensure they pass.
+- **Functionality:** Check that events are processed correctly and the leaderboard updates as expected.
+- **API Testing:** Use tools like Postman or curl to test your API endpoints.
+- **Frontend:** Ensure the web interface displays data correctly and is user-friendly.
+- **Performance:** Monitor resource usage and optimize as needed.
 
-**Explanation:**
+**Deployment:**
 
-- This project integrates various aspects of TypeScript and Bun.
-- Demonstrates full-stack development skills.
-- Emphasizes real-time data processing, API development, and frontend integration.
+- **Local Deployment:** Run the application locally and ensure all components work together.
+- **Cloud Deployment:** Deploy your application to a cloud platform, ensuring that the database and server are properly configured.
 
 ---
 
