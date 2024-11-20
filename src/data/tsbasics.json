@@ -1,0 +1,122 @@
+[
+    {
+        "id": "q18",
+        "question": "Which utility type in TypeScript creates a new type with all properties optional?",
+        "options": [
+            "Required<T>",
+            "Partial<T>",
+            "Pick<T, K>",
+            "Record<K, T>"
+        ],
+        "answer": 1,
+        "image": "/images/quiz/typescript2.png",
+        "explanation": {
+            "text": "The 'Partial<T>' utility type makes all properties of type T optional, commonly used for updating objects or implementing defaults.",
+            "url": "https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype",
+            "urlText": "TypeScript Partial Utility Documentation",
+            "codeExample": {
+                "code": "type User = { name: string; age: number; };\ntype PartialUser = Partial<User>; // { name?: string; age?: number; }",
+                "language": "typescript"
+            }
+        },
+        "tags": ["typescript", "utility-types"],
+        "difficulty": "medium",
+        "category": "programming"
+    },
+    {
+        "id": "q19",
+        "question": "What is the difference between 'interface' and 'type' in TypeScript?",
+        "options": [
+            "Interfaces are more powerful and can handle unions.",
+            "Types are more powerful and can handle unions.",
+            "There is no difference; both are equivalent.",
+            "Interfaces can only describe objects, not primitives or unions."
+        ],
+        "answer": 1,
+        "image": "/images/quiz/code-screenshot2.png",
+        "explanation": {
+            "text": "While both 'interface' and 'type' are used for defining object shapes, 'type' is more versatile as it supports unions, intersections, and primitives.",
+            "url": "https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#type-aliases",
+            "urlText": "TypeScript Type Aliases Documentation",
+            "codeExample": {
+                "code": "type UnionType = string | number;\ninterface ObjectType { key: string; value: number; }",
+                "language": "typescript"
+            }
+        },
+        "tags": ["typescript", "interfaces", "types"],
+        "difficulty": "medium",
+        "category": "programming"
+    },
+    {
+        "id": "q20",
+        "question": "Which of the following is a valid generic function in TypeScript?",
+        "options": [
+            "function identity(arg: T): T",
+            "function identity<T>(arg: T): T",
+            "function identity(arg: T): <T>",
+            "function identity(<T>arg: T): T"
+        ],
+        "answer": 1,
+        "image": "/images/quiz/code-screenshot.png",
+        "explanation": {
+            "text": "Generics in TypeScript allow functions to operate on types specified during invocation. The syntax 'function identity<T>(arg: T): T' is the correct way to define a generic function.",
+            "url": "https://www.typescriptlang.org/docs/handbook/2/generics.html",
+            "urlText": "TypeScript Generics Documentation",
+            "codeExample": {
+                "code": "function identity<T>(arg: T): T {\n  return arg;\n}",
+                "language": "typescript"
+            }
+        },
+        "tags": ["typescript", "generics"],
+        "difficulty": "medium",
+        "category": "programming"
+    },
+    {
+        "id": "q21",
+        "question": "What is the purpose of 'never' in TypeScript?",
+        "options": [
+            "It represents a value that is undefined.",
+            "It is a subtype of all types used for unreachable code.",
+            "It is the default type of untyped variables.",
+            "It represents null or undefined values."
+        ],
+        "answer": 1,
+        "image": "/images/quiz/code-screenshot2.png",
+        "explanation": {
+            "text": "The 'never' type in TypeScript is used to represent values that should never occur, such as in functions that throw exceptions or have infinite loops.",
+            "url": "https://www.typescriptlang.org/docs/handbook/2/functions.html#never",
+            "urlText": "TypeScript Never Documentation",
+            "codeExample": {
+                "code": "function fail(message: string): never {\n  throw new Error(message);\n}",
+                "language": "typescript"
+            }
+        },
+        "tags": ["typescript", "types"],
+        "difficulty": "medium",
+        "category": "programming"
+    },
+    {
+        "id": "q22",
+        "question": "Which of the following is a correct TypeScript enum?",
+        "options": [
+            "enum Role { 'Captain', 'FirstMate', 'Navigator' }",
+            "enum Role = { Captain, FirstMate, Navigator };",
+            "enum Role { Captain = 1, FirstMate, Navigator }",
+            "enum Role { 'Captain' = 0, 'FirstMate' = 1, 'Navigator' = 2 }"
+        ],
+        "answer": 2,
+        "image": "/images/quiz/typescript.png",
+        "explanation": {
+            "text": "TypeScript enums allow defining a set of named constants. The syntax 'enum Role { Captain = 1, FirstMate, Navigator }' is correct, where values increment from the initial value.",
+            "url": "https://www.typescriptlang.org/docs/handbook/enums.html",
+            "urlText": "TypeScript Enum Documentation",
+            "codeExample": {
+                "code": "enum Role {\n  Captain = 1,\n  FirstMate,\n  Navigator\n}",
+                "language": "typescript"
+            }
+        },
+        "tags": ["typescript", "enums"],
+        "difficulty": "easy",
+        "category": "programming"
+    }
+]
