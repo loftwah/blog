@@ -10,41 +10,49 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
-  <body>
+  <body class="bg-gray-50">
     <Header />
     <main>
-      <h1>👋 G’day, I'm Dean "Loftwah" Lofts!</h1>
-      <p>
-        I’m a tech enthusiast, Senior DevOps Engineer, and music producer with a deep passion for building efficient and scalable cloud infrastructures. Over the years, I’ve honed my skills in AWS, Docker, Ruby, and Golang, focusing on creating automation and optimization solutions for modern tech stacks. I’m dedicated to solving complex technical problems while driving innovation and pushing boundaries in cloud architecture.
-      </p>
-      <p>
-        My journey in tech isn’t just about code – it’s about creating impactful products. I’m the creator of <strong>Linkarooie</strong>, an open-source alternative to Linktree that empowers users to manage their online presence with ease, and co-founder of <strong>Echosight</strong>, an analytics platform designed to provide in-depth insights for social media users.
-      </p>
-      <p>
-        Beyond the world of tech, I’m known as <strong>Loftwah The Beatsmiff</strong> in music circles, collaborating with artists such as Grind Mode Cypher and OptiMystic MC. Music production has always been a creative outlet for me, and I’ve been fortunate to blend my technical expertise with my love for music to create unique sounds and beats.
-      </p>
-      <p>
-        In my downtime, I enjoy spending time with my family, learning about emerging technologies, and staying active with cycling and swimming. I’m constantly exploring new ideas, whether it’s diving into AI, experimenting with automation, or creating innovative projects that push the boundaries of what’s possible.
-      </p>
+      <div class="prose mx-auto bg-white p-8 rounded-lg shadow-sm">
+        <h1 class="text-4xl font-bold mb-6">👋 G'day, I'm Dean "Loftwah" Lofts!</h1>
+        
+        <p class="mb-6">
+          I'm a tech enthusiast, Senior DevOps Engineer, and music producer with a deep passion for building efficient and scalable cloud infrastructures. Over the years, I've honed my skills in AWS, Docker, Ruby, and Golang, focusing on creating automation and optimization solutions for modern tech stacks. I'm dedicated to solving complex technical problems while driving innovation and pushing boundaries in cloud architecture.
+        </p>
+        
+        <p class="mb-6">
+          My journey in tech isn't just about code – it's about creating impactful products. I'm the creator of <strong>Linkarooie</strong>, an open-source alternative to Linktree that empowers users to manage their online presence with ease, and co-founder of <strong>Echosight</strong>, an analytics platform designed to provide in-depth insights for social media users.
+        </p>
+        
+        <p class="mb-6">
+          Beyond the world of tech, I'm known as <strong>Loftwah The Beatsmiff</strong> in music circles, collaborating with artists such as Grind Mode Cypher and OptiMystic MC. Music production has always been a creative outlet for me, and I've been fortunate to blend my technical expertise with my love for music to create unique sounds and beats.
+        </p>
+        
+        <p class="mb-6">
+          In my downtime, I enjoy spending time with my family, learning about emerging technologies, and staying active with cycling and swimming. I'm constantly exploring new ideas, whether it's diving into AI, experimenting with automation, or creating innovative projects that push the boundaries of what's possible.
+        </p>
 
-      <h2>My Work & Projects</h2>
-      <ul>
-        <li><strong>Linkarooie</strong>: A full-featured, open-source alternative to Linktree built with Ruby on Rails.</li>
-        <li><strong>Echosight</strong>: An advanced social media analytics platform providing powerful insights for Twitter/X users.</li>
-        <li><strong>Music Production</strong>: Producing beats as Loftwah The Beatsmiff, collaborating with artists like Grind Mode Cypher and OptiMystic MC.</li>
-      </ul>
+        <h2 class="text-2xl font-bold mt-8 mb-4">My Work & Projects</h2>
+        <ul class="list-disc pl-6 mb-8">
+          <li class="mb-2"><strong>Linkarooie</strong>: A full-featured, open-source alternative to Linktree built with Ruby on Rails.</li>
+          <li class="mb-2"><strong>Echosight</strong>: An advanced social media analytics platform providing powerful insights for Twitter/X users.</li>
+          <li class="mb-2"><strong>Music Production</strong>: Producing beats as Loftwah The Beatsmiff, collaborating with artists like Grind Mode Cypher and OptiMystic MC.</li>
+        </ul>
 
-      <h2>Get in Touch</h2>
-      <p>
-        Find me on <a href="https://twitter.com/loftwah" target="_blank">Twitter</a>, check out my beats on <a href="https://www.youtube.com/loftwahthebeatsmiff" target="_blank">YouTube</a>, or explore my open-source work on <a href="https://github.com/loftwah" target="_blank">GitHub</a>.
-      </p>
+        <h2 class="text-2xl font-bold mt-8 mb-4">Get in Touch</h2>
+        <p class="mb-8">
+          Find me on <a href="https://twitter.com/loftwah" target="_blank" class="text-accent hover:text-accent-dark">Twitter</a>, 
+          check out my beats on <a href="https://www.youtube.com/loftwahthebeatsmiff" target="_blank" class="text-accent hover:text-accent-dark">YouTube</a>, 
+          or explore my open-source work on <a href="https://github.com/loftwah" target="_blank" class="text-accent hover:text-accent-dark">GitHub</a>.
+        </p>
 
-      <h2>My Favourite Quotes</h2>
-      <ul>
-        <li>“Any sufficiently advanced technology is equivalent to magic.” – Arthur C. Clarke</li>
-        <li>“Be curious. Read widely. Try new things. What people call intelligence just boils down to curiosity.” – Aaron Swartz</li>
-        <li>“I always felt that I had to work harder than the next guy, just to do as well as the next guy. And to do better than the next guy, I had to just kill. And you know, to a certain extent, that's still with me in how I work, you know. I just... go in.” – Jimmy Iovine</li>
-      </ul>
+        <h2 class="text-2xl font-bold mt-8 mb-4">My Favourite Quotes</h2>
+        <ul class="list-disc pl-6">
+          <li class="mb-4">"Any sufficiently advanced technology is equivalent to magic." – Arthur C. Clarke</li>
+          <li class="mb-4">"Be curious. Read widely. Try new things. What people call intelligence just boils down to curiosity." – Aaron Swartz</li>
+          <li>"I always felt that I had to work harder than the next guy, just to do as well as the next guy. And to do better than the next guy, I had to just kill. And you know, to a certain extent, that's still with me in how I work, you know. I just... go in." – Jimmy Iovine</li>
+        </ul>
+      </div>
     </main>
     <Footer />
   </body>
