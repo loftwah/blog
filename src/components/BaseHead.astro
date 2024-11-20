@@ -4,7 +4,7 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description: string;
-  image?: string;
+  image: string | undefined;
   author?: string;
 }
 
@@ -30,18 +30,18 @@ const { title, description, image = '/og-image.jpg', author = 'loftwah' } = Astr
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
-<meta name="author" content={author} /> <!-- Adding author -->
+<meta name="author" content={author} />
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image.startsWith('http') ? image : image.startsWith('/') ? image.slice(1) : image, Astro.site).toString()} />
+<meta property="og:image" content={image ? new URL(image.startsWith('http') ? image : image.startsWith('/') ? image.slice(1) : image, Astro.site).toString() : new URL('/og-image.jpg', Astro.site).toString()} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image.startsWith('http') ? image : image.startsWith('/') ? image.slice(1) : image, Astro.site).toString()} />
+<meta property="twitter:image" content={image ? new URL(image.startsWith('http') ? image : image.startsWith('/') ? image.slice(1) : image, Astro.site).toString() : new URL('/og-image.jpg', Astro.site).toString()} />
