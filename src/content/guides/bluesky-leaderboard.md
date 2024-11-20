@@ -55,16 +55,11 @@ Before we set sail, we need a map. Let's define the core types that represent th
 
 ```typescript
 // Define the types of events we'll encounter on the seas
-type BlueskyEventType =
-  | "post"
-  | "like"
-  | "repost"
-  | "follow"
-  | "reply"
-  | "quote";
+const BLUESKY_EVENT_TYPES = ["post", "like", "repost", "follow", "reply", "quote"] as const;
+type BlueskyEventType = typeof BLUESKY_EVENT_TYPES[number];
 
 // The treasure we find (events) have these properties
-interface BlueskyEvent {
+type BlueskyEvent = {
   type: BlueskyEventType;
   uri: string;
   did: string; // Decentralized Identifier of the pirate
@@ -72,10 +67,10 @@ interface BlueskyEvent {
   text?: string;
   replyTo?: string;
   quotedUri?: string;
-}
+};
 
 // Each pirate's stats for the leaderboard
-interface LeaderboardEntry {
+type LeaderboardEntry = {
   did: string;
   handle: string;
   metrics: {
@@ -87,16 +82,17 @@ interface LeaderboardEntry {
     followers: number;
   };
   engagementScore: number;
-}
+};
 
 // Time periods for our treasure hunts
-type TimePeriod = "24h" | "7d" | "30d";
+const TIME_PERIODS = ["24h", "7d", "30d"] as const;
+type TimePeriod = typeof TIME_PERIODS[number];
 
-interface LeaderboardConfig {
+type LeaderboardConfig = {
   period: TimePeriod;
   minimumPosts: number;
   limit: number; // How many pirates to show on the leaderboard
-}
+};
 ```
 
 ---
