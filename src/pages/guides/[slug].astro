@@ -1,5 +1,4 @@
 ---
-// src/pages/guides/[slug].astro
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -21,7 +20,11 @@ const { Content } = await guide.render();
 
 <html lang="en">
   <head>
-    <BaseHead title={`${guide.data.title} - ${SITE_TITLE}`} description={guide.data.description} />
+    <BaseHead 
+      title={`${guide.data.title} - ${SITE_TITLE}`} 
+      description={guide.data.description} 
+      image={guide.data.heroImage}
+    />
     <style>
       main {
         width: 960px;
@@ -80,7 +83,6 @@ const { Content } = await guide.render();
     <Header />
     <main>
       <article class="prose">
-        <!-- Display Hero Image at the top -->
         {guide.data.heroImage && (
           <div class="hero-image">
             <img src={guide.data.heroImage} alt="" />
@@ -108,7 +110,6 @@ const { Content } = await guide.render();
           </div>
         )}
 
-        <!-- Guide content -->
         <Content />
       </article>
     </main>
