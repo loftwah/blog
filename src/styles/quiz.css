@@ -1,0 +1,282 @@
+.quiz-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .filters {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .filters label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .filters input,
+  .filters select {
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .score {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--accent);
+  }
+  
+  .question-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+  }
+  
+  .question-text {
+    font-size: 1.2rem;
+    margin: 20px 0;
+    line-height: 1.5;
+  }
+  
+  .options {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  
+  .option-button {
+    padding: 15px 20px;
+    font-size: 1rem;
+    background-color: white;
+    color: var(--gray-dark);
+    border: 2px solid var(--gray-light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+  }
+  
+  .option-button:hover:not(:disabled) {
+    background-color: var(--gray-light);
+    transform: translateY(-2px);
+  }
+  
+  .option-button.selected {
+    border-color: var(--accent);
+  }
+  
+  .option-button.correct {
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+  }
+  
+  .option-button.wrong {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+  }
+  
+  .option-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  .explanation {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--accent);
+    border-radius: 4px;
+  }
+  
+  .explanation p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+  }
+  
+  .learn-more {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .learn-more:hover {
+    text-decoration: underline;
+  }
+  
+  .code-example {
+    background: #2d2d2d;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin-top: 15px;
+  }
+  
+  .code-example code {
+    color: #fff;
+    font-family: monospace;
+  }
+  
+  .quiz-result {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+  }
+  
+  .quiz-result h2 {
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  
+  .stats {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  .reset-button {
+    padding: 12px 24px;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .reset-button:hover {
+    background-color: var(--accent-dark);
+  }
+  
+  @media (max-width: 600px) {
+    .filters {
+      flex-direction: column;
+    }
+    
+    .filters label {
+      width: 100%;
+    }
+    
+    .quiz-header {
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+    }
+  }
+
+  /* Add this to your existing CSS */
+.next-button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 12px 24px;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.next-button:hover {
+  background-color: var(--accent-dark);
+}
+
+/* Update the filters section */
+.filters {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filters label {
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filters select {
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.quiz-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  gap: 10px;
+}
+
+.control-center {
+  display: flex;
+  gap: 10px;
+}
+
+.control-button {
+  padding: 8px 16px;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.control-button:hover:not(:disabled) {
+  background-color: var(--accent-dark);
+  transform: translateY(-1px);
+}
+
+.control-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 600px) {
+  .quiz-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .control-center {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .control-button {
+    flex: 1;
+  }
+}

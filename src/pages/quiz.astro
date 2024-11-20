@@ -1,0 +1,51 @@
+---
+import QuizComponent from '../components/Quiz';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import type { Question } from '../types/quiz';
+
+import '../styles/quiz.css';
+
+// Import quiz data
+import quiz1 from '../data/quiz1.json';
+import quiz2 from '../data/quiz2.json';
+import quiz3 from '../data/quiz3.json';
+
+// Validate and transform the questions
+const validateDifficulty = (difficulty: string): 'easy' | 'medium' | 'hard' => {
+  if (!['easy', 'medium', 'hard'].includes(difficulty)) {
+    return 'medium'; // Default fallback
+  }
+  return difficulty as 'easy' | 'medium' | 'hard';
+};
+
+const validateQuestion = (q: any): Question => ({
+  ...q,
+  difficulty: validateDifficulty(q.difficulty)
+});
+
+// Combine and validate all questions
+const allQuestions: Question[] = [...quiz1, ...quiz2, ...quiz3].map(validateQuestion);
+---
+
+<html lang="en">
+  <head>
+    <BaseHead 
+      title="Tech Quiz | Loftwah's Blog" 
+      description="Test your knowledge with our interactive tech quiz"
+    />
+  </head>
+
+  <body>
+    <Header />
+    <main class="prose">
+      <div class="title">
+        <h1>Tech Quiz</h1>
+        <p>Test your knowledge across different tech topics. Your progress will be saved in this session.</p>
+      </div>
+      <QuizComponent questions={allQuestions} client:load />
+    </main>
+    <Footer />
+  </body>
+</html>
