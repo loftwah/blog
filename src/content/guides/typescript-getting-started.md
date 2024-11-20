@@ -11,642 +11,676 @@ prerequisites:
   - "An eagerness to learn and explore Bun"
 ---
 
-# Ahoy! Set Sail with TypeScript and Bun: A Pirate's Guide for 2024
+# Arrr! Building a Bluesky Leaderboard with Bun: A Pirate's Guide
 
-Ahoy there, fellow code buccaneers! Before we hoist the sails and navigate the vast oceans of programming, we need to get our sea legs with the basics of our trusty tools. I've put together this treasure map to guide you through the fundamentals of TypeScript and Bun, so you're ready for the grandest of coding voyages ahead.
+Ahoy, matey! Welcome aboard this grand adventure where we'll set sail to build a mighty **Bluesky Leaderboard System** using [Bun](https://bun.sh/), the fastest ship in the JavaScript seas. We'll track user activity, process engagement metrics, and crown the kings and queens of the Bluesky ocean.
+
+So hoist the Jolly Roger, grab yer eyepatch, and let's dive into the code!
+
+---
 
 ## 🏴‍☠️ Table of Contents
 
-1. [Setting Up Your Ship (Development Environment)](#setting-up)
-2. [TypeScript Fundamentals](#typescript-fundamentals)
-3. [Modern JavaScript Features You Need](#modern-javascript)
-4. [Understanding Bun](#understanding-bun)
-5. [Practical Examples](#practical-examples)
-6. [Common Patterns and Best Practices](#common-patterns)
-7. [Testing Your Skills](#testing)
-8. [Next Steps](#next-steps)
+1. [The Quest Begins: Understanding Our Mission](#the-quest-begins)
+2. [Preparation: Setting Up the Environment](#preparation)
+3. [Charting the Course: Defining Data Types](#charting-the-course)
+4. [Hoisting the Sails: Writing Data Processing Functions](#hoisting-the-sails)
+5. [Storing the Booty: Working with SQLite in Bun](#storing-the-booty)
+6. [Listening to the Parrot: Connecting to the Firehose](#listening-to-the-parrot)
+7. [Manning the Ship: Putting It All Together](#manning-the-ship)
+8. [Anchors Aweigh: Running and Testing the Application](#anchors-aweigh)
+9. [Guarding the Treasure: Key Implementation Points](#guarding-the-treasure)
+10. [The Treasure Map: Directory Structure and Files](#the-treasure-map)
+11. [Final Thoughts: Sailing Into the Sunset](#final-thoughts)
 
 ---
 
-<a name="setting-up"></a>
+<a name="the-quest-begins"></a>
 
-## 1. 🚢 Setting Up Your Ship
+## 1. 🏴‍☠️ The Quest Begins: Understanding Our Mission
 
-Before we embark, let's make sure our ship is seaworthy!
+Imagine you're the captain of a ship, and you want to know which pirates (users) are the most active and influential on the Bluesky seas. Our mission is to build a system that:
 
-### Installing the Essential Tools
+- **Collects real-time data** from the Bluesky firehose (like messages in bottles floating our way).
+- **Processes and stores** this data securely in our treasure chest (database).
+- **Analyzes** the data to generate leaderboards (ranking the fiercest pirates).
+- **Runs efficiently** using Bun, our swift and trusty vessel.
 
-First, we'll need to install Bun, our trusty first mate.
+By the end of this guide, you'll have a working application that collects data from Bluesky, processes it, and displays a leaderboard of the most engaged users.
+
+---
+
+<a name="preparation"></a>
+
+## 2. 🧰 Preparation: Setting Up the Environment
+
+### Install Bun
+
+First, we need to install Bun, a fast JavaScript runtime like Node.js but with superpowers.
+
+Follow the [Bun installation guide](https://bun.sh/docs/installation):
 
 ```bash
-# Install Bun (for macOS, Linux, and WSL)
 curl -fsSL https://bun.sh/install | bash
-
-# Check the cargo
-bun --version
-
-# Chart a new course
-mkdir my-first-voyage
-cd my-first-voyage
-bun init
-
-# Follow the prompts to set up your project
-# Bun will generate a package.json and tsconfig.json, ready for adventure!
 ```
 
-### Setting Up Your Captain's Quarters (VS Code)
+### Verify the Installation
 
-I recommend Visual Studio Code as our captain's quarters for code plundering.
-
-1. Install VS Code from [code.visualstudio.com](https://code.visualstudio.com)
-2. Equip it with these essential extensions:
-   - **ESLint**: Keeps our code shipshape.
-   - **Prettier**: Ensures our code logs are tidy.
-   - **TypeScript and JavaScript Language Features**: Provides TypeScript support.
-
-### Project Configuration
-
-Your `tsconfig.json` should look like this (Bun crafts this for you with `bun init`):
-
-```json
-{
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "types": ["bun-types"],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
-}
-```
-
----
-
-<a name="typescript-fundamentals"></a>
-
-## 2. 📚 TypeScript Fundamentals
-
-Time to learn the lingo of the coding seas!
-
-### Basic Types
-
-```typescript
-// Basic types
-const shipName: string = "The Black Pearl";
-const crewCount: number = 100;
-const isReadyToSail: boolean = true;
-
-// Arrays
-const crewMembers: string[] = ["Jack", "Elizabeth", "Will"];
-const treasureCoordinates: [number, number] = [25.7617, -80.1918]; // Tuple
-
-// Objects
-type CrewMember = {
-  name: string;
-  role: string;
-  yearsAtSea: number;
-};
-
-const captain: CrewMember = {
-  name: "Captain Jack Sparrow",
-  role: "Captain",
-  yearsAtSea: 20,
-};
-
-// Enums (use const enums for better performance)
-const enum ShipStatus {
-  Docked = "Docked",
-  Sailing = "Sailing",
-  UnderAttack = "Under Attack",
-}
-
-// Union Types
-type SailSpeed = "Dead Slow" | "Cruise" | "Full Sail";
-let currentSpeed: SailSpeed = "Cruise";
-```
-
-### Interfaces and Types
-
-```typescript
-// Interface definition
-interface Ship {
-  name: string;
-  crew: CrewMember[];
-  status: ShipStatus;
-  // Optional property
-  homePort?: string;
-}
-
-// Extending interfaces
-interface ArmedShip extends Ship {
-  cannons: number;
-  firepower: number;
-}
-
-// Type aliases
-type MapCoordinates = {
-  latitude: number;
-  longitude: number;
-  accuracy: number;
-};
-
-// Combining types
-type ShipLocation = Ship & MapCoordinates;
-
-// Utility types
-type ReadonlyShip = Readonly<Ship>;
-type PartialShip = Partial<Ship>;
-```
-
-### Functions
-
-```typescript
-// Function with type annotations
-function calculateDistance(
-  point1: MapCoordinates,
-  point2: MapCoordinates
-): number {
-  // Use the Haversine formula or similar
-  return 0; // Placeholder for calculation
-}
-
-// Arrow functions with types
-const isInRange = (target: MapCoordinates, range: number): boolean => {
-  // Determine if target is within range
-  return true; // Placeholder
-};
-
-// Function types
-type DistanceCalculator = (
-  point1: MapCoordinates,
-  point2: MapCoordinates
-) => number;
-
-// Generic functions
-function getFirstMate<T>(crew: T[]): T | undefined {
-  return crew[0];
-}
-```
-
----
-
-<a name="modern-javascript"></a>
-
-## 3. 🚀 Modern JavaScript Features You Need
-
-Modern JavaScript is full of treasures! Let's uncover some of them.
-
-### Destructuring and Spread Operator
-
-```typescript
-// Object destructuring
-const { name, role } = captain;
-
-// Array destructuring
-const [firstMate, quartermaster, ...deckhands] = crewMembers;
-
-// Spread operator with objects
-const updatedCaptain = {
-  ...captain,
-  ship: shipName,
-};
-
-// Spread operator with arrays
-const allCrew = [...crewMembers, "Gibbs"];
-```
-
-### Async/Await and Promises
-
-```typescript
-// Basic Promise
-const loadSupplies = (): Promise<string[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(["Hardtack", "Fresh Water", "Rum"]);
-    }, 1000);
-  });
-};
-
-// Async/Await usage
-async function prepareShip(): Promise<void> {
-  try {
-    const supplies = await loadSupplies();
-    console.log("Supplies loaded:", supplies);
-  } catch (error) {
-    console.error("Failed to load supplies:", error);
-  }
-}
-
-// Promise.all example
-async function fullPreparation(): Promise<void> {
-  const [supplies, crew, weather] = await Promise.all([
-    loadSupplies(),
-    assembleCrew(),
-    checkWeather(),
-  ]);
-}
-```
-
-### Map and Set
-
-```typescript
-// Using Map
-const crewRoles = new Map<string, string>();
-crewRoles.set("Jack", "Captain");
-crewRoles.set("Gibbs", "First Mate");
-
-// Using Set for unique values
-const visitedIslands = new Set<string>();
-visitedIslands.add("Tortuga");
-visitedIslands.add("Isla de Muerta");
-```
-
----
-
-<a name="understanding-bun"></a>
-
-## 4. 🏃 Understanding Bun
-
-Bun is like a swift clipper ship, making your JavaScript run faster than ever.
-
-### Bun-Specific Features
-
-```typescript
-// File operations
-const logbook = Bun.file("logbook.txt");
-const exists = await logbook.exists();
-const entries = await logbook.text();
-const data = await logbook.json();
-
-// HTTP Server
-const server = Bun.serve({
-  port: 3000,
-  fetch(req) {
-    return new Response("Ahoy, matey!");
-  },
-});
-
-// WebSocket handling
-const wsServer = Bun.serve({
-  port: 3001,
-  websocket: {
-    message(ws, message) {
-      ws.send(`Echo from the deep: ${message}`);
-    },
-  },
-});
-
-// SQLite database
-const db = new Bun.SQLite(":memory:");
-db.run("CREATE TABLE crew (name TEXT, role TEXT)");
-db.run("INSERT INTO crew VALUES ('Jack', 'Captain')");
-const crewList = db.query("SELECT * FROM crew").all();
-
-// Password hashing (for securing your treasure)
-const hash = await Bun.password.hash("shiverMeTimbers");
-const isMatch = await Bun.password.verify("shiverMeTimbers", hash);
-```
-
-### Basic Bun Commands
+Ensure Bun is installed correctly:
 
 ```bash
-# Run a TypeScript file
-bun run src/index.ts
-
-# Install dependencies
-bun install
-
-# Run tests
-bun test
-
-# Start a development server with hot reload
-bun --hot src/index.ts
-
-# Build your project
-bun build src/index.ts --outdir ./dist
+bun --version
 ```
+
+You should see the version number printed out.
+
+### Create a Project Directory
+
+Let's create a new directory for our project:
+
+```bash
+mkdir bluesky-leaderboard
+cd bluesky-leaderboard
+```
+
+### Initialize a Bun Project
+
+Initialize the project with Bun:
+
+```bash
+bun init
+```
+
+This command will prompt you to set up your `package.json` file.
 
 ---
 
-<a name="practical-examples"></a>
+<a name="charting-the-course"></a>
 
-## 5. 🛠️ Practical Examples
+## 3. 🗺️ Charting the Course: Defining Data Types
 
-Time to put our skills to the test and hoist the colors!
+Let's define the data structures we'll be working with.
 
-### Building a Simple API Server
+Create a `src/types.ts` file:
 
 ```typescript
-// types.ts
-interface Ship {
-  id: string;
-  name: string;
-  status: string;
-}
+// Define the types of events we'll encounter on the seas
+const BLUESKY_EVENT_TYPES = ["post", "like", "repost", "follow", "reply", "quote"] as const;
+type BlueskyEventType = (typeof BLUESKY_EVENT_TYPES)[number];
 
-// server.ts
-const ships = new Map<string, Ship>();
+// The treasure we find (events) have these properties
+type BlueskyEvent = {
+  type: BlueskyEventType;
+  uri: string;
+  did: string; // Decentralized Identifier of the pirate
+  createdAt: string;
+  text?: string;
+  replyTo?: string;
+  quotedUri?: string;
+};
 
-export default {
-  port: 3000,
-  async fetch(req: Request): Promise<Response> {
-    const url = new URL(req.url);
+// Each pirate's stats for the leaderboard
+type LeaderboardEntry = {
+  did: string;
+  handle: string;
+  metrics: {
+    posts: number;
+    likes: number;
+    reposts: number;
+    replies: number;
+    quotes: number;
+    followers: number;
+  };
+  engagementScore: number;
+};
 
-    if (url.pathname === "/ships" && req.method === "GET") {
-      return new Response(JSON.stringify(Array.from(ships.values())), {
-        headers: { "Content-Type": "application/json" },
-      });
-    }
+// Time periods for our treasure hunts
+const TIME_PERIODS = ["24h", "7d", "30d"] as const;
+type TimePeriod = (typeof TIME_PERIODS)[number];
 
-    if (url.pathname === "/ships" && req.method === "POST") {
-      const ship = (await req.json()) as Ship;
-      ships.set(ship.id, ship);
-      return new Response(JSON.stringify(ship), {
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
-    return new Response("Not Found", { status: 404 });
-  },
+type LeaderboardConfig = {
+  period: TimePeriod;
+  minimumPosts: number;
+  limit: number; // How many pirates to show on the leaderboard
 };
 ```
 
-### File Processing
+**Explanation:**
+
+- **BlueskyEventType**: Represents the types of events we can receive using `const` assertions for unions.
+- **BlueskyEvent**: The structure of an event from Bluesky.
+- **LeaderboardEntry**: Represents a user's metrics and engagement score.
+- **TimePeriod**: The time frames for which we can generate leaderboards.
+
+---
+
+<a name="hoisting-the-sails"></a>
+
+## 4. 🏴‍☠️ Hoisting the Sails: Writing Data Processing Functions
+
+Create a `src/utils.ts` file to hold our utility functions.
+
+### Parsing Events
 
 ```typescript
-// Process a logbook file
-async function processLogbook(path: string): Promise<void> {
-  const file = Bun.file(path);
-  const text = await file.text();
-  const entries = text.split("\n");
+import { BlueskyEvent, BLUESKY_EVENT_TYPES } from './types';
 
-  const processedEntries = entries.map((entry) => {
-    // Process each log entry
-    return `[Processed] ${entry}`;
+// Validate if data is a valid BlueskyEvent
+const isValidEventData = (data: any): data is BlueskyEvent => {
+  return (
+    data &&
+    BLUESKY_EVENT_TYPES.includes(data.type) &&
+    typeof data.uri === 'string' &&
+    typeof data.did === 'string' &&
+    typeof data.createdAt === 'string'
+  );
+};
+
+// Parse raw data into a BlueskyEvent
+export const parseBlueskyEvent = (data: unknown): BlueskyEvent | null => {
+  if (typeof data !== 'object' || data === null) return null;
+  if (!isValidEventData(data)) return null;
+
+  return {
+    type: data.type,
+    uri: data.uri,
+    did: data.did,
+    createdAt: data.createdAt,
+    text: data.text,
+    replyTo: data.replyTo,
+    quotedUri: data.quotedUri,
+  };
+};
+```
+
+**Explanation:**
+
+- **isValidEventData**: A type guard to check if the data conforms to `BlueskyEvent`.
+- **parseBlueskyEvent**: Parses raw data into a `BlueskyEvent` if valid.
+
+### Calculating User Metrics
+
+```typescript
+import { BlueskyEvent, LeaderboardEntry } from './types';
+
+// Calculate metrics for a user
+export const calculateUserMetrics = (
+  events: BlueskyEvent[],
+  userDid: string
+): LeaderboardEntry['metrics'] => {
+  return events.reduce(
+    (metrics, event) => {
+      if (event.did !== userDid) return metrics;
+
+      switch (event.type) {
+        case 'post':
+          metrics.posts++;
+          break;
+        case 'like':
+          metrics.likes++;
+          break;
+        case 'repost':
+          metrics.reposts++;
+          break;
+        case 'reply':
+          metrics.replies++;
+          break;
+        case 'quote':
+          metrics.quotes++;
+          break;
+        case 'follow':
+          metrics.followers++;
+          break;
+      }
+
+      return metrics;
+    },
+    { posts: 0, likes: 0, reposts: 0, replies: 0, quotes: 0, followers: 0 }
+  );
+};
+```
+
+### Calculating Engagement Score
+
+```typescript
+// Calculate engagement score based on user metrics
+export const calculateEngagementScore = (
+  metrics: LeaderboardEntry['metrics']
+): number => {
+  const totalEngagements =
+    metrics.likes + metrics.reposts * 2 + metrics.quotes * 3;
+
+  return metrics.posts === 0 ? 0 : totalEngagements / metrics.posts;
+};
+```
+
+### Filtering Events by Time Period
+
+```typescript
+import { TimePeriod } from './types';
+
+// Get the cutoff date based on the time period
+export const getPeriodCutoff = (period: TimePeriod): Date => {
+  const now = new Date();
+  const cutoff = new Date(now);
+
+  switch (period) {
+    case '24h':
+      cutoff.setHours(now.getHours() - 24);
+      break;
+    case '7d':
+      cutoff.setDate(now.getDate() - 7);
+      break;
+    case '30d':
+      cutoff.setDate(now.getDate() - 30);
+      break;
+  }
+
+  return cutoff;
+};
+
+// Filter events based on the time period
+export const filterEventsByPeriod = (
+  events: BlueskyEvent[],
+  period: TimePeriod
+): BlueskyEvent[] => {
+  const cutoff = getPeriodCutoff(period);
+  return events.filter((event) => new Date(event.createdAt) >= cutoff);
+};
+```
+
+### Generating the Leaderboard
+
+```typescript
+import { LeaderboardConfig, LeaderboardEntry } from './types';
+import { calculateUserMetrics, calculateEngagementScore } from './utils';
+
+// Generate the leaderboard
+export const generateLeaderboard = (
+  events: BlueskyEvent[],
+  config: LeaderboardConfig,
+  handleMap: Map<string, string>
+): LeaderboardEntry[] => {
+  // Group events by user
+  const userEventsMap = new Map<string, BlueskyEvent[]>();
+
+  events.forEach((event) => {
+    if (!userEventsMap.has(event.did)) {
+      userEventsMap.set(event.did, []);
+    }
+    userEventsMap.get(event.did)!.push(event);
   });
 
-  await Bun.write("processed-logbook.txt", processedEntries.join("\n"));
-}
+  // Calculate metrics and scores
+  const entries: LeaderboardEntry[] = [];
 
-// Handle file uploads (e.g., treasure maps)
-const server = Bun.serve({
-  async fetch(req) {
-    if (req.method === "POST") {
-      const formData = await req.formData();
-      const file = formData.get("file") as File;
+  userEventsMap.forEach((userEvents, did) => {
+    const metrics = calculateUserMetrics(userEvents, did);
+    if (metrics.posts < config.minimumPosts) return;
 
-      if (file) {
-        const contents = await file.arrayBuffer();
-        await Bun.write("uploads/" + file.name, contents);
-        return new Response("File uploaded!");
-      }
-    }
-    return new Response("Invalid request", { status: 400 });
-  },
-});
+    const engagementScore = calculateEngagementScore(metrics);
+    const handle = handleMap.get(did) || did;
+
+    entries.push({
+      did,
+      handle,
+      metrics,
+      engagementScore,
+    });
+  });
+
+  // Sort and limit the leaderboard
+  return entries
+    .sort((a, b) => b.engagementScore - a.engagementScore)
+    .slice(0, config.limit);
+};
 ```
 
 ---
 
-<a name="common-patterns"></a>
+<a name="storing-the-booty"></a>
 
-## 6. 🎯 Common Patterns and Best Practices
+## 5. 💰 Storing the Booty: Working with SQLite in Bun
 
-Even pirates need to follow some codes!
+Bun provides built-in support for SQLite, so we don't need any external libraries.
+
+### Setting Up the Database
+
+Create a `src/database.ts` file:
+
+```typescript
+import { Database } from 'bun:sqlite';
+import { BlueskyEvent } from './types';
+
+export const initializeDatabase = (dbPath: string): Database => {
+  const db = new Database(dbPath);
+
+  // Create tables if they don't exist
+  db.run(`
+    CREATE TABLE IF NOT EXISTS events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      type TEXT,
+      uri TEXT,
+      did TEXT,
+      created_at TEXT,
+      text TEXT,
+      reply_to TEXT,
+      quoted_uri TEXT
+    )
+  `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS handles (
+      did TEXT PRIMARY KEY,
+      handle TEXT
+    )
+  `);
+
+  return db;
+};
+```
+
+### Saving Events
+
+```typescript
+import { Database } from 'bun:sqlite';
+import { BlueskyEvent } from './types';
+
+// Save an event to the database
+export const saveEvent = (db: Database, event: BlueskyEvent): void => {
+  const query = `
+    INSERT INTO events (
+      type, uri, did, created_at, text, reply_to, quoted_uri
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.run(query, [
+    event.type,
+    event.uri,
+    event.did,
+    event.createdAt,
+    event.text || null,
+    event.replyTo || null,
+    event.quotedUri || null,
+  ]);
+};
+```
+
+### Fetching Events
+
+```typescript
+import { Database } from 'bun:sqlite';
+import { BlueskyEvent, TimePeriod } from './types';
+import { getPeriodCutoff } from './utils';
+
+// Fetch events from the database based on time period
+export const fetchEvents = (
+  db: Database,
+  period: TimePeriod
+): BlueskyEvent[] => {
+  const cutoff = getPeriodCutoff(period).toISOString();
+
+  const query = `
+    SELECT * FROM events
+    WHERE created_at >= ?
+    ORDER BY created_at DESC
+  `;
+
+  const statement = db.query(query);
+  const rows = statement.all([cutoff]) as any[];
+
+  return rows.map((row) => ({
+    type: row.type,
+    uri: row.uri,
+    did: row.did,
+    createdAt: row.created_at,
+    text: row.text || undefined,
+    replyTo: row.reply_to || undefined,
+    quotedUri: row.quoted_uri || undefined,
+  }));
+};
+```
+
+### Handling User Handles
+
+```typescript
+// Update or insert a user handle
+export const updateHandle = (
+  db: Database,
+  did: string,
+  handle: string
+): void => {
+  db.run(
+    `INSERT OR REPLACE INTO handles (did, handle) VALUES (?, ?)`,
+    [did, handle]
+  );
+};
+
+// Fetch the handle map
+export const fetchHandleMap = (db: Database): Map<string, string> => {
+  const rows = db.query('SELECT * FROM handles').all();
+  const handleMap = new Map<string, string>();
+
+  rows.forEach((row) => {
+    handleMap.set(row.did, row.handle);
+  });
+
+  return handleMap;
+};
+```
+
+---
+
+<a name="listening-to-the-parrot"></a>
+
+## 6. 🦜 Listening to the Parrot: Connecting to the Firehose
+
+Create a `src/firehose.ts` file.
+
+### Connecting to the Firehose
+
+Bun has built-in WebSocket support, so we can use it directly.
+
+```typescript
+import { parseBlueskyEvent } from './utils';
+import { saveEvent } from './database';
+import { Database } from 'bun:sqlite';
+
+// Connect to the Bluesky firehose
+export const connectToFirehose = (db: Database): void => {
+  const ws = new WebSocket(
+    'wss://bsky.social/xrpc/com.atproto.sync.subscribeRepos'
+  );
+
+  ws.addEventListener('open', () => {
+    console.log('Connected to the Bluesky firehose.');
+  });
+
+  ws.addEventListener('message', (event) => {
+    const data = JSON.parse(event.data.toString());
+    const blueskyEvent = parseBlueskyEvent(data);
+    if (blueskyEvent) {
+      saveEvent(db, blueskyEvent);
+    }
+  });
+
+  ws.addEventListener('close', () => {
+    console.log('Disconnected from the firehose. Reconnecting in 5 seconds...');
+    setTimeout(() => connectToFirehose(db), 5000);
+  });
+
+  ws.addEventListener('error', (error) => {
+    console.error('WebSocket error:', error);
+    ws.close();
+  });
+};
+```
+
+**Explanation:**
+
+- **WebSocket Connection**: Uses Bun's built-in WebSocket to connect to the Bluesky firehose.
+- **Event Handling**: Parses and saves events as they come in.
+- **Reconnection Logic**: Automatically reconnects if the connection is lost.
+
+---
+
+<a name="manning-the-ship"></a>
+
+## 7. ⛵ Manning the Ship: Putting It All Together
+
+Create a `src/main.ts` file.
+
+```typescript
+import { initializeDatabase } from './database';
+import { connectToFirehose } from './firehose';
+import { generateLeaderboard } from './utils';
+import { LeaderboardConfig, TimePeriod } from './types';
+import { fetchEvents, fetchHandleMap } from './database';
+
+// Configuration
+const config = {
+  dbPath: './data/leaderboard.db',
+  updateInterval: 5 * 60 * 1000, // 5 minutes
+  leaderboardConfig: {
+    period: '24h' as TimePeriod,
+    minimumPosts: 5,
+    limit: 100,
+  } as LeaderboardConfig,
+};
+
+const main = () => {
+  // Initialize the database
+  const db = initializeDatabase(config.dbPath);
+
+  // Connect to the firehose
+  connectToFirehose(db);
+
+  // Periodically generate the leaderboard
+  setInterval(() => {
+    const events = fetchEvents(db, config.leaderboardConfig.period);
+    const handleMap = fetchHandleMap(db);
+    const leaderboard = generateLeaderboard(
+      events,
+      config.leaderboardConfig,
+      handleMap
+    );
+
+    // For now, we'll just log the leaderboard
+    console.log('Current Leaderboard:', leaderboard);
+  }, config.updateInterval);
+};
+
+main();
+```
+
+---
+
+<a name="anchors-aweigh"></a>
+
+## 8. ⚓ Anchors Aweigh: Running and Testing the Application
+
+### Running the Application
+
+Ensure your directory structure looks like this:
+
+```
+bluesky-leaderboard/
+├── src/
+│   ├── main.ts
+│   ├── types.ts
+│   ├── utils.ts
+│   ├── database.ts
+│   └── firehose.ts
+├── data/
+├── package.json
+├── tsconfig.json
+└── bunfig.toml
+```
+
+Create the `data` directory to store your database:
+
+```bash
+mkdir data
+```
+
+Run the application:
+
+```bash
+bun run src/main.ts
+```
+
+You should see logs indicating that you're connected to the firehose and the leaderboard being updated.
+
+### Testing the Functions
+
+To ensure everything works correctly, consider writing unit tests for your utility functions. You can use any testing framework compatible with Bun.
+
+---
+
+<a name="guarding-the-treasure"></a>
+
+## 9. 🛡️ Guarding the Treasure: Key Implementation Points
+
+### TypeScript Best Practices
+
+- **Types Over Interfaces**: We've used `type` aliases instead of `interfaces` for better flexibility.
+- **Const Assertions for Unions**: Used `const` assertions to define union types instead of enums.
+- **Inferred Types**: Avoided explicit type annotations where TypeScript can infer the types.
+
+### Bun's Built-in Support
+
+- **SQLite**: Utilized Bun's built-in SQLite support without external libraries.
+- **WebSockets**: Used Bun's native WebSocket implementation.
 
 ### Error Handling
 
-```typescript
-// Custom error class
-class ShipError extends Error {
-  constructor(message: string, public code: string, public details?: unknown) {
-    super(message);
-    this.name = "ShipError";
-  }
-}
+- **Resilience**: The application reconnects to the firehose if the connection drops.
+- **Data Validation**: Invalid data is discarded early on.
 
-// Result type for error handling
-type Result<T, E = Error> =
-  | { success: true; data: T }
-  | { success: false; error: E };
+### Scalability
 
-// Safe operation wrapper
-async function safeOperation<T>(
-  operation: () => Promise<T>
-): Promise<Result<T>> {
-  try {
-    const data = await operation();
-    return { success: true, data };
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error : new Error(String(error)),
-    };
-  }
-}
+- **Modular Design**: The code is organized into modules (`utils`, `database`, `firehose`) for better maintainability.
+- **Configuration**: Important settings are centralized, making it easier to adjust as needed.
+
+---
+
+<a name="the-treasure-map"></a>
+
+## 10. 🗺️ The Treasure Map: Directory Structure and Files
+
+Here's how our project is organized:
+
 ```
-
-### Configuration Management
-
-```typescript
-// Environment variables interface
-interface Env {
-  PORT: number;
-  API_KEY: string;
-  DATABASE_URL: string;
-}
-
-// Load and validate environment
-function loadConfig(): Env {
-  const config = {
-    PORT: parseInt(Bun.env.PORT || "3000"),
-    API_KEY: Bun.env.API_KEY,
-    DATABASE_URL: Bun.env.DATABASE_URL,
-  };
-
-  // Validate required fields
-  const missing = Object.entries(config)
-    .filter(([_, value]) => value === undefined || value === "")
-    .map(([key]) => key);
-
-  if (missing.length > 0) {
-    throw new Error(
-      `Missing required environment variables: ${missing.join(", ")}`
-    );
-  }
-
-  return config as Env;
-}
+bluesky-leaderboard/
+├── src/
+│   ├── main.ts          // Entry point of our application
+│   ├── types.ts         // TypeScript types
+│   ├── utils.ts         // Utility functions
+│   ├── database.ts      // Database interactions
+│   └── firehose.ts      // Firehose connection logic
+├── data/
+│   └── leaderboard.db   // SQLite database
+├── package.json         // Project dependencies
+├── tsconfig.json        // TypeScript configuration
+└── bunfig.toml          // Bun configuration
 ```
 
 ---
 
-<a name="testing"></a>
+<a name="final-thoughts"></a>
 
-## 7. 🧪 Testing Your Skills
+## 11. 🌅 Final Thoughts: Sailing Into the Sunset
 
-Let's create a small project that combines everything we've plundered so far:
+Congratulations! You've built a real-time leaderboard system that connects to the Bluesky firehose, processes incoming events, and calculates user engagement scores.
 
-```typescript
-// types.ts
-interface Pirate {
-  id: string;
-  name: string;
-  rank: string;
-  skills: string[];
-}
+This project not only demonstrates how to use Bun for efficient JavaScript execution but also provides a template for building scalable, real-time applications.
 
-interface Ship {
-  id: string;
-  name: string;
-  captain: Pirate;
-  crew: Pirate[];
-}
+Remember, every great pirate keeps exploring and learning. Feel free to expand this project by adding a frontend to display the leaderboard or integrating more complex analytics.
 
-// database.ts
-class Database {
-  private db: Bun.SQLite;
-
-  constructor() {
-    this.db = new Bun.SQLite(":memory:");
-    this.init();
-  }
-
-  private init(): void {
-    this.db.run(`
-      CREATE TABLE IF NOT EXISTS ships (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        captain_id TEXT NOT NULL
-      )
-    `);
-
-    this.db.run(`
-      CREATE TABLE IF NOT EXISTS pirates (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        rank TEXT NOT NULL
-      )
-    `);
-
-    this.db.run(`
-      CREATE TABLE IF NOT EXISTS ship_crew (
-        ship_id TEXT NOT NULL,
-        pirate_id TEXT NOT NULL,
-        FOREIGN KEY(ship_id) REFERENCES ships(id),
-        FOREIGN KEY(pirate_id) REFERENCES pirates(id)
-      )
-    `);
-  }
-
-  async addShip(ship: Ship): Promise<void> {
-    const shipQuery = this.db.prepare(
-      "INSERT INTO ships (id, name, captain_id) VALUES (?, ?, ?)"
-    );
-    shipQuery.run(ship.id, ship.name, ship.captain.id);
-
-    const captainQuery = this.db.prepare(
-      "INSERT INTO pirates (id, name, rank) VALUES (?, ?, ?)"
-    );
-    captainQuery.run(ship.captain.id, ship.captain.name, ship.captain.rank);
-
-    const crewQuery = this.db.prepare(
-      "INSERT INTO pirates (id, name, rank) VALUES (?, ?, ?)"
-    );
-    for (const pirate of ship.crew) {
-      crewQuery.run(pirate.id, pirate.name, pirate.rank);
-      this.db.run(
-        "INSERT INTO ship_crew (ship_id, pirate_id) VALUES (?, ?)",
-        ship.id,
-        pirate.id
-      );
-    }
-  }
-
-  async getShip(id: string): Promise<Ship | null> {
-    const shipRow = this.db.query("SELECT * FROM ships WHERE id = ?").get(id);
-    if (!shipRow) return null;
-
-    const captainRow = this.db
-      .query("SELECT * FROM pirates WHERE id = ?")
-      .get(shipRow.captain_id);
-    const crewRows = this.db
-      .query(
-        `
-      SELECT pirates.* FROM pirates
-      JOIN ship_crew ON pirates.id = ship_crew.pirate_id
-      WHERE ship_crew.ship_id = ?
-    `
-      )
-      .all(id);
-
-    return {
-      id: shipRow.id,
-      name: shipRow.name,
-      captain: captainRow,
-      crew: crewRows,
-    };
-  }
-}
-
-// server.ts
-const db = new Database();
-
-export default {
-  port: 3000,
-  async fetch(req: Request): Promise<Response> {
-    const url = new URL(req.url);
-
-    try {
-      if (url.pathname === "/ship" && req.method === "GET") {
-        const id = url.searchParams.get("id");
-        if (!id) throw new Error("Missing ship ID");
-
-        const ship = await db.getShip(id);
-        if (!ship) return new Response("Not found", { status: 404 });
-
-        return new Response(JSON.stringify(ship), {
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-
-      if (url.pathname === "/ship" && req.method === "POST") {
-        const ship = (await req.json()) as Ship;
-        await db.addShip(ship);
-        return new Response("Ship added successfully", { status: 201 });
-      }
-
-      return new Response("Not found", { status: 404 });
-    } catch (error) {
-      return new Response(JSON.stringify({ error: (error as Error).message }), {
-        status: 500,
-      });
-    }
-  },
-};
-```
+So keep your cutlass sharp and your code sharper. Happy sailing!
 
 ---
 
-<a name="next-steps"></a>
+**Yo ho, yo ho, a coder's life for me!**
 
-## 8. 🎓 Next Steps
-
-You've now got the wind in your sails and are ready to explore further horizons!
-
-1. **Chart Your Own Course**: Start building your own projects using TypeScript and Bun.
-2. **Join the Crew**: Engage with the Bun community on [Discord](https://bun.sh/discord).
-3. **Contribute to Open Source**: Find a project that interests you and start contributing.
-4. **Keep Learning**: The sea of knowledge is vast. Keep exploring new technologies and best practices.
-
-Remember, the best way to become a legendary code pirate is by diving into the depths and seeking out new challenges. Here are some ideas to set you on your way:
-
-- **Build a Real-Time Chat Application**: Utilize Bun's WebSocket support.
-- **Create a File Storage Service**: Harness Bun's file system capabilities.
-- **Develop a RESTful API**: Use Bun.serve to create a backend for your applications.
-- **Process Data Efficiently**: Take advantage of Bun's performance to handle large datasets.
-
-Fair winds and following seas, matey! May your code be bug-free and your deployments swift! 🏴‍☠️
+_This guide was crafted with love and a bit of rum. May your servers be swift, and your bugs be scarce._
