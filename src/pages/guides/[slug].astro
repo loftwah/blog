@@ -21,7 +21,11 @@ const { Content } = await guide.render();
 
 <html lang="en">
   <head>
-    <BaseHead title={`${guide.data.title} - ${SITE_TITLE}`} description={guide.data.description} />
+    <BaseHead 
+      title={`${guide.data.title} - ${SITE_TITLE}`} 
+      description={guide.data.description}
+      image={guide.data.heroImage}
+    />
     <style>
       main {
         width: 960px;
