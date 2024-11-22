@@ -1,250 +1,272 @@
 ---
-title: "Building a Games Section for My Astro Blog"
-description: "How I created a Games section in my Astro blog with markdown-driven content, filtering, and a focus on accessibility and performance."
+title: "Creating a Games Section for My Astro Blog"
+description: "How I designed and built a games section in my Astro blog, complete with filtering, sorting, and enhanced user experience."
 pubDate: "Nov 21, 2024"
 heroImage: "/images/games-section-astro.jpg"
 author: "Dean Lofts (Loftwah)"
 ---
 
-# Building a Games Section for My Astro Blog
+# Creating a Games Section for My Astro Blog
 
-Gaming has been a lifelong passion, but balancing work, family, and hobbies often pushes it aside. Recently, with a week off work and an Xbox GamePass subscription, I saw an opportunity to organize my gaming backlog while diving deeper into Astro's features.
+**Author:** Dean Lofts (Loftwah)  
+**Date:** November 21, 2024  
+**Description:** How I built a dynamic Games section in my Astro blog with markdown-driven content, filtering, and performance-focused design.
 
-This post outlines how I built a **Games section** for my Astro blog, featuring markdown-driven content, dynamic filtering, rich metadata, and accessibility-focused design.
+---
+
+## Introduction
+
+Gaming has been a cornerstone of my free time, and like many, I’ve accumulated a backlog of titles that I’ve wanted to track and organise. As a developer, I saw this as the perfect opportunity to blend my love for gaming with my skills in Astro, TypeScript, and Tailwind CSS. The result? A dynamic, scalable Games section for my blog.
+
+This guide walks you through how I built this feature from scratch, covering:
+
+1. Structuring game data with markdown and schemas
+2. Creating reusable components
+3. Adding client-side filtering and sorting
+4. Optimising for performance and accessibility
 
 ---
 
 ## Goals
 
-- **Markdown-Driven Content**: Manage game data like descriptions, progress, and metadata using markdown files.
-- **Dynamic Pages**: Automatically generate individual game pages with rich metadata and related game suggestions.
-- **Filtering and Sorting**: Provide client-side filtering by platform, status, and sorting options.
-- **Performance and SEO**: Ensure fast loading times, optimized images, and accessible design.
-- **Scalability**: Create a maintainable structure for easy expansion.
+1. **Markdown-Driven Content**: Use markdown for game metadata and updates.
+2. **Dynamic Pages**: Auto-generate individual pages for each game.
+3. **Interactive Filtering and Sorting**: Enable users to filter by platform, status, and more.
+4. **Performance Optimisation**: Ensure fast loading with optimised images and lazy loading.
+5. **Accessibility**: Make it usable for everyone.
 
 ---
 
-## Step 1: Define Game Metadata
+## Step 1: Define Types and Schemas
 
-The foundation of the Games section starts with defining the `Game` type and its associated metadata schema. This ensures consistent data handling across components and pages.
+To manage game data efficiently, I started by defining strict TypeScript types and schemas.
 
-### TypeScript Game Type
+### Game Type (`src/types/games.ts`)
 
 ```typescript
-export type GameStatus = "completed" | "in-progress" | "backlog";
+export type Platform = "PC" | "Xbox" | "PlayStation" | "Switch";
+export type Genre = "RPG" | "Simulation" | "Action" | "Adventure";
+export type GameStatus = "completed" | "in-progress" | "backlog" | "wishlist";
 
 export type Game = {
   title: string;
   description: string;
-  releaseDate: string;
-  platforms: string[];
-  genres: string[];
+  releaseDate: Date;
+  platforms: Platform[];
+  genres: Genre[];
   heroImage: string;
   thumbnailImage: string;
   tags: string[];
-  status?: GameStatus;
+  status: GameStatus;
   rating?: number;
   playtime?: number;
-  lastPlayed?: string;
+  lastPlayed?: Date;
 };
 ```
 
-### Astro Content Schema
+### Content Schema (`src/content/games/_schema.ts`)
 
 ```typescript
-import { defineCollection, z } from "astro:content";
+import { z } from "astro:content";
 
-export const gamesCollection = defineCollection({
-  type: "content",
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    releaseDate: z.string(),
-    platforms: z.array(z.string()),
-    genres: z.array(z.string()),
-    heroImage: z.string(),
-    thumbnailImage: z.string(),
-    tags: z.array(z.string()),
-    status: z.enum(["completed", "in-progress", "backlog"]).optional(),
-    rating: z.number().min(1).max(5).optional(),
-    playtime: z.number().optional(),
-    lastPlayed: z.string().optional(),
-  }),
+export const gameSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  releaseDate: z.string().transform((date) => new Date(date)),
+  platforms: z.array(z.string()),
+  genres: z.array(z.string()),
+  heroImage: z.string(),
+  thumbnailImage: z.string(),
+  tags: z.array(z.string()),
+  status: z.enum(["completed", "in-progress", "backlog", "wishlist"]),
+  rating: z.number().min(1).max(5).optional(),
+  playtime: z.number().optional(),
+  lastPlayed: z.string().transform((date) => new Date(date)).optional(),
 });
+```
+
+Update your Astro content configuration:
+
+```typescript
+import { defineCollection } from "astro:content";
+import { gameSchema } from "./games/_schema";
+
+export const collections = {
+  games: defineCollection({ schema: gameSchema }),
+};
 ```
 
 ---
 
-## Step 2: Adding Game Content
+## Step 2: Add Game Content
 
-Each game is stored as a markdown file. Here's an example for **Arcade Paradise**:
-
-### File: `src/content/games/arcade-paradise.md`
+Each game entry is stored as a markdown file. Here’s an example for **Arcade Paradise**:
 
 ```markdown
 ---
 title: "Arcade Paradise"
-description: "A quirky management sim where you turn a laundromat into a thriving arcade."
+description: "Turn a laundromat into a thriving arcade in this quirky management sim."
 releaseDate: "2022-08-11"
 platforms:
-  - PC
-  - Xbox
-  - PlayStation
+  - "PC"
+  - "Xbox"
+  - "PlayStation"
 genres:
-  - Simulation
-  - Management
-heroImage: "/images/games/arcade-paradise-3x1.jpg"
-thumbnailImage: "/images/games/arcade-paradise-1x1.jpg"
+  - "Simulation"
+  - "Action"
+heroImage: "/images/games/arcade-paradise-hero.jpg"
+thumbnailImage: "/images/games/arcade-paradise-thumb.jpg"
 tags:
-  - Simulation
-  - Indie
-  - Nostalgia
+  - "indie"
+  - "nostalgia"
 status: "in-progress"
 rating: 4
 playtime: 10
 lastPlayed: "2024-11-19"
 ---
-
-## Getting Started
-
-- Start by running the laundromat to earn cash.
-- Use your earnings to purchase arcade machines and upgrades.
+## My Progress
+- Purchased 8 arcade machines
+- Weekly income: $1,500
+- Goal: Unlock all hidden mini-games
 
 ## Tips
-
-- Upgrade machines strategically to boost revenue.
-- Keep the laundromat clean to maximize customer satisfaction.
+- Upgrade arcade machines to increase revenue.
+- Keep the laundromat clean for bonus income.
 ```
 
 ---
 
-## Step 3: Create the GameCard Component
+## Step 3: Build Components
 
-The `GameCard` component displays individual game summaries and links to detail pages.
+### GameCard Component (`src/components/GameCard.tsx`)
+
+```tsx
+import type { Game } from "../types/games";
+
+export const GameCard = ({ game }: { game: Game }) => {
+  const statusColors = {
+    completed: "bg-green-100 text-green-800",
+    "in-progress": "bg-blue-100 text-blue-800",
+    backlog: "bg-gray-100 text-gray-800",
+    wishlist: "bg-purple-100 text-purple-800",
+  };
+
+  return (
+    <div className="game-card bg-white rounded-lg shadow-md overflow-hidden">
+      <img src={game.thumbnailImage} alt={game.title} className="w-full h-48 object-cover" />
+      <div className="p-4">
+        <h3 className="font-bold">{game.title}</h3>
+        <p className="text-sm">{game.description}</p>
+        <span className={`px-2 py-1 rounded-full ${statusColors[game.status]}`}>{game.status}</span>
+      </div>
+    </div>
+  );
+};
+```
+
+### GameFilter Component (`src/components/GameFilter.tsx`)
+
+```tsx
+import { useState } from "react";
+
+export const GameFilter = ({ onFilterChange }: { onFilterChange: Function }) => {
+  const [status, setStatus] = useState("all");
+
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatus(e.target.value);
+    onFilterChange({ status: e.target.value });
+  };
+
+  return (
+    <div className="game-filter">
+      <select value={status} onChange={handleStatusChange}>
+        <option value="all">All Statuses</option>
+        <option value="completed">Completed</option>
+        <option value="in-progress">In Progress</option>
+        <option value="backlog">Backlog</option>
+        <option value="wishlist">Wishlist</option>
+      </select>
+    </div>
+  );
+};
+```
+
+---
+
+## Step 4: Create Pages
+
+### Games Index Page (`src/pages/games/index.astro`)
 
 ```astro
 ---
-import type { Game } from '../types/games';
+// Astro imports
+import { getCollection } from "astro:content";
+import GameCard from "../../components/GameCard";
+import GameFilter from "../../components/GameFilter";
 
-type Props = {
-  game: Game;
-  slug: string;
-};
-
-const { game, slug } = Astro.props;
-
-const getStatusColor = (status: Game['status']) => {
-  const colors = {
-    completed: 'bg-green-100 text-green-800',
-    'in-progress': 'bg-blue-100 text-blue-800',
-    backlog: 'bg-gray-100 text-gray-800',
-  };
-  return status ? colors[status] : '';
-};
+const games = await getCollection("games");
 ---
 
-<article
-  class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-  data-platforms={game.platforms.join(',')}
-  data-status={game.status}
-  data-rating={game.rating}
-  data-title={game.title}
-  data-last-played={game.lastPlayed}
->
-  <a href={`/games/${slug}`} class="block">
-    <img src={game.thumbnailImage} alt={game.title} class="w-full h-48 object-cover" />
-    <div class="p-4">
-      <h2 class="font-bold">{game.title}</h2>
-      <p>{game.description}</p>
-      <span>{game.rating ? `Rating: ${game.rating}/5` : 'No rating yet'}</span>
-    </div>
-  </a>
+<GameFilter client:load />
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  {games.map((game) => (
+    <GameCard game={game.data} />
+  ))}
+</div>
+```
+
+### Individual Game Page (`src/pages/games/[slug].astro`)
+
+```astro
+---
+// Astro imports
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const games = await getCollection("games");
+  return games.map((game) => ({
+    params: { slug: game.slug },
+  }));
+}
+
+const { game } = Astro.props;
+---
+
+<article>
+  <h1>{game.data.title}</h1>
+  <img src={game.data.heroImage} alt={game.data.title} />
+  <p>{game.data.description}</p>
+  <Content />
 </article>
 ```
 
 ---
 
-## Step 4: Build the Games Index Page
+## Step 5: Add Filtering and Sorting
 
-The index page dynamically lists all games and supports filtering and sorting.
-
-```astro
----
-import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import GameCard from '../components/GameCard.astro';
-
-const games = await getCollection('games');
----
-
-<BaseLayout>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-4xl font-bold mb-8">Games Collection</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {games.map((game) => (
-        <GameCard game={game.data} slug={game.slug} />
-      ))}
-    </div>
-  </div>
-</BaseLayout>
-```
-
----
-
-## Step 5: Filtering and Sorting with JavaScript
-
-To enhance user experience, I added client-side filtering and sorting. Users can filter by platform, status, or sort by rating.
+Integrate client-side JavaScript for interactivity.
 
 ```javascript
 const filterGames = () => {
-  const platform = document.getElementById("platform-filter").value;
   const status = document.getElementById("status-filter").value;
-  const sort = document.getElementById("sort-filter").value;
-
   const cards = document.querySelectorAll(".game-card");
+
   cards.forEach((card) => {
-    const matchesPlatform =
-      platform === "all" || card.dataset.platforms.includes(platform);
     const matchesStatus = status === "all" || card.dataset.status === status;
-
-    if (matchesPlatform && matchesStatus) {
-      card.classList.remove("hidden");
-    } else {
-      card.classList.add("hidden");
-    }
+    card.style.display = matchesStatus ? "block" : "none";
   });
-
-  // Sorting logic
 };
+
+document.getElementById("status-filter").addEventListener("change", filterGames);
 ```
-
----
-
-## Step 6: Individual Game Pages
-
-Each game page includes detailed information, progress updates, and related game suggestions.
-
-```astro
-<BaseLayout>
-  <h1>{game.title}</h1>
-  <img src={game.heroImage} alt={game.title} />
-  <Content />
-  {relatedGames.length > 0 && <RelatedGames games={relatedGames} />}
-</BaseLayout>
-```
-
----
-
-## Performance and SEO Enhancements
-
-1. **Image Optimization**: Lazy loading and responsive sizing.
-2. **SEO Improvements**: Meta tags, structured data, and canonical URLs.
-3. **Accessibility**: ARIA labels, keyboard navigation, and semantic HTML.
 
 ---
 
 ## Conclusion
 
-Building this Games section was an enjoyable challenge. It allowed me to combine my love for gaming with Astro's powerful features, creating a dynamic and scalable solution for organizing my gaming backlog.
+Creating this Games section combined my passion for gaming with my love of development. With Astro’s content collections, TypeScript, and Tailwind CSS, I built a feature-rich, dynamic, and accessible section that I can expand over time.
 
-Time to tackle my GamePass library!
+If you’re looking to do something similar, I hope this guide provides inspiration. Time to dive back into **Arcade Paradise**!
+
+--- 
