@@ -15,16 +15,16 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     <BaseHead title={title} description={description} image={heroImage} />
   </head>
 
-  <body class="bg-gray-50">
+  <body class="bg-gray-50 overflow-x-hidden">
     <Header />
-    <main>
-      <article class="prose mx-auto bg-white p-6 rounded-lg shadow-sm">
+    <main class="w-full overflow-x-hidden">
+      <article class="prose mx-auto bg-white p-6 rounded-lg shadow-sm w-full">
         {heroImage && (
-          <div class="mb-8">
+          <div class="mb-8 w-full">
             <img
               src={heroImage}
               alt=""
-              class="w-full rounded-lg shadow-lg"
+              class="w-full h-auto rounded-lg shadow-lg"
             />
           </div>
         )}
@@ -40,7 +40,9 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           <h1 class="text-4xl font-bold mb-4">{title}</h1>
           <hr class="my-4" />
         </div>
-        <slot />
+        <div class="w-full overflow-x-hidden">
+          <slot />
+        </div>
       </article>
     </main>
     <Footer />

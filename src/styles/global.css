@@ -9,17 +9,17 @@
   }
 
   body {
-    @apply bg-gray-50;
+    @apply bg-gray-50 overflow-x-hidden;
   }
 
   main {
-    @apply max-w-4xl mx-auto px-4 py-12;
+    @apply max-w-4xl mx-auto px-4 py-12 w-full overflow-x-hidden;
   }
 }
 
 @layer components {
   .prose {
-    @apply max-w-[720px] mx-auto;
+    @apply max-w-[720px] mx-auto w-full;
   }
 }
 
