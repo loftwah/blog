@@ -121,6 +121,82 @@ For a working example, you can reference this helpful [GitHub repo example](http
 
 ---
 
+### **Option 3: Using GitLab Pages as Your Handle (e.g., `loftwah.gitlab.io`)**
+
+If you don’t have a custom domain, you can use GitLab Pages to create a professional handle. Here’s how:
+
+![Custom domain setup on Bluesky-gitlab.jpg](/images/bluesky-custom-domain-gitlab.png)
+
+---
+
+1. **Enable GitLab Pages**:
+
+   - Use your GitLab repository: [https://gitlab.com/loftwah/loftwah.gitlab.io](https://gitlab.com/loftwah/loftwah.gitlab.io).
+   - Ensure the repository's **visibility** is set to `Public`:
+     - Go to **Settings → General → Visibility, project features, permissions**.
+     - Set the project to `Public`.
+   - Go to **Settings → Pages** and ensure **Access Control** is set to `Public`.
+
+---
+
+2. **Create the `.well-known` Folder**:
+
+   - In your repository, create a folder named `.well-known`.
+   - Inside this folder, add a file named `atproto-did`. In this file, enter your DID as shown in Bluesky (e.g., `did:plc:axc7n2yjep6ggdz7fuztluc4`).
+
+---
+
+3. **Add a `.gitlab-ci.yml` File**:
+
+   - In your repository, add a file named `.gitlab-ci.yml` with the following content:
+     ```yaml
+     pages:
+       stage: deploy
+       script:
+         - mkdir -p public
+         - cp -r index.html .well-known public/
+       artifacts:
+         paths:
+           - public
+       rules:
+         - if: $CI_COMMIT_BRANCH == "main"
+     ```
+
+   - This configuration ensures your `index.html` and `.well-known` folder are deployed.
+
+---
+
+4. **Publish and Verify**:
+
+   - Once the pipeline succeeds, your GitLab Pages site will be live at [https://loftwah.gitlab.io](https://loftwah.gitlab.io).
+   - Visit [https://loftwah.gitlab.io/.well-known/atproto-did](https://loftwah.gitlab.io/.well-known/atproto-did) to ensure your DID is accessible.
+
+---
+
+5. **Set Your Handle in Bluesky**:
+
+   - Go to **Settings → Change Handle → Custom Domain** in Bluesky.
+   - Enter `loftwah.gitlab.io` as your custom domain.
+   - Click **Verify** to complete the setup.
+
+---
+
+For reference, your GitLab repository should look like this:
+[https://gitlab.com/loftwah/loftwah.gitlab.io](https://gitlab.com/loftwah/loftwah.gitlab.io)
+
+Example structure:
+```
+loftwah.gitlab.io/
+├── .gitlab-ci.yml
+├── index.html
+└── .well-known/
+    └── atproto-did
+```
+
+This method leverages GitLab Pages, using your repository as the foundation for a professional and functional Bluesky handle.
+
+---
+
 ![Custom domain setup on Bluesky](/images/bluesky-custom-domain.jpg)
 
 ## 5. Managing Moderation and Content Preferences
@@ -223,6 +299,6 @@ This setup gives your repositories a professional edge with automated label mana
 - [Bluesky Documentation](https://docs.bsky.app/)
 - [Community Guidelines](https://bsky.social/about/support/community-guidelines)
 
-**Last updated**: 12th of November, 2024
+**Last updated**: 25th of November, 2024
 
 ---
