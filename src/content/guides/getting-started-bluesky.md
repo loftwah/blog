@@ -72,8 +72,6 @@ For a complete list of packs, visit [Bluesky Directory](https://blueskydirectory
 
 ![Screenshot of Bluesky starter packs](/images/bluesky-starterpacks.jpg)
 
-You're absolutely correct; this section is handling two distinct setups—one for a custom domain and another for using GitHub Pages as a handle. Let’s structure it so each setup is clearly separated, without redundant steps. Here’s a revised version that distinguishes between the two approaches:
-
 ---
 
 ## 4. Custom Domain Setup
