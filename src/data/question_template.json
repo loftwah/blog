@@ -1,0 +1,24 @@
+{
+    "id": "unique_question_id",
+    "question": "Write your question here",
+    "options": [
+        "Option 1",
+        "Option 2",
+        "Option 3",
+        "Option 4"
+    ],
+    "answer": 0,
+    "image": "/images/quiz/placeholder.jpg",
+    "explanation": {
+        "text": "Explanation of the answer.",
+        "url": "https://example.com",
+        "urlText": "Learn more here",
+        "codeExample": {
+            "code": "Example code here",
+            "language": "language"
+        }
+    },
+    "tags": ["tag1", "tag2"],
+    "difficulty": "easy",
+    "category": "category"
+}
