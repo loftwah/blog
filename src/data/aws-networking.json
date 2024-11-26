@@ -1,0 +1,112 @@
+[
+    {
+      "id": "aws-net-1",
+      "question": "When designing a VPC with both public and private subnets, where should a NAT Gateway be placed and why?",
+      "options": [
+        "In a private subnet, to protect it from the internet",
+        "In a public subnet, because it needs to communicate with the Internet Gateway",
+        "It doesn't matter which subnet it's in",
+        "In both subnets for redundancy"
+      ],
+      "answer": 1,
+      "image": "aws1.jpg",
+      "explanation": {
+        "text": "A NAT Gateway must be placed in a public subnet because it needs access to an Internet Gateway to provide outbound internet access for private resources. This is a fundamental AWS networking concept - the NAT Gateway acts as an intermediary between private resources and the internet.",
+        "codeExample": {
+          "code": "# NAT Gateway requires:\n# 1. A public subnet\n# 2. An Elastic IP\n# 3. Route table entry in private subnet",
+          "language": "bash"
+        }
+      },
+      "tags": ["vpc", "nat", "security"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-2",
+      "question": "What is the key difference between VPC Interface Endpoints and Gateway Endpoints?",
+      "options": [
+        "Interface Endpoints are faster than Gateway Endpoints",
+        "Gateway Endpoints only work with public subnets",
+        "Interface Endpoints create ENIs and cost money, while Gateway Endpoints are free and use route tables",
+        "Gateway Endpoints provide better security"
+      ],
+      "answer": 2,
+      "image": "aws2.jpg",
+      "explanation": {
+        "text": "Interface Endpoints create Elastic Network Interfaces (ENIs) in your subnets and incur hourly charges. Gateway Endpoints are free and work through route table entries. Gateway Endpoints are currently only available for S3 and DynamoDB.",
+        "codeExample": {
+          "code": "# Interface Endpoint (uses ENI)\naws_vpc_endpoint \"ecr\" {\n  vpc_endpoint_type = \"Interface\"\n}\n\n# Gateway Endpoint (uses route tables)\naws_vpc_endpoint \"s3\" {\n  vpc_endpoint_type = \"Gateway\"\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["vpc", "endpoints", "cost-optimization"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-3",
+      "question": "When configuring security groups for VPC endpoints, what is the recommended practice for ingress rules?",
+      "options": [
+        "Allow all inbound traffic (0.0.0.0/0)",
+        "Allow only the VPC CIDR range on required ports",
+        "Block all inbound traffic",
+        "Allow only public subnet traffic"
+      ],
+      "answer": 1,
+      "image": "aws3.jpg",
+      "explanation": {
+        "text": "Security best practice is to allow only traffic from within your VPC (VPC CIDR range) and only on the required ports. For HTTPS endpoints, this typically means port 443. This follows the principle of least privilege while allowing all VPC resources to access the endpoint.",
+        "codeExample": {
+          "code": "# Security group for VPC endpoints\ningress {\n  from_port   = 443\n  to_port     = 443\n  protocol    = \"tcp\"\n  cidr_blocks = [vpc_cidr_block]\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["security-groups", "vpc-endpoints", "security"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-4",
+      "question": "Why might you need both VPC Endpoints AND a NAT Gateway in a private subnet architecture?",
+      "options": [
+        "You don't - they serve the same purpose",
+        "VPC Endpoints are for AWS services, NAT Gateway for other internet traffic (like package updates)",
+        "NAT Gateways are faster than VPC Endpoints",
+        "VPC Endpoints are only for backup"
+      ],
+      "answer": 1,
+      "image": "cloud.jpg",
+      "explanation": {
+        "text": "VPC Endpoints provide direct private access to AWS services, reducing costs and latency. However, a NAT Gateway is still needed for other internet traffic (like downloading packages, accessing third-party APIs, etc). Using both is a common pattern for cost-effective, secure architectures.",
+        "codeExample": {
+          "code": "# Traffic to S3: Uses VPC Endpoint (free)\n# Traffic to apt update: Uses NAT Gateway ($)\n# Traffic to AWS API: Uses Interface Endpoint ($)",
+          "language": "bash"
+        }
+      },
+      "tags": ["vpc-endpoints", "nat", "architecture"],
+      "difficulty": "hard",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-5",
+      "question": "What are valid custom health check response codes for an Application Load Balancer target group?",
+      "options": [
+        "Only 200 OK is valid",
+        "Any 2XX response code",
+        "Any HTTP response code can be valid, including 4XX and 5XX",
+        "Only 200 and 301 responses"
+      ],
+      "answer": 2,
+      "image": "cloud2.jpg",
+      "explanation": {
+        "text": "ALB health checks can consider any HTTP status code as healthy. This is useful for endpoints that intentionally return non-200 codes (like 401 for auth-required endpoints or 304 for cached content). The matcher is configurable based on your application's needs.",
+        "codeExample": {
+          "code": "health_check {\n  matcher = \"200,301,302,401\"\n  path = \"/health\"\n  timeout = 5\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["alb", "health-checks", "load-balancing"],
+      "difficulty": "medium",
+      "category": "networking"
+    }
+  ]

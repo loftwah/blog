@@ -1,0 +1,222 @@
+[
+    {
+      "id": "aws-net-16",
+      "question": "What's the key difference between an ALB listener and a target group?",
+      "options": [
+        "Listeners are for HTTP only, target groups are for TCP only",
+        "A listener defines rules for routing incoming requests, while a target group contains the destinations for traffic",
+        "Target groups are deprecated in favor of listeners",
+        "Listeners are only used with SSL certificates"
+      ],
+      "answer": 1,
+      "image": "cloud3.jpg",
+      "explanation": {
+        "text": "Listeners check incoming traffic and use rules to determine where to route it, while target groups are the destinations (like EC2 instances or IP addresses) where the traffic will be sent. They serve different but complementary roles in load balancing.",
+        "codeExample": {
+          "code": "# Listener defines rules\nresource \"aws_lb_listener\" \"front_end\" {\n  port = 80\n  default_action {\n    type = \"forward\"\n    target_group_arn = aws_lb_target_group.app.arn\n  }\n}\n\n# Target group defines destinations\nresource \"aws_lb_target_group\" \"app\" {\n  port = 80\n  protocol = \"HTTP\"\n  target_type = \"ip\"\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["alb", "load-balancing", "architecture"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-17",
+      "question": "When using private subnets with a NAT Gateway, what happens if you accidentally delete the NAT Gateway?",
+      "options": [
+        "Nothing, traffic will automatically route through the Internet Gateway",
+        "Instances in private subnets will lose outbound internet access",
+        "The VPC will automatically create a new NAT Gateway",
+        "Traffic will use VPC endpoints instead"
+      ],
+      "answer": 1,
+      "image": "aws1.jpg",
+      "explanation": {
+        "text": "If a NAT Gateway is deleted, instances in private subnets immediately lose outbound internet access. VPC endpoints will still work for AWS services, but any other outbound internet traffic (like package updates or external APIs) will fail.",
+        "codeExample": {
+          "code": "# Route table dependency\nresource \"aws_route_table\" \"private\" {\n  route {\n    cidr_block = \"0.0.0.0/0\"\n    # If this nat_gateway_id is invalid,\n    # outbound internet access fails\n    nat_gateway_id = aws_nat_gateway.main.id\n  }\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["nat", "vpc", "operations"],
+      "difficulty": "hard",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-18",
+      "question": "A security group has NO inbound rules and NO outbound rules. What traffic is allowed?",
+      "options": [
+        "All inbound and outbound traffic is allowed",
+        "No inbound or outbound traffic is allowed",
+        "No inbound traffic is allowed, all outbound traffic is allowed",
+        "All inbound traffic is allowed, no outbound traffic is allowed"
+      ],
+      "answer": 2,
+      "image": "aws2.jpg",
+      "explanation": {
+        "text": "By default, security groups deny all inbound traffic and allow all outbound traffic. An empty security group will maintain these defaults. This is different from NACLs, which deny all traffic by default in both directions.",
+        "codeExample": {
+          "code": "# Empty security group\nresource \"aws_security_group\" \"example\" {\n  # No rules defined\n  # Result:\n  # - All inbound: DENIED\n  # - All outbound: ALLOWED\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["security-groups", "security", "defaults"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-19",
+      "question": "Which statement about VPC CIDR blocks and subnets is correct?",
+      "options": [
+        "Subnets can be larger than their VPC CIDR",
+        "Subnet CIDR blocks can overlap within a VPC",
+        "A subnet's CIDR must be a subset of its VPC's CIDR",
+        "All subnets must use /24 CIDR blocks"
+      ],
+      "answer": 2,
+      "image": "aws3.jpg",
+      "explanation": {
+        "text": "A subnet's CIDR block must be a subset of the VPC's CIDR block and cannot overlap with other subnets in the same VPC. For example, if a VPC uses 10.0.0.0/16, valid subnets might be 10.0.1.0/24, 10.0.2.0/24, etc.",
+        "codeExample": {
+          "code": "# VPC and subnet CIDR relationship\nresource \"aws_vpc\" \"main\" {\n  cidr_block = \"10.0.0.0/16\"  # 65,536 IPs\n}\n\nresource \"aws_subnet\" \"example\" {\n  vpc_id = aws_vpc.main.id\n  cidr_block = \"10.0.1.0/24\"  # 256 IPs, within VPC range\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["vpc", "subnets", "cidr"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-20",
+      "question": "Why might you need to enable DNS hostnames and DNS support in a VPC?",
+      "options": [
+        "It's required for internet access",
+        "To allow instances to resolve public DNS hostnames and use private DNS with Route 53",
+        "Only if you're using VPC endpoints",
+        "It's required for security groups"
+      ],
+      "answer": 1,
+      "image": "cloud.jpg",
+      "explanation": {
+        "text": "DNS hostnames and DNS support allow instances to resolve public DNS hostnames to public IP addresses and enable private DNS features. This is important for services like RDS instances, ELBs, and custom Route 53 private hosted zones.",
+        "codeExample": {
+          "code": "resource \"aws_vpc\" \"main\" {\n  cidr_block           = \"10.0.0.0/16\"\n  enable_dns_hostnames = true\n  enable_dns_support   = true\n  # Enables:\n  # - Public DNS for public IPs\n  # - Private DNS in VPC\n  # - Route 53 private zones\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["vpc", "dns", "route53"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-21",
+      "question": "What is the difference between connection draining and deregistration delay in target groups?",
+      "options": [
+        "They are different names for the same feature",
+        "Connection draining is for ALB, deregistration delay is for NLB",
+        "Deregistration delay gives time for in-flight requests to complete before removing a target, connection draining is deprecated",
+        "Connection draining is for EC2 only, deregistration delay works with all target types"
+      ],
+      "answer": 2,
+      "image": "cloud2.jpg",
+      "explanation": {
+        "text": "Deregistration delay (formerly called connection draining) gives time for in-flight requests to complete before removing a target from service. This prevents interruption of active requests when targets are being removed or replaced.",
+        "codeExample": {
+          "code": "resource \"aws_lb_target_group\" \"example\" {\n  # Time to wait before removing target\n  deregistration_delay = 300\n  \n  # Gives 300 seconds for:\n  # - Active requests to complete\n  # - New requests to route elsewhere\n  # - Target to gracefully drain\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["alb", "load-balancing", "operations"],
+      "difficulty": "hard",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-22",
+      "question": "What happens to network traffic if a NACL's inbound rule number 100 allows port 80 and rule 200 denies it?",
+      "options": [
+        "Traffic is denied because deny rules always override allow rules",
+        "Traffic is allowed because allow rules always override deny rules",
+        "Traffic is allowed because the allow rule has a lower number",
+        "Both rules are ignored and the default rule is used"
+      ],
+      "answer": 2,
+      "image": "aws1.jpg",
+      "explanation": {
+        "text": "NACLs evaluate rules in order based on rule number (lowest first). Once a rule matches traffic, it's applied immediately without checking further rules. Therefore, rule 100 (allow) would be applied before reaching rule 200 (deny).",
+        "codeExample": {
+          "code": "# NACL rule evaluation order\nresource \"aws_network_acl_rule\" \"allow_80\" {\n  rule_number = 100\n  protocol = \"tcp\"\n  rule_action = \"allow\"\n  from_port = 80\n  to_port = 80\n}\n\nresource \"aws_network_acl_rule\" \"deny_80\" {\n  rule_number = 200  # Never reached for port 80\n  protocol = \"tcp\"\n  rule_action = \"deny\"\n  from_port = 80\n  to_port = 80\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["nacl", "security", "rules"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-23",
+      "question": "Why might you use multiple security groups on a single EC2 instance?",
+      "options": [
+        "To increase the maximum number of rules available",
+        "For better performance",
+        "To organize and manage different types of access separately",
+        "Multiple security groups are required for VPC endpoints"
+      ],
+      "answer": 2,
+      "image": "aws2.jpg",
+      "explanation": {
+        "text": "Using multiple security groups allows logical separation of rules. For example, one group for application traffic (ports 80/443), another for management (SSH), and another for database access. This makes rules easier to manage and reuse.",
+        "codeExample": {
+          "code": "# Instance with multiple security groups\nresource \"aws_instance\" \"app\" {\n  # Web traffic rules\n  vpc_security_group_ids = [\n    aws_security_group.web.id,      # Ports 80/443\n    aws_security_group.ssh.id,      # Port 22\n    aws_security_group.monitoring.id # Ports 9100-9300\n  ]\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["security-groups", "ec2", "security"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-24",
+      "question": "Which statement about an ALB's X-Forwarded-For header is correct?",
+      "options": [
+        "It's only available with HTTPS listeners",
+        "It contains the client's original IP address before the load balancer",
+        "It's used for SSL termination",
+        "It's only used with VPC endpoints"
+      ],
+      "answer": 1,
+      "image": "cloud3.jpg",
+      "explanation": {
+        "text": "X-Forwarded-For (XFF) contains the client's original IP address. This is important because the load balancer sits between the client and your application, so without XFF, your application would only see the load balancer's IP address.",
+        "codeExample": {
+          "code": "# Example Nginx configuration for XFF\nhttp {\n  # Real IP configuration\n  set_real_ip_from 10.0.0.0/8;  # VPC range\n  real_ip_header X-Forwarded-For;\n  # Now request.remote_addr will show\n  # the actual client IP\n}",
+          "language": "nginx"
+        }
+      },
+      "tags": ["alb", "headers", "security"],
+      "difficulty": "medium",
+      "category": "networking"
+    },
+    {
+      "id": "aws-net-25",
+      "question": "What potential issue exists when using security group rules that reference other security groups?",
+      "options": [
+        "It's not supported by AWS",
+        "It creates a circular dependency if not carefully managed",
+        "It only works in public subnets",
+        "It requires VPC endpoints"
+      ],
+      "answer": 1,
+      "image": "aws2.jpg",
+      "explanation": {
+        "text": "When security groups reference each other (e.g., DB security group allows access from App security group), you can create circular dependencies that are difficult to create or modify. This is especially important in Infrastructure as Code.",
+        "codeExample": {
+          "code": "# Potential circular dependency\nresource \"aws_security_group\" \"app\" {\n  ingress {\n    security_groups = [aws_security_group.lb.id]\n  }\n}\n\nresource \"aws_security_group\" \"lb\" {\n  ingress {\n    security_groups = [aws_security_group.app.id]\n  }\n}",
+          "language": "hcl"
+        }
+      },
+      "tags": ["security-groups", "dependencies", "infrastructure"],
+      "difficulty": "hard",
+      "category": "networking"
+    }
+  ]

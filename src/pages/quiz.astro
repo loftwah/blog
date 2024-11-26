@@ -13,6 +13,11 @@ import quiz4 from '../data/quiz4.json';
 import bun from '../data/bun.json';
 import tsbasics from '../data/tsbasics.json';
 
+// Import quiz aws
+import awsnetworking from '../data/aws-networking.json';
+import awsnetworking2 from '../data/aws-networking-2.json';
+import awsnetworking3 from '../data/aws-networking-3.json';
+
 // Validate and transform the questions
 const validateDifficulty = (difficulty: string): 'easy' | 'medium' | 'hard' => {
   if (!['easy', 'medium', 'hard'].includes(difficulty)) {
@@ -27,7 +32,7 @@ const validateQuestion = (q: any): Question => ({
 });
 
 // Combine and validate all questions
-const allQuestions: Question[] = [...quiz3, ...quiz4, ...bun, ...tsbasics].map(validateQuestion);
+const allQuestions: Question[] = [...quiz3, ...quiz4, ...bun, ...tsbasics, ...awsnetworking, ...awsnetworking2, ...awsnetworking3].map(validateQuestion);
 ---
 
 <html lang="en">
