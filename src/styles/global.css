@@ -25,17 +25,50 @@
 
 /* Fonts */
 @font-face {
-  font-family: 'Atkinson';
-  src: url('/fonts/atkinson-regular.woff') format('woff');
+  font-family: "Atkinson";
+  src: url("/fonts/atkinson-regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Atkinson';
-  src: url('/fonts/atkinson-bold.woff') format('woff');
+  font-family: "Atkinson";
+  src: url("/fonts/atkinson-bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
+
+pre:has(code) {
+  position: relative;
+}
+
+pre .copy {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  font-size: 14px;
+  color: var(--accent, #ff6f61);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.3s;
+  text-decoration: none; /* Remove underline */
+}
+
+pre .copy:hover {
+  color: var(--accent-dark, #e65c50);
+}
+
+pre .copy.copied {
+  color: #4caf50;
+}
+
+pre .copy::after {
+  content: 'Copy'; /* Default state */
+}
+
+pre .copy.copied::after {
+  content: 'Copied'; /* Copied state */
+}
+
