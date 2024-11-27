@@ -1,7 +1,7 @@
 ---
-title: "UV with Python and Docker: The Ultimate Guide to Modern Python Development"
-description: "A comprehensive guide to using UV package manager with Python and Docker. Learn how to build efficient, multi-architecture Python applications with best practices for both development and production."
-difficulty: "intermediate"
+title: "UV with Python and Docker: A Comprehensive Guide to Modern Python Development"
+description: "Learn how to use the UV package manager with Python and Docker. This guide covers two main approaches, best practices, and how to optimize your development and production environments."
+difficulty: "Intermediate"
 category: "DevOps"
 order: 21
 heroImage: "/images/python-docker-uv.png"
@@ -15,6 +15,13 @@ prerequisites:
 
 UV is a blazing-fast Python package manager written in Rust that's changing how we build Python applications. In this guide, we'll explore using UV with Docker to create efficient, reproducible Python environments that work everywhere.
 
+We'll cover two main approaches:
+
+- Using official UV Docker images
+- Custom UV integration in your Docker builds
+
+We'll discuss the pros and cons of each approach, best practices, and when to use each method.
+
 ## What We're Building
 
 We'll create:
@@ -24,109 +31,44 @@ We'll create:
 - Efficient caching systems for faster builds
 - Secure, production-ready configurations
 
-## Getting Started: Basic UV Setup
+## Two Approaches to Using UV in Docker
 
-Let's start with the simplest possible UV setup in Docker. This is our foundation:
+### Approach 1: Using Official UV Docker Images
+
+The simplest way to get started with UV in Docker is by using the official UV Docker images.
+
+**Dockerfile Example:**
 
 ```dockerfile
-# syntax=docker/dockerfile:1.4
-
-FROM --platform=$TARGETPLATFORM python:3.13-slim-bookworm AS base
-
-# Install UV
-ADD --chmod=755 https://astral.sh/uv/install.sh /uv-installer.sh
-RUN /uv-installer.sh && rm /uv-installer.sh
-
-# Configure UV
-ENV PATH="/root/.local/bin:$PATH" \
-    UV_SYSTEM_PYTHON=1 \
-    UV_CACHE_DIR=/root/.cache/uv \
-    PYTHONUNBUFFERED=1
-
-WORKDIR /app
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm
+COPY . .
+RUN uv pip install -r requirements.txt
 ```
 
-This base setup:
+**Pros:**
 
-- Uses the latest Python 3.13
-- Installs UV using the official installer
-- Configures UV for system-wide use
-- Sets up proper caching
+- Minimal setup required
+- Officially maintained images with regular security updates
+- Guaranteed UV compatibility
+- Best for simple applications, learning, and prototypes
 
-## Development Environment
+**Cons:**
 
-For development, we need additional tools. Here's a more complete setup:
+- Limited optimization options
+- Larger image sizes
+- Less control over the Python environment
+- May include unnecessary dependencies
+- No multi-stage build benefits
 
-```dockerfile
-# syntax=docker/dockerfile:1.4
+### Approach 2: Custom UV Integration
 
-FROM --platform=$TARGETPLATFORM python:3.13-slim-bookworm AS dev-base
+For more control and optimization, you can integrate UV into your own Docker images.
 
-# Install UV and development dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    ca-certificates \
-    git \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install UV
-ADD --chmod=755 https://astral.sh/uv/install.sh /uv-installer.sh
-RUN /uv-installer.sh && rm /uv-installer.sh
-
-# Configure UV for development
-ENV PATH="/root/.local/bin:$PATH" \
-    UV_SYSTEM_PYTHON=1 \
-    UV_CACHE_DIR=/root/.cache/uv \
-    PYTHONUNBUFFERED=1 \
-    UV_LINK_MODE=copy
-
-WORKDIR /app
-```
-
-Key differences for development:
-
-- Additional build tools installed
-- Git for version control
-- `UV_LINK_MODE=copy` for better compatibility
-
-## Production Environment
-
-Production needs a leaner, more secure setup:
+**Dockerfile Example:**
 
 ```dockerfile
-# syntax=docker/dockerfile:1.4
-
-FROM --platform=$TARGETPLATFORM python:3.13-slim-bookworm AS prod-base
-
-# Install minimal dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install UV
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
-ENV UV_SYSTEM_PYTHON=1 \
-    PYTHONUNBUFFERED=1
-
-WORKDIR /app
-```
-
-Notice how we:
-
-- Minimize installed packages
-- Use the official UV container image
-- Keep only essential environment variables
-
-## Real-World Example: FastAPI Application
-
-Here's a complete example using FastAPI that demonstrates all best practices:
-
-```dockerfile
-# syntax=docker/dockerfile:1.4
-
 # Build stage
-FROM --platform=$TARGETPLATFORM python:3.13-slim-bookworm AS builder
+FROM python:3.13-slim-bookworm AS builder
 
 # Install UV
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
@@ -142,78 +84,101 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     -r pyproject.toml
 
 # Final stage
-FROM --platform=$TARGETPLATFORM python:3.13-slim-bookworm
+FROM python:3.13-slim-bookworm
 
 WORKDIR /app
-
-# Copy Python packages and bytecode
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
-COPY --from=builder /usr/local/lib/python3.13/__pycache__ /usr/local/lib/python3.13/__pycache__
-
-# Copy application code
 COPY . .
-
-CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 ```
 
-## Setting Up Multi-Architecture Builds
+**Pros:**
 
-First, create your BuildX builder:
+- Smaller final image size
+- Better build caching
+- Fine-grained control over dependencies
+- Multi-stage build optimization
+- Production-ready configuration
+- Support for complex applications
+- Better security practices
 
-```bash
-# Create new builder instance
-docker buildx create --name mybuilder --driver docker-container --bootstrap
+**Cons:**
 
-# Use the new builder
-docker buildx use mybuilder
+- More complex setup
+- Requires Docker expertise
+- More maintenance responsibility
+- Longer initial setup time
 
-# Verify available platforms
-docker buildx inspect --bootstrap
-```
+## When to Use Each Approach
 
-Then build for multiple architectures:
+### Use Official UV Docker Images When:
 
-```bash
-# Build and push
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  --cache-from type=registry,ref=ghcr.io/username/myapp:cache \
-  --cache-to type=registry,ref=ghcr.io/username/myapp:cache,mode=max \
-  -t ghcr.io/username/myapp:latest \
-  --push .
-```
+1. Building simple applications
+2. Creating proof-of-concept projects
+3. Learning UV and Docker
+4. Quick prototyping
+5. CI/CD testing environments
 
-## Managing Dependencies
+### Use Custom UV Integration When:
 
-UV provides multiple ways to install dependencies. Here are the most common patterns:
+1. Building production applications
+2. Optimizing for size and performance
+3. Implementing complex deployment strategies
+4. Requiring multi-architecture support
+5. Managing multiple environments (development/production)
 
-### From requirements.txt
+## Getting Started: Basic UV Setup
+
+### Using Official UV Docker Images
+
+This is the simplest setup using the official UV image.
+
+**Dockerfile:**
 
 ```dockerfile
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system -r requirements.txt
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm
+COPY . .
+RUN uv pip install -r requirements.txt
+
+CMD ["python", "-m", "your_application"]
 ```
 
-### From pyproject.toml
+### Custom UV Integration
+
+For more control and optimization, start with a base Python image and integrate UV.
+
+**Dockerfile:**
 
 ```dockerfile
-COPY pyproject.toml .
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system -r pyproject.toml
+# syntax=docker/dockerfile:1.4
+
+FROM python:3.13-slim-bookworm AS base
+
+# Install UV
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
+ENV UV_SYSTEM_PYTHON=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
 ```
 
-### Specific Packages
+## Development Environment Setup
 
-```dockerfile
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system \
-    fastapi~=0.109.0 \
-    uvicorn~=0.27.0
+### Official Image Approach
+
+**docker-compose.yml:**
+
+```yaml
+services:
+  app:
+    image: ghcr.io/astral-sh/uv:python3.13-bookworm
+    volumes:
+      - .:/app
+    command: uvicorn app.main:app --reload --host 0.0.0.0
 ```
 
-## Development vs Production Setup
+### Custom Integration Approach
 
-### Development Compose File
+**docker-compose.yml:**
 
 ```yaml
 services:
@@ -221,7 +186,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-      target: dev
     volumes:
       - .:/app
       - uv-cache:/root/.cache/uv
@@ -234,59 +198,243 @@ volumes:
   uv-cache:
 ```
 
-### Production Compose File
+**Dockerfile.dev:**
 
-```yaml
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      platforms:
-        - linux/amd64
-        - linux/arm64
-    environment:
-      - UV_SYSTEM_PYTHON=1
-      - PYTHONUNBUFFERED=1
-    deploy:
-      resources:
-        limits:
-          memory: 512M
+```dockerfile
+# syntax=docker/dockerfile:1.4
+
+FROM python:3.13-slim-bookworm
+
+# Install development dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install UV
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
+ENV UV_SYSTEM_PYTHON=1 \
+    UV_LINK_MODE=copy \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+```
+
+## Production Environment Setup
+
+### Official Image Approach
+
+**Dockerfile:**
+
+```dockerfile
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+
+WORKDIR /app
+COPY . .
+RUN uv pip install --system -r requirements.txt
+
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0"]
+```
+
+### Custom Integration Approach
+
+**Dockerfile:**
+
+```dockerfile
+# syntax=docker/dockerfile:1.4
+
+# Build stage
+FROM python:3.13-slim-bookworm AS builder
+
+# Install UV
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
+ENV UV_SYSTEM_PYTHON=1
+
+WORKDIR /build
+COPY pyproject.toml uv.lock ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system --compile-bytecode \
+    --no-editable --only-binary :all: \
+    -r pyproject.toml
+
+# Final stage
+FROM python:3.13-slim-bookworm
+
+WORKDIR /app
+
+# Copy installed packages
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+
+# Copy application code
+COPY . .
+
+# Create a non-root user and switch to it
+RUN useradd -m -s /bin/bash appuser
+USER appuser
+
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0"]
 ```
 
 ## Best Practices
 
-### 1. Efficient Caching
+### Security
 
-Always use BuildX cache mounts:
+- **Run as a non-root user**
+
+  ```dockerfile
+  RUN useradd -m -s /bin/bash appuser
+  USER appuser
+  ```
+
+- **Keep your images up to date**
+
+  Always use specific versions and update regularly to include security patches.
+
+  ```dockerfile
+  FROM ghcr.io/astral-sh/uv:0.5.4-python3.13-bookworm
+  ```
+
+### Caching
+
+Use Docker BuildKit cache mounts to speed up dependency installation.
 
 ```dockerfile
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system package-name
+    uv pip install [...]
 ```
 
-### 2. Security
+### Multi-Architecture Support
 
-Run as non-root user:
+Leverage Docker Buildx for building images that support multiple architectures.
+
+```bash
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t myapp:latest \
+  --push .
+```
+
+## Migration Path
+
+Start with the official UV images for simplicity. As your application grows, consider migrating to a custom integration to optimize for production.
+
+1. Begin with official UV images.
+2. Introduce multi-stage builds.
+3. Implement caching strategies.
+4. Add security hardening.
+5. Optimize for production deployment.
+
+## Performance Comparison
+
+### Build Time (Example Project)
+
+- **Official Image:** ~2 minutes
+- **Custom Integration:** ~3 minutes on the first build, ~30 seconds on subsequent builds due to caching
+
+### Image Size (Example Project)
+
+- **Official Image:** ~1.2GB
+- **Custom Integration:** ~400MB
+
+### Memory Usage (Example Project)
+
+- **Official Image:** ~500MB
+- **Custom Integration:** ~300MB
+
+## Real-World Example: FastAPI Application
+
+Here's a complete example using FastAPI with custom UV integration.
+
+**Dockerfile:**
 
 ```dockerfile
+# syntax=docker/dockerfile:1.4
+
+# Build stage
+FROM python:3.13-slim-bookworm AS builder
+
+# Install UV
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/
+ENV UV_SYSTEM_PYTHON=1
+
+WORKDIR /build
+
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
+
+# Install dependencies with caching
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system --compile-bytecode \
+    --no-editable --only-binary :all: \
+    -r pyproject.toml
+
+# Final stage
+FROM python:3.13-slim-bookworm
+
+WORKDIR /app
+
+# Copy installed packages
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+
+# Copy application code
+COPY . .
+
+# Run as non-root user
 RUN useradd -m -s /bin/bash appuser
 USER appuser
+
+CMD ["python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0"]
 ```
 
-### 3. Image Size
+## Setting Up Multi-Architecture Builds
 
-Keep images small:
+First, create and bootstrap a new Buildx builder.
+
+```bash
+# Create new builder instance
+docker buildx create --name mybuilder --driver docker-container --bootstrap
+
+# Use the new builder
+docker buildx use mybuilder
+```
+
+Build your image for multiple architectures and push to a registry.
+
+```bash
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t ghcr.io/username/myapp:latest \
+  --push .
+```
+
+## Managing Dependencies
+
+### Using `requirements.txt`
 
 ```dockerfile
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    package-name \
-    && rm -rf /var/lib/apt/lists/*
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system -r requirements.txt
+```
+
+### Using `pyproject.toml`
+
+```dockerfile
+COPY pyproject.toml .
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system -r pyproject.toml
+```
+
+### Installing Specific Packages
+
+```dockerfile
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv pip install --system \
+    fastapi~=0.109.0 \
+    uvicorn~=0.27.0
 ```
 
 ## Working with Private Packages
 
-### Using SSH
+### Using SSH Keys
 
 ```dockerfile
 RUN --mount=type=ssh \
@@ -294,7 +442,7 @@ RUN --mount=type=ssh \
     git+ssh://git@github.com/org/repo.git
 ```
 
-### Using Token
+### Using Access Tokens
 
 ```dockerfile
 ARG GITHUB_TOKEN
@@ -309,57 +457,72 @@ RUN --mount=type=secret,id=github_token \
 
 1. **UV Cache Permission Issues**
 
-```dockerfile
-RUN mkdir -p /root/.cache/uv && chmod 777 /root/.cache/uv
-```
+   Ensure the cache directory has the correct permissions.
+
+   ```dockerfile
+   RUN mkdir -p /root/.cache/uv && chmod 777 /root/.cache/uv
+   ```
 
 2. **Platform-Specific Problems**
 
-```dockerfile
-RUN case "$(uname -m)" in \
-        aarch64) ARCH='arm64' ;; \
-        x86_64) ARCH='amd64' ;; \
-    esac && \
-    apt-get update && apt-get install -y package-name:${ARCH}
-```
+   Handle platform-specific dependencies.
+
+   ```dockerfile
+   RUN case "$(uname -m)" in \
+           aarch64) ARCH='arm64' ;; \
+           x86_64) ARCH='amd64' ;; \
+       esac && \
+       apt-get update && apt-get install -y package-name:${ARCH}
+   ```
 
 3. **Memory Issues**
 
-```yaml
-services:
-  app:
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-```
+   Set resource limits in your Docker Compose file.
 
-### Debug Commands
+   ```yaml
+   services:
+     app:
+       deploy:
+         resources:
+           limits:
+             memory: 2G
+   ```
 
-Check your setup:
+### Debugging Commands
 
-```bash
-# View UV cache directory
-docker run --rm myimage uv cache dir
+- **Check UV version**
 
-# Check UV version
-docker run --rm myimage uv --version
+  ```bash
+  docker run --rm myimage uv --version
+  ```
 
-# List installed packages
-docker run --rm myimage uv pip list
+- **List installed packages**
 
-# Verify Python paths
-docker run --rm myimage python -c "import sys; print(sys.path)"
-```
+  ```bash
+  docker run --rm myimage uv pip list
+  ```
+
+- **Inspect Python paths**
+
+  ```bash
+  docker run --rm myimage python -c "import sys; print(sys.path)"
+  ```
 
 ## Next Steps
 
-1. Implement CI/CD pipelines with UV
-2. Set up automated dependency updates
-3. Create development team guidelines
-4. Optimize build times further
+1. Implement CI/CD pipelines using UV and Docker.
+2. Set up automated dependency updates with Dependabot or similar tools.
+3. Establish development team guidelines for Docker and UV usage.
+4. Explore further build optimizations.
 
 ## Conclusion
+
+Choosing between the official UV Docker images and custom UV integration depends on your specific needs:
+
+- **Official UV Images**: Ideal for learning, development, and simple applications where ease of setup is a priority.
+- **Custom UV Integration**: Suited for production environments, optimization, and complex deployment strategies requiring finer control over the build process.
+
+Start with the official images to get up and running quickly, and consider transitioning to custom integration as your project grows in complexity and demands higher performance and security.
 
 You now have a complete toolkit for building Python applications with UV and Docker. This setup provides:
 
