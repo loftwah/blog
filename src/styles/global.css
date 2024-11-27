@@ -44,34 +44,31 @@ pre:has(code) {
   position: relative;
 }
 
-pre button.copy {
+pre .copy {
   position: absolute;
   right: 16px;
   top: 16px;
-  padding: 4px 8px;
   font-size: 14px;
+  color: var(--accent, #ff6f61);
   font-weight: 500;
-  color: #fff;
-  background-color: var(--accent, #ff6f61);
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s, content 0.3s;
+  transition: color 0.3s;
+  text-decoration: none; /* Remove underline */
 }
 
-pre button.copy:hover {
-  background-color: var(--accent-dark, #e65c50);
+pre .copy:hover {
+  color: var(--accent-dark, #e65c50);
 }
 
-pre button.copy.copied {
-  background-color: #4caf50; /* Green for success */
-  color: #fff;
+pre .copy.copied {
+  color: #4caf50;
 }
 
-pre button.copy::before {
-  content: 'Copy'; /* Default text */
+pre .copy::after {
+  content: 'Copy'; /* Default state */
 }
 
-pre button.copy.copied::before {
-  content: 'Copied!'; /* Changes to "Copied!" */
+pre .copy.copied::after {
+  content: 'Copied'; /* Copied state */
 }
+
