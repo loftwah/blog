@@ -1,7 +1,7 @@
 ---
 title: "UV with Python and Docker: A Comprehensive Guide to Modern Python Development"
 description: "Learn how to use the UV package manager with Python and Docker. This guide covers two main approaches, best practices, and how to optimize your development and production environments."
-difficulty: "Intermediate"
+difficulty: "intermediate"
 category: "DevOps"
 order: 21
 heroImage: "/images/python-docker-uv.png"
