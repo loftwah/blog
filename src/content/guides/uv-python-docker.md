@@ -292,12 +292,12 @@ WORKDIR /app
 
 #### Hot Reloading and Debugging
 
-To enable hot reloading and debugging, consider integrating tools like `watchdog` or `ptvsd`.
+To enable hot reloading and debugging, consider integrating tools like `watchdog` or `debugpy`.
 
 **Dockerfile.dev (Additions):**
 
 ```dockerfile
-RUN uv pip install --system watchdog ptvsd
+RUN uv pip install --system watchdog debugpy
 ```
 
 **docker-compose.yml (Additions):**
@@ -645,18 +645,62 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ### Using SSH Keys
 
 ```dockerfile
+# Assuming you have SSH keys set up
 RUN --mount=type=ssh \
     uv pip install --system \
     git+ssh://git@github.com/org/repo.git
 ```
 
+To build the image using the SSH key, run:
+
+```bash
+docker build --ssh default -t myimage .
+```
+
 ### Using Access Tokens
 
+When working with private repositories that require an access token, you can use Docker secrets to securely pass the token during the build process.
+
+**Dockerfile:**
+
 ```dockerfile
-ARG GITHUB_TOKEN
 RUN --mount=type=secret,id=github_token \
+    GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
     uv pip install --system \
     git+https://${GITHUB_TOKEN}@github.com/org/repo.git
+```
+
+**Explanation:**
+
+- The `--mount=type=secret,id=github_token` option mounts the secret file at `/run/secrets/github_token`.
+- Inside the `RUN` command, we read the token using `cat /run/secrets/github_token` and store it in the `GITHUB_TOKEN` environment variable.
+- We then use `GITHUB_TOKEN` in the pip install command to authenticate with GitHub.
+
+**Building the Image:**
+
+```bash
+docker build --secret id=github_token,src=path_to_your_github_token_file -t myimage .
+```
+
+**Alternative Approach Using `requirements.txt`:**
+
+If you have multiple private packages, you can use a placeholder in your `requirements.txt` file.
+
+**requirements.txt:**
+
+```
+git+https://${GITHUB_TOKEN}@github.com/org/private-repo.git
+```
+
+**Dockerfile:**
+
+```dockerfile
+COPY requirements.txt .
+RUN --mount=type=secret,id=github_token \
+    GITHUB_TOKEN=$(cat /run/secrets/github_token) && \
+    sed "s/\${GITHUB_TOKEN}/${GITHUB_TOKEN}/g" requirements.txt > requirements_resolved.txt && \
+    uv pip install --system -r requirements_resolved.txt && \
+    rm requirements_resolved.txt
 ```
 
 ---
