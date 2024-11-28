@@ -644,6 +644,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 ### Using SSH Keys
 
+**Dockerfile:**
+
 ```dockerfile
 # Assuming you have SSH keys set up
 RUN --mount=type=ssh \
@@ -651,15 +653,19 @@ RUN --mount=type=ssh \
     git+ssh://git@github.com/org/repo.git
 ```
 
-To build the image using the SSH key, run:
+**Building the Image:**
+
+Run the following command to build the image using the SSH key:
 
 ```bash
-docker build --ssh default -t myimage .
+docker buildx build --ssh default -t myimage .
 ```
+
+---
 
 ### Using Access Tokens
 
-When working with private repositories that require an access token, you can use Docker secrets to securely pass the token during the build process.
+When working with private repositories that require an access token, use Docker secrets to securely pass the token during the build process.
 
 **Dockerfile:**
 
@@ -673,18 +679,20 @@ RUN --mount=type=secret,id=github_token \
 **Explanation:**
 
 - The `--mount=type=secret,id=github_token` option mounts the secret file at `/run/secrets/github_token`.
-- Inside the `RUN` command, we read the token using `cat /run/secrets/github_token` and store it in the `GITHUB_TOKEN` environment variable.
-- We then use `GITHUB_TOKEN` in the pip install command to authenticate with GitHub.
+- Inside the `RUN` command, the token is read using `cat /run/secrets/github_token` and stored in the `GITHUB_TOKEN` environment variable.
+- The `GITHUB_TOKEN` is then used in the `pip install` command to authenticate with GitHub.
 
 **Building the Image:**
 
 ```bash
-docker build --secret id=github_token,src=path_to_your_github_token_file -t myimage .
+docker buildx build --secret id=github_token,src=path_to_your_github_token_file -t myimage .
 ```
 
-**Alternative Approach Using `requirements.txt`:**
+---
 
-If you have multiple private packages, you can use a placeholder in your `requirements.txt` file.
+### Alternative Approach Using `requirements.txt`
+
+If you have multiple private packages, you can use a placeholder for the token in your `requirements.txt` file.
 
 **requirements.txt:**
 
@@ -703,7 +711,23 @@ RUN --mount=type=secret,id=github_token \
     rm requirements_resolved.txt
 ```
 
+**Building the Image:**
+
+```bash
+docker buildx build --secret id=github_token,src=path_to_your_github_token_file -t myimage .
+```
+
 ---
+
+### Key Notes:
+
+1. Replace `path_to_your_github_token_file` with the path to your token file.
+2. Ensure `docker buildx` is installed and enabled. If not, follow [Docker Build Documentation](https://docs.docker.com/build/) for setup instructions.
+3. If BuildKit is not enabled by default, set `DOCKER_BUILDKIT=1` as an environment variable.
+
+---
+
+This approach ensures secure and efficient builds leveraging BuildKit's features.
 
 ## Troubleshooting Guide
 
