@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="Project Roadmap"
+	description="Explore Dean 'Loftwah' Lofts' roadmap of exciting projects, from RetroRides to Linkarooie."
+	pubDate={new Date('November 2024')}
+	heroImage="/images/roadmap.jpg"
+>
+	<h2>Project Roadmap</h2>
+	<p>
+		This page outlines the roadmap for my current and upcoming projects, giving insight into what I’m building, learning, and exploring. These projects span personal development, open-source contributions, and innovative SaaS ideas.
+	</p>
+
+	<h3>Immediate Focus (1–3 Months)</h3>
+	<ul>
+		<li><strong>FastAPI + Docker ECS Demo</strong> – Expanding the demo app to include AI integrations like background removal and text summarisation. Adding monitoring with Prometheus and Grafana for deeper observability.</li>
+		<li><strong>Astro Blog Enhancements</strong> – Publishing this roadmap and starting a blog post series about FastAPI, Docker, and ECS development.</li>
+	</ul>
+
+	<h3>Mid-Term Goals (3–6 Months)</h3>
+	<ul>
+		<li><strong>RetroRides</strong> – Building a pipeline to scrape and normalise classic car auction data, storing it in a SQLite database. Developing a lightweight UI for browsing and exporting the data.</li>
+		<li><strong>Linkarooie Enhancements</strong> – Adding "The Pool Room" community feature and refactoring user authentication to replace invite codes with email verification.</li>
+		<li><strong>Custom LLM Training</strong> – Automating the processing and fine-tuning of an LLM using my personal data, starting with Facebook exports.</li>
+	</ul>
+
+	<h3>Long-Term Ambitions (6–12 Months)</h3>
+	<ul>
+		<li><strong>AI SaaS Platform</strong> – Developing a SaaS solution powered by GPT-4 and Anthropic Claude for tasks like summarisation, document classification, and image processing.</li>
+		<li><strong>DevOps Pipeline Expansion</strong> – Transitioning to AWS CodeBuild and CodePipeline for improved CI/CD workflows, integrating them with ECS deployments.</li>
+		<li><strong>Linkarooie v2</strong> – Upgrading analytics, adding API integrations, and modernising the UI for a more interactive experience.</li>
+	</ul>
+
+	<h3>Exploration (Ongoing)</h3>
+	<ul>
+		<li><strong>Event-Driven Architectures</strong> – Experimenting with Kafka and RabbitMQ for scalable task processing in FastAPI.</li>
+		<li><strong>Databases</strong> – Deepening my understanding of database management and optimisation with SQLite and PostgreSQL.</li>
+		<li><strong>Terraform & AWS Refinement</strong> – Enhancing my Terraform templates to meet production-grade standards.</li>
+	</ul>
+
+	<h3>Why This Roadmap?</h3>
+	<p>
+		These projects are designed to challenge my skills, explore new technologies, and contribute meaningful tools and solutions. From enhancing open-source contributions like <strong>Linkarooie</strong> to launching innovative platforms, this roadmap reflects my passion for continuous improvement and impactful engineering.
+	</p>
+
+	<p>
+		Stay tuned for updates as I share my progress on this roadmap. Follow along for tutorials, insights, and milestones!
+	</p>
+</Layout>
