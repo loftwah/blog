@@ -3,49 +3,71 @@ import Layout from '../layouts/BlogPost.astro';
 ---
 
 <Layout
-	title="Project Roadmap"
-	description="Explore Dean 'Loftwah' Lofts' roadmap of exciting projects, from RetroRides to Linkarooie."
+	title="Dean's Roadmap for 2024"
+	description="A detailed plan of Dean 'Loftwah' Lofts' projects and exploration, blending Linkarooie improvements, cutting-edge tech, and personal development."
 	pubDate={new Date('December 2024')}
 	heroImage="/images/roadmap.jpg"
 >
-	<h2>Project Roadmap</h2>
+	<h2>Roadmap for 2024</h2>
 	<p>
-		This page outlines the roadmap for my current and upcoming projects, giving insight into what I’m building, learning, and exploring. These projects span personal development, open-source contributions, and innovative SaaS ideas.
+		This roadmap highlights the projects, tools, and technologies I'm prioritising for the next year. It reflects my commitment to learning, creating, and improving, while building impactful tools and engaging with open-source communities.
 	</p>
 
 	<h3>Immediate Focus (1–3 Months)</h3>
 	<ul>
-		<li><strong>FastAPI + Docker ECS Demo</strong> – Expanding the demo app to include AI integrations like background removal and text summarisation. Adding monitoring with Prometheus and Grafana for deeper observability.</li>
-		<li><strong>Astro Blog Enhancements</strong> – Publishing this roadmap and starting a blog post series about FastAPI, Docker, and ECS development.</li>
+		<li><strong>Linkarooie Improvements</strong>: 
+			<ul>
+				<li>Fix OG image rendering issues and optimise the font setup.</li>
+				<li>Transition signups to email validation, removing the invite code system.</li>
+				<li>Explore using Kamal for streamlined deployment processes.</li>
+			</ul>
+		</li>
+		<li><strong>Astro Blog Enhancements</strong>: 
+			<ul>
+				<li>Launch a tech-focused quiz system with questions tied to my projects and learnings.</li>
+				<li>Improve site performance and design iteratively.</li>
+			</ul>
+		</li>
+		<li><strong>Exploring Bun and TypeScript</strong>: Experiment with Bun for server-side development and refine my TypeScript skills with practical projects.</li>
+		<li><strong>Bluesky and AT Proto</strong>: Build tools leveraging the Bsky SDK, exploring integrations with decentralised social media.</li>
 	</ul>
 
 	<h3>Mid-Term Goals (3–6 Months)</h3>
 	<ul>
-		<li><strong>RetroRides</strong> – Building a pipeline to scrape and normalise classic car auction data, storing it in a SQLite database. Developing a lightweight UI for browsing and exporting the data.</li>
-		<li><strong>Linkarooie Enhancements</strong> – Adding "The Pool Room" community feature and refactoring user authentication to replace invite codes with email verification.</li>
-		<li><strong>Custom LLM Training</strong> – Automating the processing and fine-tuning of an LLM using my personal data, starting with Facebook exports.</li>
+		<li><strong>RetroRides</strong>: 
+			<ul>
+				<li>Finalise the classic car auction scraper pipeline with normalisation in SQLite.</li>
+				<li>Develop a lightweight, user-friendly UI for data browsing and export.</li>
+			</ul>
+		</li>
+		<li><strong>Terraform and AWS</strong>: 
+			<ul>
+				<li>Deepen expertise in Docker and ECS deployments with Terraform.</li>
+				<li>Expand my Terraform templates for production-grade reliability.</li>
+			</ul>
+		</li>
+		<li><strong>LLM Tools</strong>: Create utility tools integrating OpenAI, Anthropic Claude, and Grok to explore practical applications of AI for summarisation, classification, and more.</li>
 	</ul>
 
-	<h3>Long-Term Ambitions (6–12 Months)</h3>
+	<h3>Long-Term Exploration and Learning (6–12 Months)</h3>
 	<ul>
-		<li><strong>AI SaaS Platform</strong> – Developing a SaaS solution powered by GPT-4 and Anthropic Claude for tasks like summarisation, document classification, and image processing.</li>
-		<li><strong>DevOps Pipeline Expansion</strong> – Transitioning to AWS CodeBuild and CodePipeline for improved CI/CD workflows, integrating them with ECS deployments.</li>
-		<li><strong>Linkarooie v2</strong> – Upgrading analytics, adding API integrations, and modernising the UI for a more interactive experience.</li>
+		<li><strong>Cloudflare Workers</strong>: Experiment with serverless edge computing and potential integrations with FastAPI and other projects.</li>
+		<li><strong>FastAPI and UV</strong>: Build projects using FastAPI for API development and UV for faster workflows.</li>
+		<li><strong>Event-Driven Architectures</strong>: Dive into Kafka and RabbitMQ for scalable processing and messaging systems.</li>
+		<li><strong>Database Optimisation</strong>: Refine skills in SQLite and PostgreSQL, focusing on performance tuning and scalability.</li>
 	</ul>
 
-	<h3>Exploration (Ongoing)</h3>
-	<ul>
-		<li><strong>Event-Driven Architectures</strong> – Experimenting with Kafka and RabbitMQ for scalable task processing in FastAPI.</li>
-		<li><strong>Databases</strong> – Deepening my understanding of database management and optimisation with SQLite and PostgreSQL.</li>
-		<li><strong>Terraform & AWS Refinement</strong> – Enhancing my Terraform templates to meet production-grade standards.</li>
-	</ul>
-
-	<h3>Why This Roadmap?</h3>
+	<h3>Core Principles Driving This Roadmap</h3>
 	<p>
-		These projects are designed to challenge my skills, explore new technologies, and contribute meaningful tools and solutions. From enhancing open-source contributions like <strong>Linkarooie</strong> to launching innovative platforms, this roadmap reflects my passion for continuous improvement and impactful engineering.
+		My work is grounded in the following goals:
 	</p>
+	<ul>
+		<li>**Continuous Improvement**: Sharpening skills with TypeScript, Bun, Terraform, and more.</li>
+		<li>**Impactful Solutions**: Prioritising high-value features like Linkarooie improvements and RetroRides development.</li>
+		<li>**Open-Source Contributions**: Sharing knowledge through tools, projects, and blog updates.</li>
+	</ul>
 
 	<p>
-		Stay tuned for updates as I share my progress on this roadmap. Follow along for tutorials, insights, and milestones!
+		Follow along as I share progress, insights, and milestones. Suggestions, feedback, and collaboration ideas are always welcome!
 	</p>
 </Layout>
