@@ -1,117 +1,411 @@
 ---
-import Layout from '../layouts/BlogPost.astro';
+import Layout from "../layouts/BlogPost.astro";
 ---
 
 <Layout
-	title="Dean's Roadmap for 2025"
-	description="A comprehensive plan highlighting Dean 'Loftwah' Lofts' projects, including Linkarooie enhancements, exploring new technologies, and personal development."
-	pubDate={new Date('December 2024')}
-	heroImage="/images/roadmap.jpg"
+  title="My Comprehensive Roadmap for 2025"
+  description="A detailed and personal journey outlining my projects, skill development, and plans to offer professional services in DevOps and cloud technologies."
+  pubDate={new Date("December 2024")}
+  heroImage="/images/roadmap.jpg"
 >
-	<h2>Roadmap for 2025</h2>
-	<p>
-		This roadmap outlines the projects, tools, and technologies I'm focusing on for the upcoming year. It represents my dedication to learning, creating, and improving, while contributing to open-source communities and exploring cutting-edge technologies.
-	</p>
+  <h2>My Roadmap for 2025</h2>
+  <p>
+    Over the past few years, I've transformed from a beginner in Ruby and Rails
+    to a Senior DevOps Engineer capable of deploying scalable, secure
+    infrastructures. Migrating a 13-year-old Rails app to AWS wasn't just a
+    technical challenge—it taught me the importance of breaking big problems
+    into manageable steps and trusting in my ability to learn what I didn't
+    know. This roadmap is a reflection of my ongoing journey to grow, innovate,
+    and contribute meaningfully to the tech community while preparing to take on
+    new challenges like offering professional services.
+  </p>
 
-	<h3>Immediate Focus (1–3 Months)</h3>
-	<ul>
-		<li><strong>Linkarooie Enhancements</strong>:
-			<ul>
-				<li>Fix OG image rendering issues and optimize font handling.</li>
-				<li>Transition signups from invite codes to email validation for a smoother user experience.</li>
-				<li>Deepen practical experience with <strong>Kamal</strong>:
-					<ul>
-						<li>Test various real-world deployment scenarios.</li>
-						<li>Practice scaling applications in production-like environments.</li>
-						<li>Explore advanced features like rollbacks and zero-downtime deployments.</li>
-						<li>Integrate and fine-tune workflows with GitHub Actions.</li>
-					</ul>
-				</li>
-			</ul>
-		</li>
-		<li><strong>Astro Blog Enhancements</strong>:
-			<ul>
-				<li>Develop and launch a tech-focused quiz system with questions related to my projects and the technologies I'm exploring.</li>
-				<li>Continuously improve site performance, design, and content.</li>
-			</ul>
-		</li>
-		<li><strong>Exploring Bun and TypeScript</strong>:
-			<ul>
-				<li>Experiment with Bun for server-side development.</li>
-				<li>Build small projects to enhance TypeScript proficiency.</li>
-			</ul>
-		</li>
-		<li><strong>Bluesky and AT Protocol</strong>:
-			<ul>
-				<li>Learn about the AT Protocol and its applications.</li>
-				<li>Build tools and integrations using the Bsky SDK and TypeScript.</li>
-			</ul>
-		</li>
-	</ul>
+  <h3>Immediate Focus (1–3 Months)</h3>
+  <ul>
+    <li>
+      <strong>Linkarooie Enhancements</strong>:
+      <ul>
+        <li>
+          <p>
+            Linkarooie has become more than just a project—it's a space where I
+            experiment, learn, and test my ability to ship meaningful features.
+            Each enhancement helps me grow as both a developer and a product
+            owner.
+          </p>
+        </li>
+        <li>
+          Resolve OG image rendering issues and optimize font handling to
+          enhance user experience.
+        </li>
+        <li>
+          Transition from invite-only signups to email validation, improving
+          accessibility without compromising security.
+        </li>
+        <li>
+          Deepen expertise with <strong>Kamal</strong>:
+          <ul>
+            <li>
+              Experiment with real-world deployment scenarios to solidify
+              understanding.
+            </li>
+            <li>
+              Implement advanced features like rollbacks and zero-downtime
+              deployments.
+            </li>
+            <li>
+              Integrate Kamal into CI/CD pipelines using GitHub Actions,
+              refining deployment workflows.
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Astro Blog Enhancements</strong>:
+      <ul>
+        <li>
+          <p>
+            I want to keep working on and improving my Astro site and blog,
+            including the quiz system I'm developing. The questions will be
+            related to the technologies I'm exploring, giving it the feel of
+            taking a test for a certification exam. This not only helps others
+            learn but also reinforces my own understanding.
+          </p>
+        </li>
+        <li>
+          Develop a tech-focused quiz system to engage readers and provide
+          interactive learning.
+        </li>
+        <li>
+          Implement performance improvements, modern design tweaks, and richer
+          content updates.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Exploring Bun and TypeScript</strong>:
+      <ul>
+        <li>
+          <p>
+            Learning new tools like Bun and TypeScript isn’t just about staying
+            relevant—it’s a way to rediscover the excitement of trying something
+            completely new. I'm eager to experiment and see how these
+            technologies can enhance my development workflow.
+          </p>
+        </li>
+        <li>
+          Experiment with Bun to evaluate its potential for lightweight
+          server-side applications.
+        </li>
+        <li>
+          Build small, focused projects in TypeScript to strengthen proficiency
+          and practical understanding.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Bluesky and AT Protocol</strong>:
+      <ul>
+        <li>
+          <p>
+            I'm intrigued by the possibilities of decentralized social media
+            platforms. By diving into the AT Protocol and building tools with
+            the Bsky SDK and TypeScript, I hope to contribute to a more open and
+            user-controlled internet.
+          </p>
+        </li>
+        <li>
+          Dive into the AT Protocol's architecture and explore use cases for
+          decentralized networking.
+        </li>
+        <li>
+          Develop tools and integrations using the Bsky SDK and TypeScript,
+          focusing on extensibility and scalability.
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-	<h3>Mid-Term Goals (3–6 Months)</h3>
-	<ul>
-		<li><strong>RetroRides Project</strong>:
-			<ul>
-				<li>Refine the classic car auction data scraper and normalization pipeline.</li>
-				<li>Store data in SQLite for efficient access and management.</li>
-				<li>Develop a lightweight UI for browsing and exporting auction data.</li>
-			</ul>
-		</li>
-		<li><strong>Terraform and AWS Mastery</strong>:
-			<ul>
-				<li>Enhance skills in infrastructure-as-code with Terraform.</li>
-				<li>Focus on Docker and ECS deployments.</li>
-				<li>Integrate Cloudflare Workers into AWS workflows.</li>
-			</ul>
-		</li>
-		<li><strong>LLM Tool Exploration</strong>:
-			<ul>
-				<li>Build tools integrating with OpenAI, Anthropic Claude, and xAI's Grok.</li>
-				<li>Experiment with applications like text summarization and classification.</li>
-			</ul>
-		</li>
-	</ul>
+  <h3>Mid-Term Goals (3–6 Months)</h3>
+  <ul>
+    <li>
+      <strong>RetroRides Project</strong>:
+      <ul>
+        <li>
+          <p>
+            RetroRides combines my passion for classic cars with technology. By
+            refining the data scraper and building a user-friendly interface, I
+            aim to create a valuable resource for enthusiasts like myself.
+          </p>
+        </li>
+        <li>
+          Refine the classic car auction data scraper for accuracy and
+          scalability.
+        </li>
+        <li>
+          Implement data storage and management using SQLite, optimizing for
+          performance and maintainability.
+        </li>
+        <li>
+          Build a lightweight UI for browsing, filtering, and exporting data,
+          emphasizing user experience.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Terraform and AWS Mastery</strong>:
+      <ul>
+        <li>
+          <p>
+            Infrastructure as code has always fascinated me. Enhancing my skills
+            with Terraform and AWS will allow me to build more scalable and
+            reliable infrastructures. This is a crucial step towards my goal of
+            offering professional services in the future.
+          </p>
+        </li>
+        <li>
+          Expand expertise in infrastructure-as-code by focusing on advanced
+          Terraform modules and patterns.
+        </li>
+        <li>
+          Optimize Docker and ECS deployments for scalability, reliability, and
+          cost-efficiency.
+        </li>
+        <li>
+          Integrate Cloudflare Workers into AWS workflows to enhance edge
+          computing capabilities and reduce latency.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>LLM Tool Exploration</strong>:
+      <ul>
+        <li>
+          <p>
+            Building tools around Large Language Models like OpenAI's GPT-4,
+            Anthropic's Claude, and xAI's Grok allows me to explore the cutting
+            edge of AI technology. While I don't plan to build a SaaS platform,
+            I'm excited to experiment with applications like text summarization
+            and classification.
+          </p>
+        </li>
+        <li>
+          Experiment with OpenAI's GPT models, Anthropic's Claude, and xAI's
+          Grok to build tools for text summarization, classification, and
+          beyond.
+        </li>
+        <li>
+          Develop a practical understanding of fine-tuning and integrating large
+          language models into existing workflows.
+        </li>
+        <li>
+          Create prototypes that leverage AI for automation and efficiency
+          improvements in DevOps processes.
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-	<h3>Long-Term Exploration and Learning (6–12 Months)</h3>
-	<ul>
-		<li><strong>Cloudflare Workers</strong>:
-			<ul>
-				<li>Explore serverless edge computing use cases.</li>
-				<li>Integrate Cloudflare Workers with existing projects.</li>
-			</ul>
-		</li>
-		<li><strong>FastAPI and UV</strong>:
-			<ul>
-				<li>Build projects using FastAPI for efficient API development.</li>
-				<li>Leverage UV for performance enhancements.</li>
-			</ul>
-		</li>
-		<li><strong>Event-Driven Architectures</strong>:
-			<ul>
-				<li>Learn about Kafka and RabbitMQ for scalable task processing.</li>
-				<li>Implement event-driven patterns in personal projects.</li>
-			</ul>
-		</li>
-		<li><strong>Database Optimization</strong>:
-			<ul>
-				<li>Improve skills in SQLite and PostgreSQL.</li>
-				<li>Focus on performance tuning and scalability.</li>
-			</ul>
-		</li>
-	</ul>
+  <h3>Long-Term Exploration and Learning (6–12 Months)</h3>
+  <ul>
+    <li>
+      <strong>Offering DevOps and Cloud Services</strong>:
+      <ul>
+        <li>
+          <p>
+            For years, I've focused on building skills and solving problems
+            behind the scenes. In 2025, I want to step into the spotlight and
+            offer services that help businesses modernize their infrastructure,
+            streamline deployments, and scale confidently. It's an intimidating
+            leap, but I'm ready to embrace the challenge.
+          </p>
+        </li>
+        <li>
+          Define clear service offerings, such as:
+          <ul>
+            <li>
+              Heroku-to-AWS migrations with a focus on cost optimization and
+              scalability.
+            </li>
+            <li>
+              SOC 2-compliant infrastructure setups for companies needing strict
+              compliance adherence.
+            </li>
+            <li>
+              CI/CD pipeline development and optimization using industry best
+              practices.
+            </li>
+          </ul>
+        </li>
+        <li>
+          Create case studies showcasing previous projects and the value
+          delivered to clients, highlighting problem-solving approaches and
+          outcomes.
+        </li>
+        <li>
+          Build a professional landing page and marketing materials to attract
+          potential clients and establish a personal brand in the consulting
+          space.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Cloudflare Workers and Edge Computing</strong>:
+      <ul>
+        <li>
+          <p>
+            Serverless edge computing is an exciting frontier. By exploring
+            Cloudflare Workers, I hope to find innovative ways to integrate edge
+            computing into my projects, enhancing performance and scalability.
+          </p>
+        </li>
+        <li>
+          Explore advanced use cases for serverless edge computing, such as
+          real-time data processing and content delivery optimizations.
+        </li>
+        <li>
+          Develop sample integrations and contribute to open-source projects to
+          share findings with the community.
+        </li>
+        <li>
+          Apply learnings to optimize latency-sensitive workflows in both
+          personal and professional projects.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Event-Driven Architectures</strong>:
+      <ul>
+        <li>
+          <p>
+            Understanding event-driven architectures with Kafka and RabbitMQ
+            will enable me to design systems that are more scalable and
+            responsive. This knowledge is essential for modern application
+            development.
+          </p>
+        </li>
+        <li>
+          Learn about scalable messaging systems like Apache Kafka and RabbitMQ,
+          focusing on their role in microservices architecture.
+        </li>
+        <li>
+          Implement event-driven patterns in projects to improve real-time
+          processing and data streaming capabilities.
+        </li>
+        <li>
+          Experiment with serverless event-driven services like AWS EventBridge
+          and Step Functions.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Database Optimization and Scalability</strong>:
+      <ul>
+        <li>
+          <p>
+            Databases are at the heart of most applications. Improving my skills
+            in SQLite and PostgreSQL, focusing on performance tuning and
+            scalability, will help me build more efficient and robust systems.
+          </p>
+        </li>
+        <li>
+          Master performance tuning techniques for SQLite and PostgreSQL,
+          including indexing strategies and query optimization.
+        </li>
+        <li>
+          Explore scalability strategies such as read replicas, sharding, and
+          partitioning to handle large-scale data efficiently.
+        </li>
+        <li>
+          Implement monitoring tools to track database performance and
+          proactively address bottlenecks.
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-	<h3>Core Principles Guiding This Roadmap</h3>
-	<p>
-		My journey is driven by the following goals:
-	</p>
-	<ul>
-		<li><strong>Continuous Learning</strong>: Constantly enhancing my skill set with new technologies like TypeScript, Bun, Kamal, and Terraform.</li>
-		<li><strong>Practical Application</strong>: Applying what I learn to real-world projects to gain hands-on experience.</li>
-		<li><strong>Community Contribution</strong>: Sharing knowledge through open-source projects, blog posts, and community engagement.</li>
-	</ul>
+  <h3>Core Principles Guiding This Roadmap</h3>
+  <p>My journey is driven by the following goals:</p>
+  <ul>
+    <li>
+      <strong>Continuous Learning</strong>:
+      <p>
+        Committing to daily learning and staying abreast of emerging
+        technologies keeps me adaptable and innovative. Participating in
+        workshops, webinars, and tech conferences broadens my knowledge and
+        connects me with like-minded professionals.
+      </p>
+    </li>
+    <li>
+      <strong>Practical Application</strong>:
+      <p>
+        Applying what I learn to real-world projects not only solidifies my
+        understanding but also creates tangible value. Engaging in hands-on
+        projects challenges my abilities and promotes growth.
+      </p>
+    </li>
+    <li>
+      <strong>Community Contribution</strong>:
+      <p>
+        Sharing knowledge through blogging, open-source contributions, and
+        mentoring aspiring developers allows me to give back to the community
+        that has supported me. Collaboration fosters innovation and collective
+        problem-solving.
+      </p>
+    </li>
+  </ul>
 
-	<p>
-		I look forward to sharing my progress, challenges, and insights along the way. Your feedback and collaboration are highly appreciated!
-	</p>
+  <h3>Balancing Work and Life</h3>
+  <p>
+    This year, I also aim to strike a better work-life balance. As a father, I
+    want to ensure I'm present for my daughter while still pushing forward
+    professionally. This roadmap reflects that balance by focusing on
+    meaningful, impactful work without overloading myself.
+  </p>
+
+  <h3>Conclusion</h3>
+  <p>
+    This roadmap isn't just a list of goals—it's a reflection of who I am and
+    who I'm becoming. I'm excited to tackle these challenges while staying true
+    to what drives me: curiosity, creativity, and a desire to make an impact.
+    I'm proud of how far I've come, and I'm excited to see where 2025 takes me.
+    If you'd like to join me on this journey or collaborate on any of these
+    goals, let's connect.
+  </p>
+
+  <h3>Get in Touch</h3>
+  <p>Feel free to connect with me on:</p>
+  <ul>
+    <li>
+      <a
+        href="https://twitter.com/loftwah"
+        target="_blank"
+        class="text-accent hover:text-accent-dark">Twitter</a>
+    </li>
+    <li>
+      <a
+        href="https://bsky.app/profile/loftwah.com"
+        target="_blank"
+        class="text-accent hover:text-accent-dark">Bluesky</a>
+    </li>
+    <li>
+      <a
+        href="https://github.com/loftwah"
+        target="_blank"
+        class="text-accent hover:text-accent-dark">GitHub</a>
+    </li>
+    <li>
+      <a
+        href="https://www.youtube.com/loftwahthebeatsmiff"
+        target="_blank"
+        class="text-accent hover:text-accent-dark">YouTube</a>
+    </li>
+    <li>
+      <a
+        href="https://linkarooie.com/loftwah"
+        target="_blank"
+        class="text-accent hover:text-accent-dark">Linkarooie</a>
+    </li>
+  </ul>
+  <p>Let’s build something amazing together!</p>
 </Layout>
