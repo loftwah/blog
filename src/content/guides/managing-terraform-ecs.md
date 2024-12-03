@@ -1,5 +1,4 @@
 ---
-
 title: "Loftwah's Guide to Managing Terraform for AWS ECS Fargate Deployments with HTTPS"
 description: "An in-depth guide to setting up and managing Terraform configurations for deploying Docker images on AWS ECS with Fargate, including HTTPS termination at the load balancer for enhanced security and compliance. This guide emphasizes clarity, maintainability, and project-specific customization for effective infrastructure management."
 difficulty: "intermediate"
@@ -70,7 +69,7 @@ Before proceeding, ensure you have the following:
 - **Docker Buildx**: Enabled for multi-architecture builds (comes with Docker Desktop).
 - **jq**: Command-line JSON processor (required for some scripts).
 - **curl**: For downloading files in the Dockerfile.
-- **A Registered Domain**: Optional but recommended for obtaining SSL/TLS certificates. You can use AWS Route 53 or Cloudflare to manage domains.
+- **A Registered Domain**: Recommended for obtaining SSL/TLS certificates. You can use AWS Route 53 or Cloudflare to manage domains.
 
 ---
 
@@ -288,7 +287,7 @@ RUN uv pip install --system -r pyproject.toml
 COPY . .
 
 # Create volume for music storage
-VOLUME /schoolstatus-jams
+VOLUME /loftwahs-jams
 
 # Default command (will be overridden in compose)
 CMD ["python", "-m", "bandaid.sync"]
@@ -302,7 +301,7 @@ CMD ["python", "-m", "bandaid.sync"]
 - **System Dependencies**: Installs necessary system packages like `curl` and `ffmpeg`.
 - **Environment Variables**: Sets up the environment for `uv` and Python.
 - **Work Directory**: Sets `/app` as the working directory.
-- **Volume**: Creates a volume at `/schoolstatus-jams` for persistent storage.
+- **Volume**: Creates a volume at `/loftwahs-jams` for persistent storage.
 
 #### Build and Push Commands
 
@@ -525,23 +524,33 @@ To enable HTTPS on the ALB, you need an SSL/TLS certificate. AWS Certificate Man
    - For example, `yourdomain.com` and `www.yourdomain.com`.
 4. **Select Validation Method**:
    - **DNS Validation** (recommended): You need to add a CNAME record to your domain's DNS.
-   - **Email Validation**: AWS sends an email to domain contacts for approval.
 5. **Add Tags** (optional).
 6. **Review and Request**.
 7. **Validate the Domain**:
-   - If using DNS validation and your domain is managed in Route 53, ACM can add the DNS record automatically.
-   - If managed elsewhere (Cloudflare), add the provided CNAME record to your DNS configuration.
+   - **If Using DNS Validation**:
+     - **For AWS Route 53 Users**: ACM can add the DNS record automatically.
+     - **For Cloudflare or Other DNS Providers**: You need to manually add the provided CNAME record to your DNS configuration or automate it using Terraform.
 
 Once validated, the certificate status will change to "Issued".
 
 #### Terraform Configuration
 
+You can automate the certificate request and DNS validation using Terraform. The configuration differs slightly depending on whether you use AWS Route 53 or Cloudflare to manage your DNS records.
+
+**Choose the appropriate configuration based on your DNS provider.**
+
+---
+
+#### Terraform Configuration for AWS Route 53 Users
+
 **main.tf**
 
 ```hcl
-# ... (Previous configurations)
+provider "aws" {
+  region = var.aws_region
+}
 
-# Data source for Route53 Zone
+# Data source for Route 53 Zone
 data "aws_route53_zone" "main" {
   name         = var.domain_name
   private_zone = false
@@ -648,7 +657,151 @@ resource "aws_security_group" "alb" {
 
 **variables.tf**
 
-Add the following variables:
+```hcl
+variable "domain_name" {
+  description = "The domain name for SSL certificate"
+  type        = string
+}
+
+variable "aws_region" {
+  description = "AWS region for resources"
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+}
+
+variable "app_name" {
+  description = "The name of the application"
+  type        = string
+}
+```
+
+**terraform.tfvars**
+
+```hcl
+domain_name = "yourdomain.com"
+aws_region  = "us-east-1"
+app_name    = "your-app-name"
+tags = {
+  Environment = "dev"
+  Project     = "YourProject"
+}
+```
+
+---
+
+#### Terraform Configuration for Cloudflare Users
+
+**main.tf**
+
+```hcl
+provider "aws" {
+  region = var.aws_region
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
+}
+
+# ACM Certificate
+resource "aws_acm_certificate" "cert" {
+  domain_name       = var.domain_name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = var.tags
+}
+
+# DNS Validation Records in Cloudflare
+resource "cloudflare_record" "cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => dvo
+  }
+
+  zone_id = var.cloudflare_zone_id
+  name    = trim(each.value.resource_record_name, ".${var.domain_name}.")
+  type    = each.value.resource_record_type
+  value   = each.value.resource_record_value
+  ttl     = 300
+}
+
+# Certificate Validation
+resource "aws_acm_certificate_validation" "cert_validation" {
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = [for record in cloudflare_record.cert_validation : record.hostname]
+}
+
+# Load Balancer Listener for HTTPS
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificates      = [{
+    certificate_arn = aws_acm_certificate.cert.arn
+  }]
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.tg.arn
+  }
+}
+
+# HTTP Listener with Redirection to HTTPS
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      protocol   = "HTTPS"
+      port       = "443"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+# Update Security Groups to Allow HTTPS
+resource "aws_security_group" "alb" {
+  name        = "${var.app_name}-alb-sg"
+  description = "Security group for ALB"
+  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = var.tags
+}
+```
+
+**variables.tf**
 
 ```hcl
 variable "domain_name" {
@@ -656,25 +809,60 @@ variable "domain_name" {
   type        = string
 }
 
-variable "hosted_zone_id" {
-  description = "The Route53 Hosted Zone ID"
+variable "aws_region" {
+  description = "AWS region for resources"
+  type        = string
+}
+
+variable "cloudflare_api_token" {
+  description = "API token for Cloudflare with permissions to edit DNS records"
+  type        = string
+}
+
+variable "cloudflare_zone_id" {
+  description = "Zone ID for your Cloudflare domain"
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+}
+
+variable "app_name" {
+  description = "The name of the application"
   type        = string
 }
 ```
 
 **terraform.tfvars**
 
-Include your domain details:
-
 ```hcl
-domain_name    = "yourdomain.com"
-hosted_zone_id = "Z1234567890ABCDEF"  # Replace with your actual Hosted Zone ID
+domain_name          = "yourdomain.com"
+aws_region           = "us-east-1"
+cloudflare_api_token = "your-cloudflare-api-token"
+cloudflare_zone_id   = "your-cloudflare-zone-id"
+app_name             = "your-app-name"
+tags = {
+  Environment = "dev"
+  Project     = "YourProject"
+}
 ```
+
+**Notes**:
+
+- **Cloudflare API Token**: Generate an API token in Cloudflare with permissions to edit DNS records.
+- **Cloudflare Zone ID**: Obtain the Zone ID from your Cloudflare dashboard for the domain.
+- **Name Trimming**: The `name` attribute in `cloudflare_record` uses `trim` to remove the domain suffix.
+
+---
 
 #### Explanation
 
 - **AWS ACM Certificate**: Requests an SSL/TLS certificate for your domain using DNS validation.
-- **Route53 Records**: Creates DNS validation records required by ACM to validate domain ownership.
+- **DNS Validation Records**: Creates DNS validation records required by ACM to validate domain ownership.
+  - **For Route 53 Users**: Uses the `aws_route53_record` resource to create CNAME records in Route 53.
+  - **For Cloudflare Users**: Uses the `cloudflare_record` resource to create CNAME records in Cloudflare.
 - **Certificate Validation**: Waits for the certificate to be issued before proceeding.
 - **HTTPS Listener**: Configures the ALB to listen on port 443 with the SSL/TLS certificate.
 - **HTTP to HTTPS Redirection**: Sets up the ALB to redirect HTTP traffic on port 80 to HTTPS on port 443.
@@ -683,11 +871,9 @@ hosted_zone_id = "Z1234567890ABCDEF"  # Replace with your actual Hosted Zone ID
 #### Notes on Domain Ownership
 
 - **Domain Ownership is Required**: To obtain a public SSL/TLS certificate from ACM, you must own or control the domain.
-- **Using Route53**: If you manage your DNS with AWS Route53, Terraform can automatically create the necessary validation records.
-- **Without Owning a Domain**:
-  - **Self-Signed Certificates**: Not recommended for production as they cause browser warnings.
-  - **AWS-Provided Certificates**: AWS does not provide certificates for domains you don't own.
-  - **Workaround for Testing**: Use a self-signed certificate or accept the browser warning for the default AWS certificate, but this is not suitable for SOC 2 compliance.
+- **Using AWS Route 53**: If you manage your DNS with AWS Route 53, Terraform can automatically create the necessary validation records.
+- **Using Cloudflare**: If you manage your DNS with Cloudflare, you can use the Cloudflare Terraform provider to automate the creation of DNS validation records.
+- **Manual DNS Record Addition**: If you prefer, you can manually add the CNAME records provided by ACM to your DNS provider.
 
 #### Deployment Commands
 
@@ -776,7 +962,7 @@ chmod +x deploy.sh
 # Get variables from Terraform outputs
 CLUSTER_NAME=$(terraform -chdir=../infrastructure/3-ecs output -raw ecs_cluster_name)
 SERVICE_NAME=$(terraform -chdir=../infrastructure/3-ecs output -raw ecs_service_name)
-REGION=$(terraform -chdir=../infrastructure/3-ecs output -raw region 2>/dev/null || echo "us-east-1")
+REGION=$(terraform -chdir=../infrastructure/3-ecs output -raw aws_region 2>/dev/null || echo "us-east-1")
 
 # Get the task ID
 TASK_ID=$(aws ecs list-tasks \
@@ -852,7 +1038,7 @@ chmod +x monitor.sh
 
 CLUSTER_NAME=$(terraform -chdir=../infrastructure/3-ecs output -raw ecs_cluster_name)
 SERVICE_NAME=$(terraform -chdir=../infrastructure/3-ecs output -raw ecs_service_name)
-REGION=$(terraform -chdir=../infrastructure/3-ecs output -raw region 2>/dev/null || echo "us-east-1")
+REGION=$(terraform -chdir=../infrastructure/3-ecs output -raw aws_region 2>/dev/null || echo "us-east-1")
 
 # Get the task ID
 TASK_ID=$(aws ecs list-tasks \
@@ -922,7 +1108,7 @@ chmod +x monitor-health.sh
 
 CLUSTER_NAME=$(terraform -chdir=../infrastructure/3-ecs output -raw ecs_cluster_name)
 SERVICE_NAME=$(terraform -chdir=../infrastructure/3-ecs output -raw ecs_service_name)
-REGION=$(terraform -chdir=../infrastructure/3-ecs output -raw region 2>/dev/null || echo "us-east-1")
+REGION=$(terraform -chdir=../infrastructure/3-ecs output -raw aws_region 2>/dev/null || echo "us-east-1")
 
 TASK_ID=$(aws ecs list-tasks \
   --cluster "$CLUSTER_NAME" \
@@ -1136,7 +1322,9 @@ By organizing code to mirror the deployment process, utilizing advanced Docker b
 
 ---
 
-By including HTTPS termination at the load balancer, this guide now addresses the requirement for SOC 2 compliance by ensuring all client-server communications are encrypted. If you do not own a domain, consider acquiring one to enable HTTPS with a valid SSL/TLS certificate from ACM. While it's technically possible to use self-signed certificates or the default certificate provided by AWS, these approaches are not suitable for production environments due to security warnings and compliance issues.
+By including HTTPS termination at the load balancer, this guide now addresses the requirement for SOC 2 compliance by ensuring all client-server communications are encrypted. Whether you manage your DNS records with AWS Route 53 or Cloudflare, this guide provides the necessary Terraform configurations to automate SSL/TLS certificate provisioning and domain validation.
+
+If you do not own a domain, consider acquiring one to enable HTTPS with a valid SSL/TLS certificate from ACM. While it's technically possible to use self-signed certificates or the default certificate provided by AWS, these approaches are not suitable for production environments due to security warnings and compliance issues.
 
 If owning a domain is not feasible, for internal applications, you could use AWS Private Certificate Authority (Private CA) to issue certificates within your organization, but this requires additional AWS services and may have associated costs.
 
