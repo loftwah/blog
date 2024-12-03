@@ -70,7 +70,7 @@ Before proceeding, ensure you have the following:
 - **Docker Buildx**: Enabled for multi-architecture builds (comes with Docker Desktop).
 - **jq**: Command-line JSON processor (required for some scripts).
 - **curl**: For downloading files in the Dockerfile.
-- **A Registered Domain**: Optional but recommended for obtaining SSL/TLS certificates. You can use AWS Route 53 to manage domains.
+- **A Registered Domain**: Optional but recommended for obtaining SSL/TLS certificates. You can use AWS Route 53 or Cloudflare to manage domains.
 
 ---
 
@@ -530,7 +530,7 @@ To enable HTTPS on the ALB, you need an SSL/TLS certificate. AWS Certificate Man
 6. **Review and Request**.
 7. **Validate the Domain**:
    - If using DNS validation and your domain is managed in Route 53, ACM can add the DNS record automatically.
-   - If managed elsewhere, add the provided CNAME record to your DNS configuration.
+   - If managed elsewhere (Cloudflare), add the provided CNAME record to your DNS configuration.
 
 Once validated, the certificate status will change to "Issued".
 
