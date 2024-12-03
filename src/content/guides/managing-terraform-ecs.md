@@ -100,6 +100,7 @@ project-root/
 ├── scripts/
 │   ├── deploy.sh
 │   ├── force-deploy.sh
+│   ├── build_and_push.sh
 │   ├── monitor.sh
 │   ├── monitor-health.sh
 │   ├── connect.sh
@@ -115,6 +116,7 @@ project-root/
 - **docker/**: Dockerfile and related files for building the Docker image.
 - **backend.tf**: Configures remote state management.
 - **terraform.tfvars**: Variable definitions for Terraform (specific to each environment).
+- **task-definition.json.tpl**: Template file for the ECS task definition.
 - **README.md**: Documentation and usage instructions.
 
 ---
@@ -312,9 +314,10 @@ cd project-root
 # Retrieve repository information from Terraform outputs
 REPO_URL=$(cd infrastructure/1-ecr && terraform output -raw repository_url)
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+AWS_REGION="us-east-1"
 
 # Authenticate Docker to ECR
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
 # Buildx setup (if not already configured)
 docker buildx create --use --name multiarch_builder || docker buildx use multiarch_builder
@@ -507,6 +510,392 @@ terraform apply
 
 Deploy the ECS cluster, task definitions, services, and configure the Application Load Balancer (ALB) to terminate HTTPS connections using SSL/TLS certificates. This enhances security by encrypting traffic between clients and the load balancer, meeting compliance requirements like SOC 2.
 
+#### Understanding `task-definition.json.tpl`
+
+The `task-definition.json.tpl` file is a template for the ECS task definition in JSON format. Terraform uses this template to create the actual task definition by replacing variables with their corresponding values. This approach allows for greater flexibility and easier management of task definitions, especially when dealing with complex configurations.
+
+**Example of `task-definition.json.tpl`**:
+
+```json
+{
+  "family": "${app_name}-task",
+  "networkMode": "awsvpc",
+  "executionRoleArn": "${ecs_exec_role_arn}",
+  "taskRoleArn": "${ecs_task_role_arn}",
+  "containerDefinitions": [
+    {
+      "name": "${app_name}-container",
+      "image": "${image_url}",
+      "cpu": 256,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/${app_name}",
+          "awslogs-region": "${aws_region}",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512"
+}
+```
+
+**Explanation**:
+
+- **Variables**: Placeholders like `${app_name}` are replaced with actual values when Terraform processes the template.
+- **Container Definitions**: Defines the container settings, including image, CPU, memory, port mappings, and logging configuration.
+- **Roles**: Specifies IAM roles for task execution and task role.
+- **Network Mode**: Set to `awsvpc` for Fargate tasks.
+- **Compatibility**: Specifies that the task requires Fargate compatibility.
+
+#### Terraform Configuration
+
+In `main.tf`, reference the `task-definition.json.tpl` using the `templatefile` function:
+
+**main.tf**
+
+```hcl
+provider "aws" {
+  region = var.aws_region
+}
+
+# Load outputs from previous steps
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = "your-terraform-state-bucket"
+    key    = "infrastructure/2-network/terraform.tfstate"
+    region = var.aws_region
+  }
+}
+
+# IAM Roles
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "${var.app_name}-ecs-exec-role"
+
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_execution_role.json
+
+  managed_policy_arns = [
+    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  ]
+
+  tags = var.tags
+}
+
+data "aws_iam_policy_document" "ecs_task_execution_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "${var.app_name}-ecs-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_role.json
+  tags               = var.tags
+}
+
+data "aws_iam_policy_document" "ecs_task_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+# Load task definition template
+locals {
+  task_definition = templatefile("${path.module}/task-definition.json.tpl", {
+    app_name          = var.app_name
+    image_url         = var.image_url
+    aws_region        = var.aws_region
+    ecs_task_role_arn = aws_iam_role.ecs_task_role.arn
+    ecs_exec_role_arn = aws_iam_role.ecs_task_execution_role.arn
+  })
+}
+
+# ECS Cluster
+resource "aws_ecs_cluster" "main" {
+  name = "${var.app_name}-cluster"
+  tags = var.tags
+}
+
+# ECS Task Definition
+resource "aws_ecs_task_definition" "app" {
+  family                   = "${var.app_name}-task"
+  container_definitions    = local.task_definition
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
+}
+
+# ECS Service
+resource "aws_ecs_service" "app" {
+  name            = "${var.app_name}-service"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.app.arn
+  launch_type     = "FARGATE"
+  desired_count   = 1
+
+  network_configuration {
+    subnets         = data.terraform_remote_state.network.outputs.private_subnet_ids
+    security_groups = [aws_security_group.ecs.id]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app.arn
+    container_name   = "${var.app_name}-container"
+    container_port   = 80
+  }
+
+  deployment_minimum_healthy_percent = 50
+  deployment_maximum_percent         = 200
+
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
+
+  tags = var.tags
+}
+
+# Security Groups
+resource "aws_security_group" "ecs" {
+  name        = "${var.app_name}-ecs-sg"
+  description = "Security group for ECS tasks"
+  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
+
+  ingress {
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = var.tags
+}
+
+resource "aws_security_group" "alb" {
+  name        = "${var.app_name}-alb-sg"
+  description = "Security group for ALB"
+  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = var.tags
+}
+
+# Application Load Balancer
+resource "aws_lb" "alb" {
+  name            = "${var.app_name}-alb"
+  load_balancer_type = "application"
+  subnets         = data.terraform_remote_state.network.outputs.public_subnet_ids
+  security_groups = [aws_security_group.alb.id]
+  tags            = var.tags
+}
+
+# Target Group
+resource "aws_lb_target_group" "app" {
+  name        = "${var.app_name}-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
+  target_type = "ip"
+  health_check {
+    path                = "/"
+    protocol            = "HTTP"
+    matcher             = "200"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+  tags = var.tags
+}
+
+# Listener for HTTPS
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 443
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificates      = [{
+    certificate_arn = aws_acm_certificate.cert.arn
+  }]
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app.arn
+  }
+}
+
+# Listener for HTTP (Redirect to HTTPS)
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      protocol   = "HTTPS"
+      port       = "443"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+# ACM Certificate
+resource "aws_acm_certificate" "cert" {
+  domain_name       = var.domain_name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = var.tags
+}
+
+# Route 53 Zone (If using Route 53)
+data "aws_route53_zone" "main" {
+  name         = var.domain_name
+  private_zone = false
+}
+
+# DNS Validation Record (If using Route 53)
+resource "aws_route53_record" "cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      record = dvo.resource_record_value
+    }
+  }
+
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.record]
+  ttl     = 300
+}
+
+# Certificate Validation
+resource "aws_acm_certificate_validation" "cert_validation" {
+  certificate_arn         = aws_acm_certificate.cert.arn
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+}
+
+# Outputs
+output "ecs_cluster_name" {
+  value = aws_ecs_cluster.main.name
+}
+
+output "ecs_service_name" {
+  value = aws_ecs_service.app.name
+}
+
+output "aws_region" {
+  value = var.aws_region
+}
+```
+
+**variables.tf**
+
+```hcl
+variable "app_name" {
+  description = "The name of the application"
+  type        = string
+}
+
+variable "image_url" {
+  description = "The Docker image URL in ECR"
+  type        = string
+}
+
+variable "aws_region" {
+  description = "AWS region for resources"
+  type        = string
+}
+
+variable "domain_name" {
+  description = "The domain name for SSL certificate"
+  type        = string
+}
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+}
+```
+
+**terraform.tfvars**
+
+```hcl
+app_name   = "your-app-name"
+image_url  = "your-account-id.dkr.ecr.us-east-1.amazonaws.com/your-app-name:latest"
+aws_region = "us-east-1"
+domain_name = "yourdomain.com"
+tags = {
+  Environment = "dev"
+  Project     = "YourProject"
+}
+```
+
+**Explanation**:
+
+- **Template Variables**: Variables used in the template are passed to `templatefile` for rendering.
+- **Container Definitions**: The rendered JSON from the template is used in the ECS task definition resource.
+- **IAM Roles**: Defined for ECS task execution and task role with necessary permissions.
+- **ALB and HTTPS Configuration**: Sets up the ALB listeners for HTTPS and redirects HTTP to HTTPS.
+- **ACM Certificate**: Requests a certificate and automates DNS validation using Route 53.
+
 #### Obtaining SSL/TLS Certificates with AWS Certificate Manager (ACM)
 
 To enable HTTPS on the ALB, you need an SSL/TLS certificate. AWS Certificate Manager (ACM) allows you to provision certificates for free. There are two types:
@@ -543,337 +932,15 @@ You can automate the certificate request and DNS validation using Terraform. The
 
 #### Terraform Configuration for AWS Route 53 Users
 
-**main.tf**
-
-```hcl
-provider "aws" {
-  region = var.aws_region
-}
-
-# Data source for Route 53 Zone
-data "aws_route53_zone" "main" {
-  name         = var.domain_name
-  private_zone = false
-}
-
-# ACM Certificate
-resource "aws_acm_certificate" "cert" {
-  domain_name       = var.domain_name
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = var.tags
-}
-
-# DNS Validation Records
-resource "aws_route53_record" "cert_validation" {
-  for_each = {
-    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      type   = dvo.resource_record_type
-      record = dvo.resource_record_value
-    }
-  }
-
-  zone_id = data.aws_route53_zone.main.zone_id
-  name    = each.value.name
-  type    = each.value.type
-  records = [each.value.record]
-  ttl     = 300
-}
-
-# Certificate Validation
-resource "aws_acm_certificate_validation" "cert_validation" {
-  certificate_arn         = aws_acm_certificate.cert.arn
-  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
-}
-
-# Load Balancer Listener for HTTPS
-resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.alb.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificates      = [{
-    certificate_arn = aws_acm_certificate.cert.arn
-  }]
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tg.arn
-  }
-}
-
-# HTTP Listener with Redirection to HTTPS
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.alb.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      protocol   = "HTTPS"
-      port       = "443"
-      status_code = "HTTP_301"
-    }
-  }
-}
-
-# Update Security Groups to Allow HTTPS
-resource "aws_security_group" "alb" {
-  name        = "${var.app_name}-alb-sg"
-  description = "Security group for ALB"
-  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = var.tags
-}
-```
-
-**variables.tf**
-
-```hcl
-variable "domain_name" {
-  description = "The domain name for SSL certificate"
-  type        = string
-}
-
-variable "aws_region" {
-  description = "AWS region for resources"
-  type        = string
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-}
-
-variable "app_name" {
-  description = "The name of the application"
-  type        = string
-}
-```
-
-**terraform.tfvars**
-
-```hcl
-domain_name = "yourdomain.com"
-aws_region  = "us-east-1"
-app_name    = "your-app-name"
-tags = {
-  Environment = "dev"
-  Project     = "YourProject"
-}
-```
+[The configuration provided in the previous section applies here.]
 
 ---
 
 #### Terraform Configuration for Cloudflare Users
 
-**main.tf**
-
-```hcl
-provider "aws" {
-  region = var.aws_region
-}
-
-provider "cloudflare" {
-  api_token = var.cloudflare_api_token
-}
-
-# ACM Certificate
-resource "aws_acm_certificate" "cert" {
-  domain_name       = var.domain_name
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = var.tags
-}
-
-# DNS Validation Records in Cloudflare
-resource "cloudflare_record" "cert_validation" {
-  for_each = {
-    for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => dvo
-  }
-
-  zone_id = var.cloudflare_zone_id
-  name    = trim(each.value.resource_record_name, ".${var.domain_name}.")
-  type    = each.value.resource_record_type
-  value   = each.value.resource_record_value
-  ttl     = 300
-}
-
-# Certificate Validation
-resource "aws_acm_certificate_validation" "cert_validation" {
-  certificate_arn         = aws_acm_certificate.cert.arn
-  validation_record_fqdns = [for record in cloudflare_record.cert_validation : record.hostname]
-}
-
-# Load Balancer Listener for HTTPS
-resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.alb.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificates      = [{
-    certificate_arn = aws_acm_certificate.cert.arn
-  }]
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.tg.arn
-  }
-}
-
-# HTTP Listener with Redirection to HTTPS
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.alb.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      protocol   = "HTTPS"
-      port       = "443"
-      status_code = "HTTP_301"
-    }
-  }
-}
-
-# Update Security Groups to Allow HTTPS
-resource "aws_security_group" "alb" {
-  name        = "${var.app_name}-alb-sg"
-  description = "Security group for ALB"
-  vpc_id      = data.terraform_remote_state.network.outputs.vpc_id
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = var.tags
-}
-```
-
-**variables.tf**
-
-```hcl
-variable "domain_name" {
-  description = "The domain name for SSL certificate"
-  type        = string
-}
-
-variable "aws_region" {
-  description = "AWS region for resources"
-  type        = string
-}
-
-variable "cloudflare_api_token" {
-  description = "API token for Cloudflare with permissions to edit DNS records"
-  type        = string
-}
-
-variable "cloudflare_zone_id" {
-  description = "Zone ID for your Cloudflare domain"
-  type        = string
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-}
-
-variable "app_name" {
-  description = "The name of the application"
-  type        = string
-}
-```
-
-**terraform.tfvars**
-
-```hcl
-domain_name          = "yourdomain.com"
-aws_region           = "us-east-1"
-cloudflare_api_token = "your-cloudflare-api-token"
-cloudflare_zone_id   = "your-cloudflare-zone-id"
-app_name             = "your-app-name"
-tags = {
-  Environment = "dev"
-  Project     = "YourProject"
-}
-```
-
-**Notes**:
-
-- **Cloudflare API Token**: Generate an API token in Cloudflare with permissions to edit DNS records.
-- **Cloudflare Zone ID**: Obtain the Zone ID from your Cloudflare dashboard for the domain.
-- **Name Trimming**: The `name` attribute in `cloudflare_record` uses `trim` to remove the domain suffix.
+[If using Cloudflare, replace the DNS validation part with the Cloudflare configuration as shown in previous sections.]
 
 ---
-
-#### Explanation
-
-- **AWS ACM Certificate**: Requests an SSL/TLS certificate for your domain using DNS validation.
-- **DNS Validation Records**: Creates DNS validation records required by ACM to validate domain ownership.
-  - **For Route 53 Users**: Uses the `aws_route53_record` resource to create CNAME records in Route 53.
-  - **For Cloudflare Users**: Uses the `cloudflare_record` resource to create CNAME records in Cloudflare.
-- **Certificate Validation**: Waits for the certificate to be issued before proceeding.
-- **HTTPS Listener**: Configures the ALB to listen on port 443 with the SSL/TLS certificate.
-- **HTTP to HTTPS Redirection**: Sets up the ALB to redirect HTTP traffic on port 80 to HTTPS on port 443.
-- **Security Group Updates**: Allows inbound traffic on port 443 for HTTPS.
-
-#### Notes on Domain Ownership
-
-- **Domain Ownership is Required**: To obtain a public SSL/TLS certificate from ACM, you must own or control the domain.
-- **Using AWS Route 53**: If you manage your DNS with AWS Route 53, Terraform can automatically create the necessary validation records.
-- **Using Cloudflare**: If you manage your DNS with Cloudflare, you can use the Cloudflare Terraform provider to automate the creation of DNS validation records.
-- **Manual DNS Record Addition**: If you prefer, you can manually add the CNAME records provided by ACM to your DNS provider.
 
 #### Deployment Commands
 
@@ -921,12 +988,13 @@ terraform apply -auto-approve
 
 # Step 2: Build and Push Docker Image
 echo "Building and pushing Docker image..."
-cd ../../
-./scripts/build_and_push.sh
+cd ../../scripts
+chmod +x build_and_push.sh
+./build_and_push.sh
 
 # Step 3: Network Infrastructure
 echo "Deploying Network Infrastructure..."
-cd infrastructure/2-network
+cd ../infrastructure/2-network
 terraform init -input=false
 terraform apply -auto-approve
 
@@ -945,6 +1013,44 @@ echo "Deployment completed successfully."
 cd scripts
 chmod +x deploy.sh
 ./deploy.sh
+```
+
+#### build_and_push.sh
+
+**Purpose**: Automates the build and push process of the Docker image to ECR.
+
+**Script Content**:
+
+```bash
+#!/bin/bash
+# build_and_push.sh - Build and push Docker image to ECR
+
+set -e
+
+# Retrieve repository information from Terraform outputs
+REPO_URL=$(cd ../infrastructure/1-ecr && terraform output -raw repository_url)
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+AWS_REGION="us-east-1"
+
+# Authenticate Docker to ECR
+aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+# Buildx setup (if not already configured)
+docker buildx create --use --name multiarch_builder || docker buildx use multiarch_builder
+
+# Build and push multi-architecture image
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t $REPO_URL:latest \
+  -f docker/Dockerfile \
+  --push .
+```
+
+**Usage**:
+
+```bash
+cd scripts
+chmod +x build_and_push.sh
+./build_and_push.sh
 ```
 
 ### Monitoring Scripts
@@ -1132,13 +1238,13 @@ echo ""
 aws ecs execute-command \
   --cluster "$CLUSTER_NAME" \
   --task "$TASK_ID" \
-  --container "your-container-name" \
+  --container "${app_name}-container" \
   --command "/bin/bash" \
   --region "$REGION" \
   --interactive
 ```
 
-**Note**: Replace `"your-container-name"` with the actual name of your container defined in the task definition.
+**Note**: Replace `"${app_name}-container"` with the actual name of your container defined in the task definition.
 
 **Usage**:
 
@@ -1181,7 +1287,7 @@ app_name = "my-app"
 terraform {
   backend "s3" {
     bucket         = "your-terraform-state-bucket"
-    key            = "infrastructure/terraform.tfstate"
+    key            = "infrastructure/3-ecs/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "your-lock-table"
     encrypt        = true
