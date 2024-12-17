@@ -93,7 +93,6 @@ I’m always tinkering with AI and staying observant with my apps:
 - **Anthropic**: More AI power with Claude for advanced use cases.
 - **Axiom**: Observability done right for logs, metrics, and more.
 - **Ollama**: Local LLMs on my machine. No cloud required.
-- **Vector**: A lightweight, ultra-fast tool for building observability pipelines
 
 ---
 
@@ -129,6 +128,7 @@ Keeping my apps healthy and resilient:
 
 - **Prometheus**: Metrics and alerts to keep an eye on performance.
 - **K6**: Load testing to make sure my apps don’t break under pressure.
+- **Vector**: A lightweight, ultra-fast tool for building observability pipelines
 
 ---
 
