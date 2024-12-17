@@ -93,7 +93,7 @@ I’m always tinkering with AI and staying observant with my apps:
 - **Anthropic**: More AI power with Claude for advanced use cases.
 - **Axiom**: Observability done right for logs, metrics, and more.
 - **Ollama**: Local LLMs on my machine. No cloud required.
-- **Vector**: For embedding search and powering AI applications.
+- **Vector**: A lightweight, ultra-fast tool for building observability pipelines
 
 ---
 
