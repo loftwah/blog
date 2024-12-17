@@ -5,8 +5,6 @@ pubDate: "Dec 18 2024"
 heroImage: "/images/rails.png"
 ---
 
-# Loftwah's Tech Stack for 2025
-
 2025 is shaping up to be another big year for me, and staying sharp means relying on a stack that's battle-tested, productive, and just plain fun to use. This year, I've refined my toolkit with the tech I trust most for building, scaling, and experimenting. If you're curious about what powers my projects, here's a personal look at my tech stack for 2025.
 
 ---
