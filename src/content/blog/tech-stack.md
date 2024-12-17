@@ -50,6 +50,7 @@ Fast, modern, and clean frontend development keeps me happy:
 
 - **Tailwind**: Utility-first CSS for building beautiful UIs without the bloat.
 - **Vite**: Super fast frontend tooling that makes dev work seamless.
+- **Astro**: Modern static site generator for fast, content-driven websites.
 
 ---
 
