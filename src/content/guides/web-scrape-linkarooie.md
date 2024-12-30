@@ -115,8 +115,6 @@ CMD [ "ruby", "linkarooie_scraper.rb" ]
 
 ```yaml
 # docker-compose.yml
-version: "3.9" # Using a recent version of the Docker Compose file format
-
 services:
   linkarooie:
     build: .
