@@ -3,7 +3,20 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
-import ceos from '../data/htmx/ceos_with_followers_top50.json'; // Use the prefiltered JSON file
+
+// Define the type for CEO objects
+interface CEO {
+  name: string;
+  twitter: string;
+  screenName: string;
+  followers: number;
+  imagePath: string;
+}
+
+// Import the JSON file and assert its type
+import ceos from '../data/htmx/ceos_with_followers_top50.json' assert { type: 'json' };
+
+const topCEOs: CEO[] = ceos as CEO[]; // Explicitly cast to the CEO array type
 ---
 
 <!DOCTYPE html>
@@ -21,10 +34,9 @@ import ceos from '../data/htmx/ceos_with_followers_top50.json'; // Use the prefi
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {ceos.map((ceo, index) => (
+        {topCEOs.map((ceo, index) => (
           <div
             class="flex flex-col items-center text-center bg-white border border-gray-200 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-            key={index}
           >
             <img
               src={`/images/${ceo.imagePath}`}
