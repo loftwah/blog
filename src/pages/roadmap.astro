@@ -4,27 +4,16 @@ import Layout from "../layouts/BlogPost.astro";
 
 <Layout
   title="My Comprehensive Roadmap for 2025"
-  description="A holistic roadmap focused on modernizing Rails apps with AWS ECS/Fargate, exploring AI-driven development, and refining Linux fundamentals, featuring tools like Kamal for container deployments on DigitalOcean."
+  description="A holistic roadmap focused on modernising Rails apps with AWS ECS/Fargate and Docker, deepening distributed systems knowledge, exploring AI-driven development, and refining Linux fundamentals while pushing for technical innovation."
   pubDate={new Date("December 2024")}
   heroImage="/images/roadmap.jpg"
 >
   <h2>My Roadmap for 2025</h2>
   <p>
-    Over the last few years, I have evolved from a curious Ruby beginner to a
-    DevOps-focused engineer, deploying scalable, secure infrastructures. In
-    2024, I modernized a 13-year-old Rails application by migrating it from EC2
-    to ECS Fargate, which taught me how containerization can streamline
-    operations by removing the need to manage servers directly. Meanwhile,
-    <strong>Linkarooie</strong>, my side project, has become a proving ground
-    for Rails upgrades and deployment innovations like <strong>Kamal</strong>.
+    Over the last few years, I have evolved from a curious Ruby beginner to a DevOps-focused engineer deploying scalable, secure infrastructures. In 2024, I modernised a 13-year-old Rails application by migrating it from EC2 to ECS Fargate, learning firsthand how containerisation can streamline operations by eliminating the need for manual server management. Meanwhile, <strong>Linkarooie</strong>, my side project, has served as a proving ground for Rails upgrades and innovative deployment strategies.
   </p>
   <p>
-    As I look to 2025, I am doubling down on <strong>AWS ECS/Fargate</strong> for
-    frictionless container orchestration where managing servers manually is not necessary.
-    I am also exploring the benefits of deploying with Kamal on platforms
-    like DigitalOcean. This roadmap unites my passion for Rails, AI-assisted development,
-    and the fundamentals of Linux into a plan for continuous learning and professional
-    development.
+    As I look to 2025, my focus has sharpened. Alongside doubling down on <strong>AWS ECS/Fargate</strong> and refining my Docker container workflows, I am now diving deeper into distributed systems theory, advanced AWS architecture, and system design. I'm also committed to sharing my journey through technical writing and speaking engagements—steps that reflect my drive to become a recognised industry innovator.
   </p>
 
   <h3>Immediate Focus (1–3 Months)</h3>
@@ -34,24 +23,17 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            With OG image fixes and the Rails 8 upgrade complete, the next step
-            is transitioning from invite-only signups to email validation,
-            improving accessibility and maintaining security.
+            With OG image fixes and the Rails 8 upgrade complete, the next step is transitioning from invite-only signups to email validation, improving accessibility and maintaining security.
           </p>
         </li>
         <li>
-          Leverage <strong>Kamal</strong> for deployments on DigitalOcean, taking
-          advantage of container-based workflows without needing to manage raw VMs.
-          Although Kamal can run on EC2, I prefer ECS/Fargate on AWS when possible
-          to avoid server management altogether.
+          Leverage Docker container workflows on <strong>AWS ECS/Fargate</strong> for deployments, harnessing managed services that eliminate the need for manual server management.
         </li>
         <li>
-          Scale performance with caching (Redis) and database optimizations so
-          Linkarooie can handle an expanding user base.
+          Scale performance with caching (Redis) and database optimisations so Linkarooie can handle an expanding user base.
         </li>
         <li>
-          **Upgrade Linkarooie to Ruby 3.4**, taking advantage of new language
-          features and performance improvements introduced in the latest release.
+          <strong>Upgrade Linkarooie to Ruby 3.4</strong>, taking advantage of new language features and performance improvements introduced in the latest release.
         </li>
       </ul>
     </li>
@@ -60,24 +42,17 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            I am enhancing my personal Ubuntu Box setup, which features Docker,
-            Terraform, Kamal, and <strong>1Password CLI</strong> to quickly stand
-            up a production-like environment locally.
+            I am enhancing my personal Ubuntu Box setup, which features Docker, Terraform, and <strong>1Password CLI</strong> to quickly stand up a production-like environment locally.
           </p>
         </li>
         <li>
-          Document installation scripts, security best practices, and secrets
-          management so others can replicate a similar all-in-one dev
-          environment.
+          Document installation scripts, security best practices, and secrets management so others can replicate a similar all-in-one dev environment.
         </li>
         <li>
-          Emphasize hardened security from the ground up with SSH keys, firewall
-          configs, and 1Password CLI for storing secrets.
+          Emphasise hardened security from the ground up with SSH keys, firewall configs, and 1Password CLI for storing secrets.
         </li>
         <li>
-          Experiment with <strong>Docker Compose</strong> for local multi-service
-          orchestration, ensuring a smooth transition from development to
-          production.
+          Experiment with <strong>Docker Compose</strong> for local multi-service orchestration, ensuring a smooth transition from development to production.
         </li>
       </ul>
     </li>
@@ -86,17 +61,14 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            I am exploring <strong>Cursor</strong> to see how AI-driven coding suggestions
-            accelerate development, especially for Rails and TypeScript codebases.
+            I am exploring <strong>Cursor</strong> to see how AI-driven coding suggestions accelerate development, especially for Rails and TypeScript codebases.
           </p>
         </li>
         <li>
-          Integrate AI tools into my workflow for automated refactoring,
-          debugging, and code reviews.
+          Integrate AI tools into my workflow for automated refactoring, debugging, and code reviews.
         </li>
         <li>
-          Evaluate Cursor's synergy with GitHub Actions and CI/CD pipelines for
-          a smoother code release process.
+          Evaluate Cursor's synergy with GitHub Actions and CI/CD pipelines for a smoother code release process.
         </li>
       </ul>
     </li>
@@ -105,14 +77,19 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            I want to go further into Ubuntu internals, systemd, performance
-            tuning, and shell scripting, to solidify my expertise in day-to-day
-            operations.
+            I want to go further into Ubuntu internals, systemd, performance tuning, and shell scripting to solidify my expertise in day-to-day operations.
           </p>
         </li>
         <li>
-          Produce reference scripts and resources that help automate typical
-          tasks and easily replicate production-grade environments.
+          Produce reference scripts and resources that help automate typical tasks and easily replicate production-grade environments.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Technical Content and Community Engagement</strong>:
+      <ul>
+        <li>
+          Start documenting AWS migration case studies, distributed systems learnings, and deployment strategies through detailed blog posts.
         </li>
       </ul>
     </li>
@@ -121,23 +98,21 @@ import Layout from "../layouts/BlogPost.astro";
   <h3>Mid-Term Goals (3–6 Months)</h3>
   <ul>
     <li>
-      <strong>Legacy Application Migration and Modernization</strong>:
+      <strong>Legacy Application Migration and Modernisation</strong>:
       <ul>
         <li>
           <p>
-            As more teams move away from Heroku or older hosting setups, I want
-            to formalize best practices for migrating legacy Rails or Node apps
-            into AWS ECS Fargate. Containerization removes server management
-            overhead and offers scalability.
+            As more teams move away from Heroku or older hosting setups, I want to formalise best practices for migrating legacy Rails or Node apps into AWS ECS Fargate. Containerisation removes server management overhead and offers scalability.
           </p>
         </li>
         <li>
-          Outline Docker-based strategies for these apps and manage data
-          migrations from Heroku Postgres to AWS RDS.
+          Outline Docker-based strategies for these apps and manage data migrations from Heroku Postgres to AWS RDS.
         </li>
         <li>
-          Build robust CI/CD pipelines integrating secrets management, logging,
-          and monitoring for a smooth transition.
+          Build robust CI/CD pipelines integrating secrets management, logging, and monitoring for a smooth transition.
+        </li>
+        <li>
+          Begin speaking at local meetups and tech conferences, sharing insights on advanced AWS architectures and distributed systems.
         </li>
       </ul>
     </li>
@@ -146,19 +121,14 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            Sharpening my Terraform skills ensures I can spin up AWS resources
-            efficiently and securely. This is central to handling container
-            orchestration, networking, and edge routing.
+            Sharpening my Terraform skills ensures I can spin up AWS resources efficiently and securely. This is central to handling container orchestration, networking, and edge routing.
           </p>
         </li>
         <li>
-          Develop advanced Terraform modules for ECS, Fargate, and Cloudflare
-          Workers, allowing me to quickly provision entire infrastructure stacks
-          on demand.
+          Develop advanced Terraform modules for ECS, Fargate, and Cloudflare Workers, allowing me to quickly provision entire infrastructure stacks on demand.
         </li>
         <li>
-          Experiment with cost-saving approaches like ECS auto-scaling, spot
-          instances, and flexible networking setups.
+          Experiment with cost-saving approaches like ECS auto-scaling, spot instances, and flexible networking setups.
         </li>
       </ul>
     </li>
@@ -167,23 +137,17 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            With Rails 8 in production, I want to master new features such as
-            ActionCable and caching enhancements that drive performance and
-            developer happiness.
+            With Rails 8 in production, I want to master new features such as ActionCable and caching enhancements that drive performance and developer happiness.
           </p>
         </li>
         <li>
-          Combine end-to-end tests (Playwright) with RSpec for deeper coverage,
-          ensuring confidence in complex systems.
+          Combine end-to-end tests (Playwright) with RSpec for deeper coverage, ensuring confidence in complex systems.
         </li>
         <li>
-          Stay alert for emerging Ruby language features that can streamline my
-          day-to-day coding workflow.
+          Stay alert for emerging Ruby language features that can streamline my day-to-day coding workflow.
         </li>
         <li>
-          **Adopt Ruby 3.4 across new and existing projects** once tested in
-          Linkarooie, maximising performance gains and staying current with
-          the latest language improvements.
+          <strong>Adopt Ruby 3.4 across new and existing projects</strong> once tested in Linkarooie, maximising performance gains and staying current with the latest language improvements.
         </li>
       </ul>
     </li>
@@ -192,18 +156,22 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            Beyond Cursor, I will continue building and testing internal tools
-            using GPT-4 or Claude for advanced tasks like text summarization,
-            classification, and code introspection.
+            Beyond Cursor, I will continue building and testing internal tools using GPT-4 or Claude for advanced tasks like text summarisation, classification, and code introspection.
           </p>
         </li>
         <li>
-          Focus on practical automations such as automated DevOps reporting or
-          environment configuration suggestions.
+          Focus on practical automations such as automated DevOps reporting or environment configuration suggestions.
         </li>
         <li>
-          Distinguish between truly beneficial AI-driven features and those that
-          are hype.
+          Distinguish between truly beneficial AI-driven features and those that are hype.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Distributed Systems and System Design</strong>:
+      <ul>
+        <li>
+          Deep dive into distributed systems theory by studying key papers (Google’s MapReduce, Amazon’s Dynamo, Raft Consensus, etc.) and build prototypes such as a distributed cache or task queue.
         </li>
       </ul>
     </li>
@@ -216,24 +184,17 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            By consolidating my experience in Rails, AWS ECS/Fargate,
-            containerization, and AI tooling, I plan to offer specialized
-            consulting services for companies needing modern infrastructure
-            solutions, particularly those transitioning away from Heroku or
-            legacy systems.
+            By consolidating my experience in Rails, AWS ECS/Fargate, containerisation, and AI tooling, I plan to offer specialised consulting services for companies needing modern infrastructure solutions, particularly those transitioning away from Heroku or legacy systems.
           </p>
         </li>
         <li>
-          Define clear packages around <strong>Heroku-to-AWS</strong>, container
-          migrations, and security-minded DevOps best practices.
+          Define clear packages around <strong>Heroku-to-AWS</strong>, container migrations, and security-minded DevOps best practices.
         </li>
         <li>
-          Publish success stories that showcase real-world improvements in cost,
-          performance, and developer velocity.
+          Publish success stories that showcase real-world improvements in cost, performance, and developer velocity.
         </li>
         <li>
-          Launch a dedicated landing page or microsite that highlights these
-          consulting services alongside my personal projects, such as Linkarooie.
+          Launch a dedicated landing page or microsite that highlights these consulting services alongside my personal projects, such as Linkarooie.
         </li>
       </ul>
     </li>
@@ -242,18 +203,14 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            While ECS and Fargate remain my go-to choices for container orchestration,
-            I am also exploring the benefits of serverless edge solutions like
-            Cloudflare Workers for real-time processing and reduced latency.
+            While ECS and Fargate remain my go-to choices for container orchestration, I am also exploring the benefits of serverless edge solutions like Cloudflare Workers for real-time processing and reduced latency.
           </p>
         </li>
         <li>
-          Implement edge caching, auth offloading, and possible dynamic image
-          manipulation for global apps.
+          Implement edge caching, auth offloading, and possible dynamic image manipulation for global apps.
         </li>
         <li>
-          Contribute to open-source demos or tutorials that help others adopt
-          edge computing strategies effectively.
+          Contribute to open-source demos or tutorials that help others adopt edge computing strategies effectively.
         </li>
       </ul>
     </li>
@@ -262,39 +219,38 @@ import Layout from "../layouts/BlogPost.astro";
       <ul>
         <li>
           <p>
-            Kafka, RabbitMQ, and AWS EventBridge are essential for building
-            scalable, loosely coupled systems. I will keep refining my knowledge
-            of these patterns to design robust microservices.
+            Kafka, RabbitMQ, and AWS EventBridge are essential for building scalable, loosely coupled systems. I will keep refining my knowledge of these patterns to design robust microservices.
           </p>
         </li>
         <li>
-          Build internal prototypes that handle real-time data streams or
-          distributed events, capturing lessons learned in the process.
+          Build internal prototypes that handle real-time data streams or distributed events, capturing lessons learned in the process.
         </li>
         <li>
-          Elevate observability with Prometheus, Grafana, Axiom, or other tools
-          to ensure that performance metrics and error tracking are top-notch.
+          Elevate observability with Prometheus, Grafana, Axiom, or other tools to ensure that performance metrics and error tracking are top-notch.
         </li>
       </ul>
     </li>
     <li>
-      <strong>Advanced Database Optimization and Scalability</strong>:
+      <strong>Advanced Database Optimisation and Scalability</strong>:
       <ul>
         <li>
           <p>
-            Whether it is Postgres or another relational DB, tuning for
-            large-scale traffic remains a priority. Techniques like partitioning
-            and read replicas can help me manage data growth without losing
-            performance.
+            Whether it is Postgres or another relational DB, tuning for large-scale traffic remains a priority. Techniques like partitioning and read replicas can help me manage data growth without losing performance.
           </p>
         </li>
         <li>
-          Delve deeper into advanced Postgres configuration, indexing,
-          concurrency, and replication to keep data flow efficient.
+          Delve deeper into advanced Postgres configuration, indexing, concurrency, and replication to keep data flow efficient.
         </li>
         <li>
-          Integrate real-time monitoring, alerting, and auto-failover strategies
-          to mitigate downtime risks.
+          Integrate real-time monitoring, alerting, and auto-failover strategies to mitigate downtime risks.
+        </li>
+      </ul>
+    </li>
+    <li>
+      <strong>Industry Influence and Thought Leadership</strong>:
+      <ul>
+        <li>
+          Lead industry initiatives by publishing technical papers, delivering talks at major conferences, and developing tools that set best practices for DevOps and cloud architecture.
         </li>
       </ul>
     </li>
@@ -306,43 +262,82 @@ import Layout from "../layouts/BlogPost.astro";
     <li>
       <strong>Continuous Learning</strong>:
       <p>
-        I stay sharp by reading, experimenting, and embracing new tools such as
-        Cursor as they emerge, remaining adaptable in a rapidly shifting tech
-        landscape.
+        I stay sharp by reading, experimenting, and embracing new tools such as Cursor as they emerge, remaining adaptable in a rapidly shifting tech landscape.
       </p>
     </li>
     <li>
       <strong>Practical Application</strong>:
       <p>
-        Everything I learn finds a home in real projects like Linkarooie, the
-        Ubuntu Box, or client migrations, ensuring my knowledge remains grounded.
+        Everything I learn finds a home in real projects like Linkarooie, the Ubuntu Box, or client migrations, ensuring my knowledge remains grounded.
       </p>
     </li>
     <li>
       <strong>Community Contribution</strong>:
       <p>
-        Through blogging, open-source code, and mentoring, I help others grow
-        while expanding my own skills through collaboration and feedback.
+        Through blogging, open-source code, and mentoring, I help others grow while expanding my own skills through collaboration and feedback.
       </p>
+    </li>
+    <li>
+      <strong>Technical Innovation and Thought Leadership</strong>:
+      <p>
+        I am committed to not only implementing robust solutions but also influencing industry best practices through technical writing, speaking engagements, and innovative projects.
+      </p>
+    </li>
+  </ul>
+
+  <h3>Technical Career Assessment & Development Roadmap</h3>
+  <p>
+    My recent technical career assessment has clarified my direction:
+  </p>
+  <ul>
+    <li>
+      <strong>Overall Score:</strong> 85/100
+    </li>
+    <li>
+      <strong>Immediate Priorities:</strong>
+      <ul>
+        <li>Write technical papers on AWS migration methodologies.</li>
+        <li>Begin local speaking engagements and community meetups.</li>
+        <li>Deep dive into distributed systems theory and system design.</li>
+        <li>Create technical content that shares practical, real-world solutions.</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Medium-Term Goals:</strong>
+      <ul>
+        <li>Develop industry-specific tools for DevOps engineers.</li>
+        <li>Contribute to core infrastructure projects.</li>
+        <li>Expand my speaking circuit to regional conferences.</li>
+        <li>Publish comprehensive technical guides.</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Long-Term Vision:</strong>
+      <ul>
+        <li>Lead industry-wide technical initiatives and shape innovative architectural approaches.</li>
+        <li>Establish myself as a thought leader through consistent technical content and open source contributions.</li>
+      </ul>
+    </li>
+    <li>
+      <strong>Key Learning Areas:</strong>
+      <ul>
+        <li>Computer Science Fundamentals and Data Structures</li>
+        <li>Distributed Systems and Consensus Algorithms</li>
+        <li>Advanced AWS Architecture and Infrastructure Automation</li>
+        <li>System Design and Scalable Patterns</li>
+        <li>Advanced Ruby/Rails Optimisation Techniques</li>
+      </ul>
     </li>
   </ul>
 
   <h3>Balancing Work and Life</h3>
   <p>
-    As a father, managing time and energy remains crucial. I focus on
-    high-impact goals that can be achieved without sacrificing family life,
-    trusting that well-defined constraints often fuel more efficient
-    innovation.
+    As a father, managing time and energy remains crucial. I focus on high-impact goals that can be achieved without sacrificing family life, trusting that well-defined constraints often fuel more efficient innovation.
   </p>
 
   <h3>Conclusion</h3>
   <p>
-    This roadmap merges my passion for Rails, AWS ECS/Fargate, AI-assisted
-    development, and Linux fundamentals into a cohesive strategy for 2025. By
-    committing to continuous learning and applying my insights in real-world
-    scenarios, I am setting a strong foundation for future client engagements,
-    open-source contributions, and more experimentation with cutting-edge
-    tooling.
+    This roadmap now reflects a refined focus on AWS ECS/Fargate, Docker, and the deep technical areas of distributed systems, system design, and advanced AWS practices. By committing to continuous learning, technical content creation, and community engagement, I am laying the foundation to transition from a skilled implementer to an industry innovator.
   </p>
 
   <h3>Get in Touch</h3>
