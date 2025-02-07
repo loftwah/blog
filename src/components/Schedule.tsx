@@ -102,7 +102,7 @@ const Schedule: React.FC = () => {
   const [timezones, setTimezones] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
   const defaultUIIndex = DateTime.now().weekday === 7 ? 6 : DateTime.now().weekday - 1;
-  const [selectedDay, setSelectedDay] = useState<number>(defaultUIIndex);
+  const [selectedDay, setSelectedDay] = useState<number>((DateTime.now().weekday - 1) % 7);
 
   // Expanded timezone list
   useEffect(() => {

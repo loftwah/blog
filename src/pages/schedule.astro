@@ -13,9 +13,35 @@ import ScheduleComponent from '../components/Schedule';
   </head>
   <body class="bg-gray-50">
     <Header />
-    <main>
-      <ScheduleComponent client:load />
+    <main class="container mx-auto p-6">
+      <div class="max-w-3xl mx-auto">
+        <section class="bg-white shadow-md rounded-lg p-6">
+          <h1 class="text-2xl font-bold mb-4">Schedule a Time with Me</h1>
+          <p class="mb-4">
+            This tool helps you view my schedule and easily book a time with me. 
+            Please note that I prefer text-based communication and asynchronous interactions 
+            to ensure I can focus fully on the conversation's details. If we communicate 
+            in real time, I may be more focused on how I'm engaging rather than the specifics 
+            of the discussion.
+          </p>
+          <p class="mb-4">
+            Feel free to reach out through any of the following:
+          </p>
+          <ul class="list-disc pl-6 mb-4">
+            <li>Email: <a href="mailto:dean@deanlofts.xyz" class="text-blue-600">dean@deanlofts.xyz</a></li>
+            <li>Mobile: <a href="tel:+61423837782" class="text-blue-600">+61 423 837 782</a></li>
+            <li>Bluesky: <a href="https://bsky.app/profile/loftwah.com" class="text-blue-600">bsky.app/profile/loftwah.com</a></li>
+            <li>GitHub: <a href="https://github.com/loftwah" class="text-blue-600">github.com/loftwah</a></li>
+            <li>LinkedIn: <a href="https://www.linkedin.com/in/deanlofts" class="text-blue-600">linkedin.com/in/deanlofts</a></li>
+            <li>Linkarooie: <a href="https://linkarooie.com/loftwah" class="text-blue-600">linkarooie.com/loftwah</a></li>
+            <li>Twitter/X: <a href="https://twitter.com/loftwah" class="text-blue-600">twitter.com/loftwah</a></li>
+          </ul>
+        </section>
+        <section class="mt-6">
+          <ScheduleComponent client:load />
+        </section>
+      </div>
     </main>
     <Footer />
   </body>
-</html> 
+</html>
