@@ -1,0 +1,21 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import ScheduleComponent from '../components/Schedule';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={`Schedule - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+  </head>
+  <body class="bg-gray-50">
+    <Header />
+    <main>
+      <ScheduleComponent client:load />
+    </main>
+    <Footer />
+  </body>
+</html> 
