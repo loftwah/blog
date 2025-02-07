@@ -4,18 +4,98 @@ import { DateTime } from 'luxon';
 type AvailabilityType = 'unavailable' | 'flexible' | 'available';
 type DayType = 'weekday' | 'weekend';
 
-interface TimeBlock {
-  start: string;
-  end: string;
-  type: AvailabilityType;
-  label?: string;
+// Unused interfaces – remove if not needed
+// interface TimeBlock {
+//   start: string;
+//   end: string;
+//   type: AvailabilityType;
+//   label?: string;
+// }
+
+// interface AvailabilityWindow {
+//   start: string;
+//   end: string;
+//   days: number[]; // 0-6, where 0 is Sunday
+// }
+
+// Define the allowed day indices
+type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+interface ScheduleEntry {
+  blockedTimes: {
+    start: string;
+    end: string;
+    type: AvailabilityType;
+    label?: string;
+  }[];
+  availableStart: string;
+  availableEnd: string;
 }
 
-interface AvailabilityWindow {
-  start: string;
-  end: string;
-  days: number[]; // 0-6, where 0 is Sunday
-}
+const schedules: Record<DayIndex, ScheduleEntry> = {
+  0: {
+    blockedTimes: [
+      { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+    ],
+    availableStart: '10:00',
+    availableEnd: '23:00'
+  },
+  1: {
+    blockedTimes: [
+      { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
+      { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+    ],
+    availableStart: '10:00',
+    availableEnd: '23:00'
+  },
+  2: {
+    blockedTimes: [
+      { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
+      { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
+      { start: '13:30', end: '14:30', type: 'unavailable', label: 'Meeting' },
+    ],
+    availableStart: '10:00',
+    availableEnd: '23:00'
+  },
+  3: {
+    blockedTimes: [
+      { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
+      { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+    ],
+    availableStart: '10:00',
+    availableEnd: '23:00'
+  },
+  4: {
+    blockedTimes: [
+      { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
+      { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+    ],
+    availableStart: '10:00',
+    availableEnd: '23:00'
+  },
+  5: {
+    blockedTimes: [
+      { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
+      { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+    ],
+    availableStart: '10:00',
+    availableEnd: '24:00'
+  },
+  6: {
+    blockedTimes: [
+      { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+    ],
+    availableStart: '10:00',
+    availableEnd: '24:00'
+  }
+};
 
 const Schedule: React.FC = () => {
   const [selectedTimezone, setSelectedTimezone] = useState<string>('Australia/Melbourne');
@@ -23,77 +103,6 @@ const Schedule: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
   const defaultUIIndex = DateTime.now().weekday === 7 ? 6 : DateTime.now().weekday - 1;
   const [selectedDay, setSelectedDay] = useState<number>(defaultUIIndex);
-
-  const schedules = {
-    // SUNDAY (0)
-    0: {
-      blockedTimes: [
-        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
-        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
-      ],
-      availableStart: '10:00',
-      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
-    },
-    // MONDAY (1)
-    1: {
-      blockedTimes: [
-        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
-        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
-        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
-      ],
-      availableStart: '10:00',
-      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
-    },
-    // TUESDAY (2)
-    2: {
-      blockedTimes: [
-        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
-        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
-        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
-      ],
-      availableStart: '10:00',
-      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
-    },
-    // WEDNESDAY (3)
-    3: {
-      blockedTimes: [
-        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
-        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
-        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
-      ],
-      availableStart: '10:00',
-      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
-    },
-    // THURSDAY (4)
-    4: {
-      blockedTimes: [
-        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
-        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
-        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
-      ],
-      availableStart: '10:00',
-      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
-    },
-    // FRIDAY (5)
-    5: {
-      blockedTimes: [
-        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
-        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
-        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
-      ],
-      availableStart: '10:00',
-      availableEnd: '24:00'  // Midnight finish (Fri-Sat)
-    },
-    // SATURDAY (6)
-    6: {
-      blockedTimes: [
-        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
-        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
-      ],
-      availableStart: '10:00',
-      availableEnd: '24:00'  // Midnight finish (Fri-Sat)
-    }
-  } as const;
 
   // Expanded timezone list
   useEffect(() => {
@@ -132,36 +141,27 @@ const Schedule: React.FC = () => {
 
   const isAvailable = (time: DateTime): AvailabilityType => {
     const timeInAEST: DateTime = time.setZone('Australia/Melbourne');
-    const dayOfWeek: number = timeInAEST.weekday % 7; // 0-6
+    // Compute day index: ensure it's one of our defined DayIndex values
+    const dayNumber: number = timeInAEST.weekday % 7;
+    const dayIndex = dayNumber as DayIndex;
     const timeString: string = timeInAEST.toFormat('HH:mm');
     
-    // Get the schedule for this specific day
-    const daySchedule = schedules[dayOfWeek].blockedTimes;
+    const daySchedule = schedules[dayIndex].blockedTimes;
 
-    // Check blocked times for this day
     for (const block of daySchedule) {
       if (timeString >= block.start && timeString < block.end) {
         return block.type;
       }
     }
 
-    // Check if within available hours for this day
-    if (timeString >= schedules[dayOfWeek].availableStart && timeString < schedules[dayOfWeek].availableEnd) {
+    if (
+      timeString >= schedules[dayIndex].availableStart &&
+      timeString < schedules[dayIndex].availableEnd
+    ) {
       return 'available';
     }
 
     return 'unavailable';
-  };
-
-  const getBlockColor = (type: AvailabilityType): string => {
-    switch (type) {
-      case 'unavailable':
-        return 'bg-red-200';
-      case 'flexible':
-        return 'bg-yellow-200';
-      case 'available':
-        return 'bg-green-200';
-    }
   };
 
   // Helper function to format timezone for display
@@ -243,9 +243,8 @@ const Schedule: React.FC = () => {
 
       <div className="space-y-1">
         {Array.from({ length: 48 }).map((_, index) => {
-          // Convert selectedDay to Luxon weekday, adjusting for Sunday.
+          // Adjust selectedDay to Luxon's weekday (1-7)
           const luxonWeekday = selectedDay === 6 ? 7 : selectedDay + 1;
-          
           const time = DateTime.now()
             .startOf('day')
             .plus({ minutes: index * 30 })
@@ -254,15 +253,22 @@ const Schedule: React.FC = () => {
           const localTime = time.setZone(selectedTimezone);
           const melbourneTime = time.setZone('Australia/Melbourne');
           const status = isAvailable(time);
-          const block = schedules[time.weekday % 7].blockedTimes.find(b => 
-            melbourneTime.toFormat('HH:mm') >= b.start && 
+          const dayIdx = (time.weekday % 7) as DayIndex;
+          const block = schedules[dayIdx].blockedTimes.find(b =>
+            melbourneTime.toFormat('HH:mm') >= b.start &&
             melbourneTime.toFormat('HH:mm') < b.end
           );
           
           return (
             <div
               key={index}
-              className={`grid grid-cols-4 gap-1 p-2 rounded items-center ${getBlockColor(status)}`}
+              className={`grid grid-cols-4 gap-1 p-2 rounded items-center ${
+                status === 'unavailable'
+                  ? 'bg-red-200'
+                  : status === 'flexible'
+                  ? 'bg-yellow-200'
+                  : 'bg-green-200'
+              }`}
             >
               <div>{melbourneTime.toFormat('HH:mm')}</div>
               <div>{localTime.toFormat('HH:mm')}</div>
