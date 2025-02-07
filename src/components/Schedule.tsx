@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 type AvailabilityType = 'unavailable' | 'flexible' | 'available';
 type DayType = 'weekday' | 'weekend';
 
-// Define the allowed day indices
+// Allowed day indices (0 = Monday, 6 = Sunday)
 type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 interface BlockedTime {
@@ -85,33 +85,67 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
   }
 };
 
+// Map internal statuses to friendlier labels.
+const statusLabels: Record<AvailabilityType, string> = {
+  unavailable: 'Busy',
+  flexible: 'Tentative',
+  available: 'Available',
+};
+
 const Schedule: React.FC = () => {
   const [selectedTimezone, setSelectedTimezone] = useState<string>('Australia/Melbourne');
   const [timezones, setTimezones] = useState<string[]>([]);
+  const [timezoneFilter, setTimezoneFilter] = useState<string>('');
   const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
   const [selectedDay, setSelectedDay] = useState<number>((DateTime.now().weekday - 1) % 7);
 
   useEffect(() => {
     const userTimezone: string | null = DateTime.local().zoneName;
     setSelectedTimezone(userTimezone || 'Australia/Melbourne');
-    
-    const commonTimezones: string[] = [
-      'Australia/Melbourne',
-      'UTC',
-      'America/New_York',
-      'America/Chicago',
-      'America/Denver',
-      'America/Los_Angeles',
-      'Europe/London',
-      'Europe/Paris',
-      'Europe/Berlin',
-      'Asia/Singapore',
-      'Asia/Tokyo',
-      'Asia/Dubai',
-      'Pacific/Auckland'
-    ];
-    setTimezones(commonTimezones);
 
+    let allTimezones: string[] = [];
+    if (typeof Intl !== 'undefined' && typeof Intl.supportedValuesOf === 'function') {
+      try {
+        allTimezones = Intl.supportedValuesOf('timeZone');
+      } catch (error) {
+        // If error occurs, fallback below.
+      }
+    }
+    if (allTimezones.length === 0) {
+      // Fallback list if Intl.supportedValuesOf isn't available.
+      allTimezones = [
+        'Africa/Abidjan',
+        'Africa/Accra',
+        'Africa/Cairo',
+        'Africa/Casablanca',
+        'Africa/Johannesburg',
+        'America/Anchorage',
+        'America/Argentina/Buenos_Aires',
+        'America/Chicago',
+        'America/Denver',
+        'America/Los_Angeles',
+        'America/New_York',
+        'America/Sao_Paulo',
+        'Asia/Dubai',
+        'Asia/Hong_Kong',
+        'Asia/Kolkata',
+        'Asia/Singapore',
+        'Asia/Tokyo',
+        'Australia/Adelaide',
+        'Australia/Brisbane',
+        'Australia/Darwin',
+        'Australia/Melbourne',
+        'Australia/Sydney',
+        'Europe/Berlin',
+        'Europe/London',
+        'Europe/Moscow',
+        'UTC'
+      ];
+    }
+    allTimezones.sort();
+    setTimezones(allTimezones);
+
+    // Update current time every minute.
     const timer: NodeJS.Timer = setInterval(() => {
       setCurrentTime(DateTime.now());
     }, 60000);
@@ -128,14 +162,13 @@ const Schedule: React.FC = () => {
     const dayNumber: number = timeInAEST.weekday % 7;
     const dayIndex = dayNumber as DayIndex;
     const timeString: string = timeInAEST.toFormat('HH:mm');
-    
+
     const daySchedule = schedules[dayIndex].blockedTimes;
     for (const block of daySchedule) {
       if (timeString >= block.start && timeString < block.end) {
         return block.type;
       }
     }
-
     if (
       timeString >= schedules[dayIndex].availableStart &&
       timeString < schedules[dayIndex].availableEnd
@@ -153,7 +186,7 @@ const Schedule: React.FC = () => {
   };
 
   const dayNames: readonly string[] = [
-    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
+    'Monday', 'Tuesday', 'Wednesday', 'Thursday',
     'Friday', 'Saturday', 'Sunday'
   ];
 
@@ -167,19 +200,32 @@ const Schedule: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Availability Schedule</h1>
-      
+      <h1 className="text-2xl font-bold mb-4">Your Availability Schedule</h1>
+
       <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block mb-2">Select Timezone:</label>
-          <select 
+          <input
+            type="text"
+            value={timezoneFilter}
+            onChange={(e) => setTimezoneFilter(e.target.value)}
+            placeholder="Search timezones..."
+            className="w-full border p-2 rounded mb-2"
+          />
+          <select
             value={selectedTimezone}
             onChange={handleTimezoneChange}
             className="w-full border p-2 rounded"
           >
-            {timezones.map((tz: string) => (
-              <option key={tz} value={tz}>{formatTimezone(tz)}</option>
-            ))}
+            {timezones
+              .filter((tz) =>
+                tz.toLowerCase().includes(timezoneFilter.toLowerCase())
+              )
+              .map((tz: string) => (
+                <option key={tz} value={tz}>
+                  {formatTimezone(tz)}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -199,14 +245,10 @@ const Schedule: React.FC = () => {
               onClick={() => handleDaySelect(index)}
               type="button"
               className={`px-4 py-2 rounded ${
-                selectedDay === index 
-                  ? 'bg-blue-500 text-white' 
+                selectedDay === index
+                  ? 'bg-blue-500 text-white'
                   : 'bg-gray-100 hover:bg-gray-200'
-              } ${
-                getDayType(index) === 'weekend' 
-                  ? 'border-l-4 border-purple-500' 
-                  : ''
-              }`}
+              } ${getDayType(index) === 'weekend' ? 'border-l-4 border-purple-500' : ''}`}
             >
               {day}
             </button>
@@ -233,7 +275,8 @@ const Schedule: React.FC = () => {
           
           const localTime = time.setZone(selectedTimezone);
           const melbourneTime = time.setZone('Australia/Melbourne');
-          const status: AvailabilityType = isAvailable(time);
+          const availability: AvailabilityType = isAvailable(time);
+          const statusLabel: string = statusLabels[availability];
           const dayIdx = (time.weekday % 7) as DayIndex;
           const block = schedules[dayIdx].blockedTimes.find(b =>
             melbourneTime.toFormat('HH:mm') >= b.start &&
@@ -244,9 +287,9 @@ const Schedule: React.FC = () => {
             <div
               key={index}
               className={`p-2 rounded ${
-                status === 'unavailable'
+                availability === 'unavailable'
                   ? 'bg-red-200'
-                  : status === 'flexible'
+                  : availability === 'flexible'
                   ? 'bg-yellow-200'
                   : 'bg-green-200'
               }`}
@@ -263,7 +306,7 @@ const Schedule: React.FC = () => {
                 </div>
                 <div className="capitalize text-sm md:text-base">
                   <span className="md:hidden font-bold">Status: </span>
-                  {status}
+                  {statusLabel}
                 </div>
                 <div className="text-sm md:text-base break-words">
                   <span className="md:hidden font-bold">Note: </span>
@@ -290,11 +333,11 @@ const Schedule: React.FC = () => {
             <div className="grid gap-2">
               <div className="flex items-center">
                 <div className="w-6 h-6 bg-red-200 mr-3 rounded"></div>
-                <span>Unavailable (Blocked)</span>
+                <span>Busy (Blocked)</span>
               </div>
               <div className="flex items-center">
                 <div className="w-6 h-6 bg-yellow-200 mr-3 rounded"></div>
-                <span>Flexible (Preferred to avoid)</span>
+                <span>Tentative (Preferred to avoid)</span>
               </div>
               <div className="flex items-center">
                 <div className="w-6 h-6 bg-green-200 mr-3 rounded"></div>
