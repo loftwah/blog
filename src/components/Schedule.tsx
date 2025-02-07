@@ -24,10 +24,28 @@ const Schedule: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<number>(DateTime.now().weekday % 7);
 
   // Daily recurring events in AEST
-  const dailySchedule: TimeBlock[] = [
-    { start: '08:00', end: '08:30', type: 'unavailable', label: 'School drop-off' },
-    { start: '08:30', end: '09:30', type: 'unavailable', label: 'Dog walking' },
-    { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
+  const dailySchedule: (TimeBlock & { days: number[] })[] = [
+    { 
+      start: '08:00', 
+      end: '08:30', 
+      type: 'unavailable', 
+      label: 'School drop-off',
+      days: [1, 2, 3, 4, 5] // Monday to Friday only
+    },
+    { 
+      start: '08:30', 
+      end: '09:30', 
+      type: 'unavailable', 
+      label: 'Dog walking',
+      days: [0, 1, 2, 3, 4, 5, 6] // Every day
+    },
+    { 
+      start: '09:30', 
+      end: '11:30', 
+      type: 'flexible', 
+      label: 'Exercise/shower',
+      days: [0, 1, 2, 3, 4, 5, 6] // Every day
+    },
   ];
 
   // Define availability windows
@@ -86,7 +104,10 @@ const Schedule: React.FC = () => {
 
     // Check daily schedule blocks
     for (const block of dailySchedule) {
-      if (timeString >= block.start && timeString < block.end) {
+      // Only check blocks that apply to the current day
+      if (block.days.includes(dayOfWeek) && 
+          timeString >= block.start && 
+          timeString < block.end) {
         return block.type;
       }
     }
@@ -209,6 +230,7 @@ const Schedule: React.FC = () => {
           const melbourneTime = time.setZone('Australia/Melbourne');
           const status = isAvailable(time);
           const block = dailySchedule.find(b => 
+            b.days.includes(time.weekday % 7) &&
             melbourneTime.toFormat('HH:mm') >= b.start && 
             melbourneTime.toFormat('HH:mm') < b.end
           );
