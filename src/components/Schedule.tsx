@@ -18,49 +18,82 @@ interface AvailabilityWindow {
 }
 
 const Schedule: React.FC = () => {
-  const [selectedTimezone, setSelectedTimezone] = useState<string>('');
+  const [selectedTimezone, setSelectedTimezone] = useState<string>('Australia/Melbourne');
   const [timezones, setTimezones] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
-  const [selectedDay, setSelectedDay] = useState<number>(DateTime.now().weekday % 7);
+  const defaultUIIndex = DateTime.now().weekday === 7 ? 6 : DateTime.now().weekday - 1;
+  const [selectedDay, setSelectedDay] = useState<number>(defaultUIIndex);
 
-  // Daily recurring events in AEST
-  const dailySchedule: (TimeBlock & { days: number[] })[] = [
-    { 
-      start: '08:00', 
-      end: '08:30', 
-      type: 'unavailable', 
-      label: 'School drop-off',
-      days: [1, 2, 3, 4, 5] // Monday to Friday only
+  const schedules = {
+    // SUNDAY (0)
+    0: {
+      blockedTimes: [
+        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
+        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
+      ],
+      availableStart: '10:00',
+      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
     },
-    { 
-      start: '08:30', 
-      end: '09:30', 
-      type: 'unavailable', 
-      label: 'Dog walking',
-      days: [0, 1, 2, 3, 4, 5, 6] // Every day
+    // MONDAY (1)
+    1: {
+      blockedTimes: [
+        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
+        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
+        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
+      ],
+      availableStart: '10:00',
+      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
     },
-    { 
-      start: '09:30', 
-      end: '11:30', 
-      type: 'flexible', 
-      label: 'Exercise/shower',
-      days: [0, 1, 2, 3, 4, 5, 6] // Every day
+    // TUESDAY (2)
+    2: {
+      blockedTimes: [
+        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
+        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
+        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
+      ],
+      availableStart: '10:00',
+      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
     },
-  ];
-
-  // Define availability windows
-  const availabilityWindows: AvailabilityWindow[] = [
-    { 
-      start: '10:00', 
-      end: '23:00', 
-      days: [0, 1, 2, 3, 4] // Sun-Thu
+    // WEDNESDAY (3)
+    3: {
+      blockedTimes: [
+        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
+        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
+        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
+      ],
+      availableStart: '10:00',
+      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
     },
-    { 
-      start: '10:00', 
-      end: '24:00', 
-      days: [5, 6] // Fri-Sat
+    // THURSDAY (4)
+    4: {
+      blockedTimes: [
+        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
+        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
+        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
+      ],
+      availableStart: '10:00',
+      availableEnd: '23:00'  // 11pm finish (Sun-Thurs)
+    },
+    // FRIDAY (5)
+    5: {
+      blockedTimes: [
+        { start: '08:00', end: '09:00', type: 'unavailable' as const, label: 'School drop-off' },
+        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
+        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
+      ],
+      availableStart: '10:00',
+      availableEnd: '24:00'  // Midnight finish (Fri-Sat)
+    },
+    // SATURDAY (6)
+    6: {
+      blockedTimes: [
+        { start: '09:00', end: '09:30', type: 'unavailable' as const, label: 'Dog walking' },
+        { start: '09:30', end: '11:30', type: 'flexible' as const, label: 'Exercise/shower' }
+      ],
+      availableStart: '10:00',
+      availableEnd: '24:00'  // Midnight finish (Fri-Sat)
     }
-  ];
+  } as const;
 
   // Expanded timezone list
   useEffect(() => {
@@ -99,25 +132,21 @@ const Schedule: React.FC = () => {
 
   const isAvailable = (time: DateTime): AvailabilityType => {
     const timeInAEST: DateTime = time.setZone('Australia/Melbourne');
-    const dayOfWeek: number = timeInAEST.weekday % 7;
+    const dayOfWeek: number = timeInAEST.weekday % 7; // 0-6
     const timeString: string = timeInAEST.toFormat('HH:mm');
+    
+    // Get the schedule for this specific day
+    const daySchedule = schedules[dayOfWeek].blockedTimes;
 
-    // Check daily schedule blocks
-    for (const block of dailySchedule) {
-      // Only check blocks that apply to the current day
-      if (block.days.includes(dayOfWeek) && 
-          timeString >= block.start && 
-          timeString < block.end) {
+    // Check blocked times for this day
+    for (const block of daySchedule) {
+      if (timeString >= block.start && timeString < block.end) {
         return block.type;
       }
     }
 
-    // Find matching availability window for the current day
-    const window: AvailabilityWindow | undefined = availabilityWindows.find(w => 
-      w.days.includes(dayOfWeek)
-    );
-    
-    if (window && timeString >= window.start && timeString < window.end) {
+    // Check if within available hours for this day
+    if (timeString >= schedules[dayOfWeek].availableStart && timeString < schedules[dayOfWeek].availableEnd) {
       return 'available';
     }
 
@@ -144,8 +173,8 @@ const Schedule: React.FC = () => {
   };
 
   const dayNames: readonly string[] = [
-    'Sunday', 'Monday', 'Tuesday', 'Wednesday', 
-    'Thursday', 'Friday', 'Saturday'
+    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
+    'Friday', 'Saturday', 'Sunday'
   ] as const;
 
   const handleTimezoneChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
@@ -181,7 +210,6 @@ const Schedule: React.FC = () => {
         </div>
       </div>
 
-      {/* Day selector */}
       <div className="mb-6">
         <label className="block mb-2">Select Day:</label>
         <div className="flex flex-wrap gap-2">
@@ -189,6 +217,7 @@ const Schedule: React.FC = () => {
             <button
               key={day}
               onClick={() => handleDaySelect(index)}
+              type="button"
               className={`px-4 py-2 rounded ${
                 selectedDay === index 
                   ? 'bg-blue-500 text-white' 
@@ -198,20 +227,13 @@ const Schedule: React.FC = () => {
                   ? 'border-l-4 border-purple-500' 
                   : ''
               }`}
-              type="button"
             >
               {day}
             </button>
           ))}
         </div>
-        <p className="mt-2 text-sm text-gray-600">
-          {getDayType(selectedDay) === 'weekend' 
-            ? '🌟 Weekend: Available 10:00 AM - 12:00 AM AEST'
-            : '📅 Weekday: Available 10:00 AM - 11:00 PM AEST'}
-        </p>
       </div>
 
-      {/* Calendar header */}
       <div className="grid grid-cols-4 gap-1 mb-2 font-medium bg-gray-100 p-2 rounded">
         <div>Melbourne Time</div>
         <div>Local Time</div>
@@ -219,18 +241,20 @@ const Schedule: React.FC = () => {
         <div>Notes</div>
       </div>
 
-      {/* Time slots */}
       <div className="space-y-1">
         {Array.from({ length: 48 }).map((_, index) => {
+          // Convert selectedDay to Luxon weekday, adjusting for Sunday.
+          const luxonWeekday = selectedDay === 6 ? 7 : selectedDay + 1;
+          
           const time = DateTime.now()
             .startOf('day')
             .plus({ minutes: index * 30 })
-            .set({ weekday: (selectedDay + 1) as 1 | 2 | 3 | 4 | 5 | 6 | 7 });
+            .set({ weekday: luxonWeekday as 1 | 2 | 3 | 4 | 5 | 6 | 7 });
+          
           const localTime = time.setZone(selectedTimezone);
           const melbourneTime = time.setZone('Australia/Melbourne');
           const status = isAvailable(time);
-          const block = dailySchedule.find(b => 
-            b.days.includes(time.weekday % 7) &&
+          const block = schedules[time.weekday % 7].blockedTimes.find(b => 
             melbourneTime.toFormat('HH:mm') >= b.start && 
             melbourneTime.toFormat('HH:mm') < b.end
           );
@@ -249,15 +273,14 @@ const Schedule: React.FC = () => {
         })}
       </div>
 
-      {/* Updated legend */}
       <div className="mt-6 p-4 bg-gray-50 rounded-lg">
         <h2 className="font-bold mb-3">Schedule Information:</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <h3 className="font-medium">Availability Hours:</h3>
             <div className="ml-4 space-y-2">
-              <p>📅 Weekdays (Sun-Thu): 10:00 AM - 11:00 PM AEST</p>
-              <p>🌟 Weekends (Fri-Sat): 10:00 AM - 12:00 AM AEST</p>
+              <p>📅 Sunday - Thursday: 10:00 AM - 11:00 PM AEST</p>
+              <p>🌟 Friday - Saturday: 10:00 AM - 12:00 AM AEST</p>
             </div>
           </div>
           <div className="space-y-4">
@@ -283,4 +306,4 @@ const Schedule: React.FC = () => {
   );
 };
 
-export default Schedule as unknown as astroHTML.JSX.Element; 
+export default Schedule as unknown as astroHTML.JSX.Element;
