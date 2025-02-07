@@ -4,30 +4,18 @@ import { DateTime } from 'luxon';
 type AvailabilityType = 'unavailable' | 'flexible' | 'available';
 type DayType = 'weekday' | 'weekend';
 
-// Unused interfaces – remove if not needed
-// interface TimeBlock {
-//   start: string;
-//   end: string;
-//   type: AvailabilityType;
-//   label?: string;
-// }
-
-// interface AvailabilityWindow {
-//   start: string;
-//   end: string;
-//   days: number[]; // 0-6, where 0 is Sunday
-// }
-
 // Define the allowed day indices
 type DayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
+interface BlockedTime {
+  start: string;
+  end: string;
+  type: AvailabilityType;
+  label?: string;
+}
+
 interface ScheduleEntry {
-  blockedTimes: {
-    start: string;
-    end: string;
-    type: AvailabilityType;
-    label?: string;
-  }[];
+  blockedTimes: BlockedTime[];
   availableStart: string;
   availableEnd: string;
 }
@@ -55,7 +43,7 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
       { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
       { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
       { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
-      { start: '13:30', end: '14:30', type: 'unavailable', label: 'Meeting' },
+      { start: '13:30', end: '14:30', type: 'unavailable', label: 'Meeting' }
     ],
     availableStart: '10:00',
     availableEnd: '23:00'
@@ -103,13 +91,11 @@ const Schedule: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
   const [selectedDay, setSelectedDay] = useState<number>((DateTime.now().weekday - 1) % 7);
 
-  // Expanded timezone list
   useEffect(() => {
     const userTimezone: string | null = DateTime.local().zoneName;
     setSelectedTimezone(userTimezone || 'Australia/Melbourne');
     
-    // Expanded list of common timezones
-    const commonTimezones = [
+    const commonTimezones: string[] = [
       'Australia/Melbourne',
       'UTC',
       'America/New_York',
@@ -122,11 +108,10 @@ const Schedule: React.FC = () => {
       'Asia/Singapore',
       'Asia/Tokyo',
       'Asia/Dubai',
-      'Pacific/Auckland',
+      'Pacific/Auckland'
     ];
     setTimezones(commonTimezones);
 
-    // Update current time every minute
     const timer: NodeJS.Timer = setInterval(() => {
       setCurrentTime(DateTime.now());
     }, 60000);
@@ -140,13 +125,11 @@ const Schedule: React.FC = () => {
 
   const isAvailable = (time: DateTime): AvailabilityType => {
     const timeInAEST: DateTime = time.setZone('Australia/Melbourne');
-    // Compute day index: ensure it's one of our defined DayIndex values
     const dayNumber: number = timeInAEST.weekday % 7;
     const dayIndex = dayNumber as DayIndex;
     const timeString: string = timeInAEST.toFormat('HH:mm');
     
     const daySchedule = schedules[dayIndex].blockedTimes;
-
     for (const block of daySchedule) {
       if (timeString >= block.start && timeString < block.end) {
         return block.type;
@@ -159,11 +142,9 @@ const Schedule: React.FC = () => {
     ) {
       return 'available';
     }
-
     return 'unavailable';
   };
 
-  // Helper function to format timezone for display
   const formatTimezone = (tz: string): string => {
     const now: DateTime = DateTime.now().setZone(tz);
     const offset: string = now.toFormat('ZZ');
@@ -174,7 +155,7 @@ const Schedule: React.FC = () => {
   const dayNames: readonly string[] = [
     'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
     'Friday', 'Saturday', 'Sunday'
-  ] as const;
+  ];
 
   const handleTimezoneChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     setSelectedTimezone(event.target.value);
@@ -233,7 +214,8 @@ const Schedule: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-1 mb-2 font-medium bg-gray-100 p-2 rounded">
+      {/* Header for schedule rows (visible on md and up) */}
+      <div className="grid grid-cols-4 gap-1 mb-2 font-medium bg-gray-100 p-2 rounded hidden md:grid">
         <div>Melbourne Time</div>
         <div>Local Time</div>
         <div>Status</div>
@@ -241,7 +223,7 @@ const Schedule: React.FC = () => {
       </div>
 
       <div className="space-y-1">
-        {Array.from({ length: 48 }).map((_, index) => {
+        {Array.from({ length: 48 }).map((_, index: number) => {
           // Adjust selectedDay to Luxon's weekday (1-7)
           const luxonWeekday = selectedDay === 6 ? 7 : selectedDay + 1;
           const time = DateTime.now()
@@ -251,7 +233,7 @@ const Schedule: React.FC = () => {
           
           const localTime = time.setZone(selectedTimezone);
           const melbourneTime = time.setZone('Australia/Melbourne');
-          const status = isAvailable(time);
+          const status: AvailabilityType = isAvailable(time);
           const dayIdx = (time.weekday % 7) as DayIndex;
           const block = schedules[dayIdx].blockedTimes.find(b =>
             melbourneTime.toFormat('HH:mm') >= b.start &&
@@ -261,7 +243,7 @@ const Schedule: React.FC = () => {
           return (
             <div
               key={index}
-              className={`grid grid-cols-4 gap-1 p-2 rounded items-center ${
+              className={`p-2 rounded ${
                 status === 'unavailable'
                   ? 'bg-red-200'
                   : status === 'flexible'
@@ -269,10 +251,25 @@ const Schedule: React.FC = () => {
                   : 'bg-green-200'
               }`}
             >
-              <div>{melbourneTime.toFormat('HH:mm')}</div>
-              <div>{localTime.toFormat('HH:mm')}</div>
-              <div className="capitalize">{status}</div>
-              <div className="break-words">{block?.label || ''}</div>
+              {/* Responsive layout: stacked on mobile, grid on md+ */}
+              <div className="block md:grid md:grid-cols-4 gap-1 items-center">
+                <div className="text-sm md:text-base">
+                  <span className="md:hidden font-bold">Melbourne: </span>
+                  {melbourneTime.toFormat('HH:mm')}
+                </div>
+                <div className="text-sm md:text-base">
+                  <span className="md:hidden font-bold">Local: </span>
+                  {localTime.toFormat('HH:mm')}
+                </div>
+                <div className="capitalize text-sm md:text-base">
+                  <span className="md:hidden font-bold">Status: </span>
+                  {status}
+                </div>
+                <div className="text-sm md:text-base break-words">
+                  <span className="md:hidden font-bold">Note: </span>
+                  {block?.label || ''}
+                </div>
+              </div>
             </div>
           );
         })}
