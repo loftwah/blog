@@ -272,7 +272,7 @@ const Schedule: React.FC = () => {
               <div>{melbourneTime.toFormat('HH:mm')}</div>
               <div>{localTime.toFormat('HH:mm')}</div>
               <div className="capitalize">{status}</div>
-              <div>{block?.label || ''}</div>
+              <div className="break-words">{block?.label || ''}</div>
             </div>
           );
         })}
