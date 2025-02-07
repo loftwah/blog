@@ -101,7 +101,6 @@ const Schedule: React.FC = () => {
   const [selectedTimezone, setSelectedTimezone] = useState<string>('Australia/Melbourne');
   const [timezones, setTimezones] = useState<string[]>([]);
   const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
-  const defaultUIIndex = DateTime.now().weekday === 7 ? 6 : DateTime.now().weekday - 1;
   const [selectedDay, setSelectedDay] = useState<number>((DateTime.now().weekday - 1) % 7);
 
   // Expanded timezone list
