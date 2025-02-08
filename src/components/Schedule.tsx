@@ -31,7 +31,8 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
   0: {
     blockedTimes: [
       { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
-      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
+      { start: '17:00', end: '17:30', type: 'unavailable', label: 'Dog walking' }
     ],
     availableStart: '10:00',
     availableEnd: '23:00'
@@ -40,7 +41,8 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
     blockedTimes: [
       { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
       { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
-      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
+      { start: '17:00', end: '17:30', type: 'unavailable', label: 'Dog walking' }
     ],
     availableStart: '10:00',
     availableEnd: '23:00'
@@ -50,7 +52,8 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
       { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
       { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
       { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
-      { start: '13:30', end: '14:30', type: 'unavailable', label: 'Meeting' }
+      { start: '13:30', end: '14:30', type: 'unavailable', label: 'Meeting' },
+      { start: '17:00', end: '17:30', type: 'unavailable', label: 'Dog walking' }
     ],
     availableStart: '10:00',
     availableEnd: '23:00'
@@ -59,7 +62,8 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
     blockedTimes: [
       { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
       { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
-      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
+      { start: '17:00', end: '17:30', type: 'unavailable', label: 'Dog walking' }
     ],
     availableStart: '10:00',
     availableEnd: '23:00'
@@ -68,7 +72,8 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
     blockedTimes: [
       { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
       { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
-      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
+      { start: '17:00', end: '17:30', type: 'unavailable', label: 'Dog walking' }
     ],
     availableStart: '10:00',
     availableEnd: '23:00'
@@ -77,7 +82,8 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
     blockedTimes: [
       { start: '08:00', end: '09:00', type: 'unavailable', label: 'School drop-off' },
       { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
-      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
+      { start: '17:00', end: '17:30', type: 'unavailable', label: 'Dog walking' }
     ],
     availableStart: '10:00',
     availableEnd: '24:00'
@@ -85,7 +91,8 @@ const schedules: Record<DayIndex, ScheduleEntry> = {
   6: {
     blockedTimes: [
       { start: '09:00', end: '09:30', type: 'unavailable', label: 'Dog walking' },
-      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' }
+      { start: '09:30', end: '11:30', type: 'flexible', label: 'Exercise/shower' },
+      { start: '17:00', end: '17:30', type: 'unavailable', label: 'Dog walking' }
     ],
     availableStart: '10:00',
     availableEnd: '24:00'
@@ -182,33 +189,50 @@ const TimezoneSelector: React.FC<TimezoneSelectorProps> = ({
   timezoneFilter,
   onTimezoneChange,
   onFilterChange
-}) => (
-  <div>
-    <label className="block mb-2">Select Timezone:</label>
-    <input
-      type="text"
-      value={timezoneFilter}
-      onChange={(e: ChangeEvent<HTMLInputElement>) => onFilterChange(e.target.value)}
-      placeholder="Search timezones..."
-      className="w-full border p-2 rounded mb-2"
-    />
-    <select
-      value={selectedTimezone}
-      onChange={(e: ChangeEvent<HTMLSelectElement>) => onTimezoneChange(e.target.value)}
-      className="w-full border p-2 rounded"
-    >
-      {timezones
-        .filter((tz: string) =>
-          tz.toLowerCase().includes(timezoneFilter.toLowerCase())
-        )
-        .map((tz: string) => (
-          <option key={tz} value={tz}>
-            {formatTimezone(tz)}
-          </option>
-        ))}
-    </select>
-  </div>
-);
+}) => {
+  // Add handler for filter changes
+  const handleFilterChange = (value: string) => {
+    onFilterChange(value);
+    
+    // Get filtered timezones
+    const filteredTimezones = timezones.filter((tz: string) =>
+      tz.toLowerCase().includes(value.toLowerCase())
+    );
+    
+    // If exactly one timezone matches, automatically select it
+    if (filteredTimezones.length === 1) {
+      onTimezoneChange(filteredTimezones[0]);
+    }
+  };
+
+  return (
+    <div>
+      <label className="block mb-2">Select Timezone:</label>
+      <input
+        type="text"
+        value={timezoneFilter}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => handleFilterChange(e.target.value)}
+        placeholder="Search timezones..."
+        className="w-full border p-2 rounded mb-2"
+      />
+      <select
+        value={selectedTimezone}
+        onChange={(e: ChangeEvent<HTMLSelectElement>) => onTimezoneChange(e.target.value)}
+        className="w-full border p-2 rounded"
+      >
+        {timezones
+          .filter((tz: string) =>
+            tz.toLowerCase().includes(timezoneFilter.toLowerCase())
+          )
+          .map((tz: string) => (
+            <option key={tz} value={tz}>
+              {formatTimezone(tz)}
+            </option>
+          ))}
+      </select>
+    </div>
+  );
+};
 
 interface DaySelectorProps {
   dayNames: readonly string[];
@@ -300,23 +324,30 @@ const Schedule: React.FC = () => {
   const [selectedTimezone, setSelectedTimezone] = useState<string>('Australia/Melbourne');
   const [timezones, setTimezones] = useState<string[]>([]);
   const [timezoneFilter, setTimezoneFilter] = useState<string>('');
-  const [currentTime, setCurrentTime] = useState<DateTime>(DateTime.now());
-  // Using 0 for Monday … 6 for Sunday (adjusted later for Luxon)
-  const [selectedDay, setSelectedDay] = useState<number>((DateTime.now().weekday - 1) % 7);
+  const [currentTime, setCurrentTime] = useState<DateTime | null>(null);
+  const [selectedDay, setSelectedDay] = useState<number>(0);
 
   useEffect(() => {
-    const userTimezone: string | null = DateTime.local().zoneName;
+    const now = DateTime.now();
+    setCurrentTime(now);
+    setSelectedDay((now.weekday - 1) % 7);
+    
+    const userTimezone = DateTime.local().zoneName;
     setSelectedTimezone(userTimezone || 'Australia/Melbourne');
 
-    const allTimezones: string[] = getAllTimezones();
+    const allTimezones = getAllTimezones();
     setTimezones(allTimezones);
 
-    const timer: number = window.setInterval(() => {
+    const timer = window.setInterval(() => {
       setCurrentTime(DateTime.now());
     }, 60000);
 
     return () => clearInterval(timer);
   }, []);
+
+  if (!currentTime) {
+    return <div>Loading...</div>;
+  }
 
   const dayNames: readonly string[] = [
     'Monday',
