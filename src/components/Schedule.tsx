@@ -200,7 +200,7 @@ const TimezoneSelector: React.FC<TimezoneSelectorProps> = ({
     );
     
     // If exactly one timezone matches, automatically select it
-    if (filteredTimezones.length === 1) {
+    if (filteredTimezones.length === 1 && filteredTimezones[0]) {
       onTimezoneChange(filteredTimezones[0]);
     }
   };
