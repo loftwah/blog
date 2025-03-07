@@ -23,6 +23,9 @@ The [langchain-csv](https://github.com/loftwah/langchain-csv) project provides t
 
 Both interfaces share a Retrieval-Augmented Generation (RAG) backend, enhanced by direct data analysis for handling precise numerical and comparative queries effectively.
 
+![RAG Demo Interface](/images/rag-demo.png)
+_The command-line RAG demo interface showing direct data analysis output_
+
 ## Technologies Used
 
 Our tech stack includes:
@@ -59,7 +62,7 @@ uv run gradio_demo.py
 You can also explore the command-line demo for a different interactive experience:
 
 ```bash
-uv run cli_demo.py
+uv run rag_demo.py
 ```
 
 ## Data: The Product Catalog
@@ -70,6 +73,9 @@ Our explorer uses product data from a CSV file. The sample `products.csv` includ
 - **Extended Data:** Stock availability, release dates, discounts, and product features.
 
 This detailed dataset enables comprehensive queries ranging from basic product lookups to advanced analytics.
+
+![Gradio Interface Setup](/images/gradio-1.png)
+_The Gradio interface setup tab showing the product data preview_
 
 ## How the RAG System Operates
 
@@ -157,6 +163,9 @@ with gr.Interface(
 ) as demo:
     demo.launch()
 ```
+
+![Gradio Query Interface](/images/gradio-2.png)
+_The Gradio interface query tab showing sample questions and results_
 
 ### CLI Interface with Colorama
 
