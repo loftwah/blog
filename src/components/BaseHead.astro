@@ -39,7 +39,7 @@ const { title, description, image = '/og-image.jpg', author = 'loftwah' } = Astr
 <meta property="og:description" content={description} />
 <meta property="og:image" content={image ? new URL(image.startsWith('http') ? image : image.startsWith('/') ? image.slice(1) : image, Astro.site).toString() : new URL('/og-image.jpg', Astro.site).toString()} />
 
-<!-- Twitter -->
+<!-- Twitter/X -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
