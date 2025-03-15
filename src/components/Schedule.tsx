@@ -207,25 +207,25 @@ const TimezoneSelector: React.FC<TimezoneSelectorProps> = ({
 
   return (
     <div>
-      <label className="block mb-2">Select Timezone:</label>
+      <label className="block mb-2 text-gray-800 dark:text-gray-200">Select Timezone:</label>
       <input
         type="text"
         value={timezoneFilter}
         onChange={(e: ChangeEvent<HTMLInputElement>) => handleFilterChange(e.target.value)}
         placeholder="Search timezones..."
-        className="w-full border p-2 rounded mb-2"
+        className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
       />
       <select
         value={selectedTimezone}
         onChange={(e: ChangeEvent<HTMLSelectElement>) => onTimezoneChange(e.target.value)}
-        className="w-full border p-2 rounded"
+        className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
       >
         {timezones
           .filter((tz: string) =>
             tz.toLowerCase().includes(timezoneFilter.toLowerCase())
           )
           .map((tz: string) => (
-            <option key={tz} value={tz}>
+            <option key={tz} value={tz} className="text-gray-900 dark:text-gray-100">
               {formatTimezone(tz)}
             </option>
           ))}
@@ -242,17 +242,17 @@ interface DaySelectorProps {
 
 const DaySelector: React.FC<DaySelectorProps> = ({ dayNames, selectedDay, onSelect }) => (
   <div className="mb-6">
-    <label className="block mb-2">Select Day:</label>
+    <label className="block mb-2 text-gray-800 dark:text-gray-200">Select Day:</label>
     <div className="flex flex-wrap gap-2">
       {dayNames.map((day: string, index: number) => (
         <button
           key={day}
           onClick={() => onSelect(index)}
           type="button"
-          className={`px-4 py-2 rounded ${
+          className={`px-4 py-2 rounded transition-colors ${
             selectedDay === index
               ? 'bg-blue-500 text-white'
-              : 'bg-gray-100 hover:bg-gray-200'
+              : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
           } ${[5, 6].includes(index) ? 'border-l-4 border-purple-500' : ''}`}
         >
           {day}
@@ -263,7 +263,7 @@ const DaySelector: React.FC<DaySelectorProps> = ({ dayNames, selectedDay, onSele
 );
 
 const ScheduleHeader: React.FC = () => (
-  <div className="grid grid-cols-4 gap-1 mb-2 font-medium bg-gray-100 p-2 rounded hidden md:grid">
+  <div className="grid grid-cols-4 gap-1 mb-2 font-medium bg-gray-100 dark:bg-gray-800 p-2 rounded hidden md:grid text-gray-800 dark:text-gray-200">
     <div>Melbourne Time</div>
     <div>Local Time</div>
     <div>Status</div>
@@ -289,10 +289,10 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   <div
     className={`p-2 rounded ${
       availability === 'unavailable'
-        ? 'bg-red-200'
+        ? 'bg-red-200 dark:bg-red-900 text-red-900 dark:text-red-100'
         : availability === 'flexible'
-        ? 'bg-yellow-200'
-        : 'bg-green-200'
+        ? 'bg-yellow-200 dark:bg-yellow-900 text-yellow-900 dark:text-yellow-100'
+        : 'bg-green-200 dark:bg-green-900 text-green-900 dark:text-green-100'
     }`}
   >
     <div className="block md:grid md:grid-cols-4 gap-1 items-center">
@@ -346,7 +346,7 @@ const Schedule: React.FC = () => {
   }, []);
 
   if (!currentTime) {
-    return <div>Loading...</div>;
+    return <div className="text-gray-800 dark:text-gray-200">Loading...</div>;
   }
 
   const dayNames: readonly string[] = [
@@ -360,8 +360,8 @@ const Schedule: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Your Availability Schedule</h1>
+    <div className="max-w-6xl mx-auto p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Your Availability Schedule</h1>
 
       <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <TimezoneSelector
@@ -372,9 +372,9 @@ const Schedule: React.FC = () => {
           onFilterChange={setTimezoneFilter}
         />
         <div className="space-y-2">
-          <p className="font-medium">Current Times:</p>
-          <p>Your timezone: {currentTime.setZone(selectedTimezone).toFormat('fff')}</p>
-          <p>Melbourne: {currentTime.setZone('Australia/Melbourne').toFormat('fff')}</p>
+          <p className="font-medium text-gray-800 dark:text-gray-200">Current Times:</p>
+          <p className="text-gray-700 dark:text-gray-300">Your timezone: {currentTime.setZone(selectedTimezone).toFormat('fff')}</p>
+          <p className="text-gray-700 dark:text-gray-300">Melbourne: {currentTime.setZone('Australia/Melbourne').toFormat('fff')}</p>
         </div>
       </div>
 
@@ -416,30 +416,30 @@ const Schedule: React.FC = () => {
         })}
       </div>
 
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-        <h2 className="font-bold mb-3">Schedule Information:</h2>
+      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <h2 className="font-bold mb-3 text-gray-900 dark:text-white">Schedule Information:</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <h3 className="font-medium">Availability Hours:</h3>
-            <div className="ml-4 space-y-2">
+            <h3 className="font-medium text-gray-800 dark:text-gray-200">Availability Hours:</h3>
+            <div className="ml-4 space-y-2 text-gray-700 dark:text-gray-300">
               <p>📅 Sunday - Thursday: 10:00 AM - 11:00 PM AEST</p>
               <p>🌟 Friday - Saturday: 10:00 AM - 12:00 AM AEST</p>
             </div>
           </div>
           <div className="space-y-4">
-            <h3 className="font-medium">Color Legend:</h3>
+            <h3 className="font-medium text-gray-800 dark:text-gray-200">Color Legend:</h3>
             <div className="grid gap-2">
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-red-200 mr-3 rounded"></div>
-                <span>Busy (Blocked)</span>
+                <div className="w-6 h-6 bg-red-200 dark:bg-red-900 mr-3 rounded"></div>
+                <span className="text-gray-700 dark:text-gray-300">Busy (Blocked)</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-yellow-200 mr-3 rounded"></div>
-                <span>Tentative (Preferred to avoid)</span>
+                <div className="w-6 h-6 bg-yellow-200 dark:bg-yellow-900 mr-3 rounded"></div>
+                <span className="text-gray-700 dark:text-gray-300">Tentative (Preferred to avoid)</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-green-200 mr-3 rounded"></div>
-                <span>Available</span>
+                <div className="w-6 h-6 bg-green-200 dark:bg-green-900 mr-3 rounded"></div>
+                <span className="text-gray-700 dark:text-gray-300">Available</span>
               </div>
             </div>
           </div>
