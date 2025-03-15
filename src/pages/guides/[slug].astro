@@ -53,6 +53,7 @@ const { Content } = await guide.render();
       .title h1 {
         margin: 0 0 0.5em 0;
       }
+      /* Dark mode styles for difficulty badges */
       .difficulty {
         display: inline-block;
         padding: 0.25rem 0.5rem;
@@ -63,6 +64,11 @@ const { Content } = await guide.render();
       .difficulty.beginner { background: #e0f2f1; color: #004d40; }
       .difficulty.intermediate { background: #fff3e0; color: #e65100; }
       .difficulty.advanced { background: #fce4ec; color: #880e4f; }
+      
+      :global(.dark) .difficulty.beginner { background: #004d40; color: #e0f2f1; }
+      :global(.dark) .difficulty.intermediate { background: #e65100; color: #fff3e0; }
+      :global(.dark) .difficulty.advanced { background: #880e4f; color: #fce4ec; }
+      
       .metadata {
         margin-bottom: 2em;
         text-align: center;
@@ -73,36 +79,40 @@ const { Content } = await guide.render();
         border-radius: 8px;
         margin-bottom: 2em;
       }
+      :global(.dark) .prerequisites {
+        background: #1f2937;
+        color: #f3f4f6;
+      }
       .prerequisites h3 {
         margin-top: 0;
       }
     </style>
   </head>
 
-  <body>
+  <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
     <Header />
     <main>
-      <article class="prose">
+      <article class="prose dark:prose-invert bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
         <!-- Display Hero Image at the top -->
         {guide.data.heroImage && (
           <div class="hero-image">
-            <img src={guide.data.heroImage} alt="" />
+            <img src={guide.data.heroImage} alt="" class="rounded-lg shadow-lg" />
           </div>
         )}
 
         <div class="title">
-          <h1>{guide.data.title}</h1>
+          <h1 class="text-gray-900 dark:text-white">{guide.data.title}</h1>
           <div class="metadata">
             <span class={`difficulty ${guide.data.difficulty}`}>
               {guide.data.difficulty.charAt(0).toUpperCase() + guide.data.difficulty.slice(1)}
             </span>
-            <div>Category: {guide.data.category}</div>
+            <div class="text-gray-600 dark:text-gray-400">Category: {guide.data.category}</div>
           </div>
         </div>
 
         {guide.data.prerequisites && guide.data.prerequisites.length > 0 && (
           <div class="prerequisites">
-            <h3>Prerequisites</h3>
+            <h3 class="dark:text-white">Prerequisites</h3>
             <ul>
               {guide.data.prerequisites.map(prereq => (
                 <li>{prereq}</li>
@@ -112,7 +122,9 @@ const { Content } = await guide.render();
         )}
 
         <!-- Guide content -->
-        <Content />
+        <div class="prose dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-accent hover:prose-a:text-accent-dark">
+          <Content />
+        </div>
       </article>
     </main>
     <Footer />

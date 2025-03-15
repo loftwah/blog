@@ -24,36 +24,36 @@ const topCEOs: CEO[] = ceos as CEO[]; // Explicitly cast to the CEO array type
   <head>
     <BaseHead title={`Top 50 HTMX CEOs - ${SITE_TITLE}`} description={`Explore the top 50 HTMX CEOs by Twitter followers. ${SITE_DESCRIPTION}`} />
   </head>
-  <body class="bg-gray-50">
+  <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
     <Header />
-    <main class="prose mx-auto p-6 bg-white rounded-lg shadow">
-      <h1 class="text-4xl font-bold mb-6 text-center">Top 50 HTMX CEOs</h1>
+    <main class="prose mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+      <h1 class="text-4xl font-bold mb-6 text-center text-gray-900 dark:text-white">Top 50 HTMX CEOs</h1>
 
-      <p class="mb-8 text-center">
+      <p class="mb-8 text-center text-gray-700 dark:text-gray-300">
         This page showcases the top 50 HTMX CEOs, ranked by their Twitter followers.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {topCEOs.map((ceo, index) => (
           <div
-            class="flex flex-col items-center text-center bg-white border border-gray-200 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+            class="flex flex-col items-center text-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
           >
             <img
               src={`/images/${ceo.imagePath}`}
               alt={`Profile of ${ceo.name}`}
-              class="w-24 h-24 rounded-full border border-gray-300 mb-4"
+              class="w-24 h-24 rounded-full border border-gray-300 dark:border-gray-500 mb-4"
             />
-            <h2 class="text-xl font-bold truncate mb-2" title={`#${index + 1}: ${ceo.name}`}>
+            <h2 class="text-xl font-bold truncate mb-2 text-gray-900 dark:text-white" title={`#${index + 1}: ${ceo.name}`}>
               #{index + 1}: {ceo.name}
             </h2>
-            <p class="text-gray-500">@{ceo.screenName}</p>
-            <p class="mt-2 text-gray-600">
+            <p class="text-gray-500 dark:text-gray-400">@{ceo.screenName}</p>
+            <p class="mt-2 text-gray-600 dark:text-gray-300">
               Followers: <span class="font-bold">{ceo.followers.toLocaleString()}</span>
             </p>
             <a
               href={ceo.twitter}
               target="_blank"
-              class="mt-4 text-blue-500 hover:text-blue-700 font-medium"
+              class="mt-4 text-accent hover:text-accent-dark dark:text-accent dark:hover:text-accent-dark font-medium"
             >
               Visit Twitter Profile →
             </a>

@@ -117,172 +117,206 @@ const Quiz: React.FC<QuizProps> = ({ questions: initialQuestions }) => {
   };
 
   const renderControls = () => (
-    <div className="quiz-controls">
-      <button 
-        onClick={handlePreviousQuestion}
-        disabled={quizState.currentQuestionIndex === 0}
-        className="control-button"
-      >
-        Previous
-      </button>
-      
-      <div className="control-center">
-        <button onClick={shuffleQuestions} className="control-button">
-          Shuffle Questions
-        </button>
-        <button onClick={resetQuiz} className="control-button">
-          Restart Quiz
-        </button>
+    <div className="controls flex items-center justify-between mb-8">
+      <div className="difficulty-filter">
+        <label htmlFor="difficulty-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Difficulty:
+        </label>
+        <select
+          id="difficulty-filter"
+          value={filters.difficulty}
+          onChange={(e) => setFilters({...filters, difficulty: e.target.value})}
+          className="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
+        >
+          <option value="">All</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
       </div>
 
-      {showExplanation && (
-        <button 
-          onClick={handleNextQuestion}
-          disabled={quizState.currentQuestionIndex === filteredQuestions.length - 1}
-          className="control-button"
+      <div className="category-filter ml-4">
+        <label htmlFor="category-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Category:
+        </label>
+        <select
+          id="category-filter"
+          value={filters.category}
+          onChange={(e) => setFilters({...filters, category: e.target.value})}
+          className="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
         >
-          Next
-        </button>
-      )}
+          <option value="">All</option>
+          {availableCategories.map(category => (
+            <option key={category} value={category}>{category}</option>
+          ))}
+        </select>
+      </div>
+
+      <div className="tag-filter ml-4">
+        <label htmlFor="tag-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          Topic:
+        </label>
+        <select 
+          id="tag-filter"
+          value={filters.tag}
+          onChange={(e) => setFilters({...filters, tag: e.target.value})}
+          className="block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 shadow-sm focus:border-accent focus:ring-accent sm:text-sm"
+        >
+          <option value="">All</option>
+          {availableTags.map(tag => (
+            <option key={tag} value={tag}>{tag}</option>
+          ))}
+        </select>
+      </div>
+
+      <button 
+        onClick={shuffleQuestions}
+        className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 mt-5"
+      >
+        Shuffle
+      </button>
     </div>
   );
 
   const renderExplanation = () => {
-    if (!showExplanation || !currentQuestion) return null;
+    const question = filteredQuestions[quizState.currentQuestionIndex];
+    if (!question || !question.explanation || !showExplanation) return null;
     
     return (
-      <div className="explanation">
-        <p>{currentQuestion.explanation.text}</p>
-        {currentQuestion.explanation.url && (
-          <a 
-            href={currentQuestion.explanation.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="learn-more"
-          >
-            {currentQuestion.explanation.urlText || 'Learn more'}
-          </a>
-        )}
-        {currentQuestion.explanation.codeExample && (
-          <pre className="code-example">
-            <code className={currentQuestion.explanation.codeExample.language}>
-              {currentQuestion.explanation.codeExample.code}
-            </code>
-          </pre>
-        )}
+      <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900 rounded-lg">
+        <h4 className="font-bold text-blue-800 dark:text-blue-200 mb-2">Explanation:</h4>
+        <p className="text-blue-700 dark:text-blue-300">{question.explanation}</p>
       </div>
     );
   };
 
-  if (isFinished) {
+  if (filteredQuestions.length === 0) {
     return (
-      <div className="quiz-result">
-        <h2>Quiz Complete!</h2>
-        <p>Your score: {quizState.score}/{filteredQuestions.length}</p>
-        <div className="stats">
-          <p>Questions answered: {quizState.answeredQuestions.length}</p>
-          <p>Correct answers: {quizState.score}</p>
-          <p>Success rate: {((quizState.score / filteredQuestions.length) * 100).toFixed(1)}%</p>
-        </div>
-        <div className="quiz-controls">
-          <button onClick={resetQuiz} className="control-button">Try Again</button>
-          <button onClick={shuffleQuestions} className="control-button">Try Shuffled</button>
-        </div>
-      </div>
-    );
-  }
-
-  // Early return if no current question is available
-  if (!currentQuestion) {
-    return (
-      <div className="quiz-container">
-        <p>No questions available with the current filters.</p>
-        <button onClick={resetQuiz} className="control-button">Reset Filters</button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="quiz-container">
-      <div className="filters">
-        <label>
-          Filter by Tag:
-          <select
-            value={filters.tag}
-            onChange={(e) => setFilters(prev => ({ ...prev, tag: e.target.value }))}
-          >
-            <option value="">All Tags</option>
-            {availableTags.map(tag => (
-              <option key={tag} value={tag}>{tag}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Filter by Category:
-          <select
-            value={filters.category}
-            onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
-          >
-            <option value="">All Categories</option>
-            {availableCategories.map(category => (
-              <option key={category} value={category}>{category}</option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Filter by Difficulty:
-          <select
-            value={filters.difficulty}
-            onChange={(e) => setFilters(prev => ({ ...prev, difficulty: e.target.value }))}
-          >
-            <option value="">All</option>
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </label>
-      </div>
-
-      <div className="question-container">
-        <div className="quiz-header">
-          <h2>Question {quizState.currentQuestionIndex + 1}/{filteredQuestions.length}</h2>
-          <span className="score">Score: {quizState.score}</span>
-        </div>
-        
+      <div className="quiz-container p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
         {renderControls()}
-        
-        <p className="question-text">{currentQuestion.question}</p>
-        
-        {currentQuestion.image && (
-          <img
-            src={currentQuestion.image}
-            alt="Question illustration"
-            className="question-image"
-          />
-        )}
-        
-        <div className="options">
-          {currentQuestion.options.map((option, index) => {
-            const isSelected = selectedAnswer === index;
-            const isCorrect = showExplanation && currentQuestion.answer === index;
-            const isWrong = showExplanation && isSelected && !isCorrect;
-            
-            return (
-              <button
-                key={index}
-                onClick={() => handleAnswer(index)}
-                disabled={selectedAnswer !== null}
-                className={`option-button ${
-                  isSelected ? 'selected' : ''
-                } ${isCorrect ? 'correct' : ''} ${isWrong ? 'wrong' : ''}`}
-              >
-                {option}
-              </button>
-            );
-          })}
+        <div className="text-center p-10 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+          <p className="text-gray-500 dark:text-gray-400">No questions found with the selected filters.</p>
+          <button 
+            onClick={() => setFilters({ tag: "", difficulty: "", category: "" })}
+            className="mt-4 inline-flex justify-center rounded-md border border-transparent bg-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+          >
+            Clear Filters
+          </button>
         </div>
+      </div>
+    );
+  }
 
-        {renderExplanation()}
+  if (isFinished) {
+    const totalQuestions = quizState.answeredQuestions.length;
+    const score = quizState.score;
+    const percentage = Math.round((score / totalQuestions) * 100);
+    
+    return (
+      <div className="quiz-container p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+        {renderControls()}
+        <div className="text-center p-10 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+          <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Quiz Complete!</h2>
+          <p className="text-xl mb-6 text-gray-700 dark:text-gray-300">
+            You scored <span className="font-bold text-accent">{score}</span> out of <span className="font-bold">{totalQuestions}</span> ({percentage}%)
+          </p>
+          <button 
+            onClick={resetQuiz}
+            className="inline-flex justify-center rounded-md border border-transparent bg-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+          >
+            Take Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const currentQuestion = filteredQuestions[quizState.currentQuestionIndex];
+  
+  return (
+    <div className="quiz-container p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      {renderControls()}
+      
+      <div className="progress-bar mb-6 bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+        <div 
+          className="bg-accent h-2.5 rounded-full"
+          style={{ width: `${((quizState.currentQuestionIndex + 1) / filteredQuestions.length) * 100}%` }}
+        ></div>
+      </div>
+      
+      <div className="question-header flex justify-between items-center mb-4">
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          Question {quizState.currentQuestionIndex + 1} of {filteredQuestions.length}
+        </span>
+        <span className={`px-2 py-1 rounded text-xs font-medium ${
+          currentQuestion.difficulty === 'easy' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
+          currentQuestion.difficulty === 'medium' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
+          'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+        }`}>
+          {currentQuestion.difficulty.charAt(0).toUpperCase() + currentQuestion.difficulty.slice(1)}
+        </span>
+      </div>
+      
+      <div className="question mb-6">
+        <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{currentQuestion.question}</h3>
+        
+        <div className="options space-y-3">
+          {currentQuestion.options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => handleAnswer(index)}
+              disabled={showExplanation}
+              className={`w-full text-left p-4 rounded-lg border transition-colors ${
+                selectedAnswer === index && showExplanation && index === currentQuestion.correctAnswer
+                  ? 'bg-green-100 dark:bg-green-900 border-green-500 dark:border-green-600 text-green-800 dark:text-green-200'
+                : selectedAnswer === index && showExplanation
+                  ? 'bg-red-100 dark:bg-red-900 border-red-500 dark:border-red-600 text-red-800 dark:text-red-200'
+                : selectedAnswer === index
+                  ? 'bg-blue-50 dark:bg-blue-900 border-blue-500 dark:border-blue-600 text-blue-800 dark:text-blue-200'
+                : 'bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600'
+              }`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      {renderExplanation()}
+      
+      <div className="navigation flex justify-between mt-6">
+        <button
+          onClick={handlePreviousQuestion}
+          disabled={quizState.currentQuestionIndex === 0}
+          className={`inline-flex items-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium ${
+            quizState.currentQuestionIndex === 0
+              ? 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+              : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent'
+          }`}
+        >
+          Previous
+        </button>
+        
+        {showExplanation ? (
+          <button
+            onClick={handleNextQuestion}
+            className="inline-flex justify-center rounded-md border border-transparent bg-accent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+          >
+            {quizState.currentQuestionIndex === filteredQuestions.length - 1 ? 'Finish Quiz' : 'Next Question'}
+          </button>
+        ) : (
+          <button
+            disabled={selectedAnswer === null}
+            onClick={() => setShowExplanation(true)}
+            className={`inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+              selectedAnswer === null
+                ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                : 'bg-accent text-white hover:bg-accent-dark focus:ring-accent'
+            }`}
+          >
+            Check Answer
+          </button>
+        )}
       </div>
     </div>
   );
