@@ -1,27 +1,38 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
   :root {
     --accent: #ff6f61;
     --accent-dark: #e65c50;
   }
-
-  body {
-    @apply bg-gray-50 overflow-x-hidden;
-  }
-
-  main {
-    @apply max-w-4xl mx-auto px-4 py-12 w-full overflow-x-hidden;
-  }
 }
 
-@layer components {
-  .prose {
-    @apply max-w-[720px] mx-auto w-full;
-  }
+@utility body {
+  background-color: var(--color-gray-50);
+  overflow-x: hidden;
 }
+
+@utility main {
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+@utility prose {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* Import typography plugin */
+@plugin "@tailwindcss/typography";
 
 /* Fonts */
 @font-face {
