@@ -2,10 +2,10 @@
 const today = new Date(); 
 ---
 
-<footer>
+<footer class="py-8 px-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-center">
   &copy; {today.getFullYear()} Dean Lofts. All rights reserved.
-  <div class="social-links">
-    <a href="https://twitter.com/loftwah" target="_blank">
+  <div class="flex justify-center gap-4 mt-4">
+    <a href="https://twitter.com/loftwah" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-accent dark:hover:text-accent transition-colors">
       <span class="sr-only">Follow Loftwah on Twitter</span>
       <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
         <path
@@ -14,7 +14,7 @@ const today = new Date();
         ></path>
       </svg>
     </a>
-    <a href="https://github.com/loftwah" target="_blank">
+    <a href="https://github.com/loftwah" target="_blank" class="text-gray-700 dark:text-gray-300 hover:text-accent dark:hover:text-accent transition-colors">
       <span class="sr-only">Go to Loftwah's GitHub</span>
       <svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32">
         <path
@@ -25,25 +25,3 @@ const today = new Date();
     </a>
   </div>
 </footer>
-
-<style>
-  footer {
-    padding: 2em 1em;
-    background: linear-gradient(var(--gray-gradient)) no-repeat;
-    color: rgb(var(--gray));
-    text-align: center;
-  }
-  .social-links {
-    display: flex;
-    justify-content: center;
-    gap: 1em;
-    margin-top: 1em;
-  }
-  .social-links a {
-    text-decoration: none;
-    color: rgb(var(--gray));
-  }
-  .social-links a:hover {
-    color: rgb(var(--gray-dark));
-  }
-</style>

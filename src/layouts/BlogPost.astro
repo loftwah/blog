@@ -15,10 +15,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
     <BaseHead title={title} description={description} image={heroImage} />
   </head>
 
-  <body class="bg-gray-50 overflow-x-hidden">
+  <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden transition-colors duration-200">
     <Header />
     <main class="w-full overflow-x-hidden">
-      <article class="prose mx-auto bg-white p-6 rounded-lg shadow-sm w-full">
+      <article class="prose mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm w-full">
         {heroImage && (
           <div class="mb-8 w-full">
             <img
@@ -29,7 +29,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           </div>
         )}
         <div class="text-center mb-8">
-          <div class="text-gray-600 mb-2">
+          <div class="text-gray-600 dark:text-gray-400 mb-2">
             <FormattedDate date={pubDate} />
             {updatedDate && (
               <div class="italic">
@@ -37,10 +37,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
               </div>
             )}
           </div>
-          <h1 class="text-4xl font-bold mb-4">{title}</h1>
-          <hr class="my-4" />
+          <h1 class="text-4xl font-bold mb-4 text-gray-900 dark:text-white">{title}</h1>
+          <hr class="my-4 border-gray-200 dark:border-gray-700" />
         </div>
-        <div class="w-full overflow-x-hidden">
+        <div class="w-full overflow-x-hidden prose dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-accent hover:prose-a:text-accent-dark">
           <slot />
         </div>
       </article>

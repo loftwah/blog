@@ -1,14 +1,34 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --accent: #ff6f61;
     --accent-dark: #e65c50;
+    --text-base: #333333;
+    --text-muted: #6b7280;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --border-color: #e5e7eb;
+  }
+
+  .dark {
+    --accent: #ff6f61;
+    --accent-dark: #ff8379; 
+    --text-base: #f3f4f6;
+    --text-muted: #9ca3af;
+    --bg-primary: #1f2937;
+    --bg-secondary: #111827;
+    --border-color: #374151;
+  }
+
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
   }
 }
 
 @utility body {
-  background-color: var(--color-gray-50);
   overflow-x: hidden;
 }
 
@@ -53,6 +73,7 @@
 
 pre:has(code) {
   position: relative;
+  @apply bg-gray-100 dark:bg-gray-800;
 }
 
 pre .copy {
