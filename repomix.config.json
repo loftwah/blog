@@ -1,0 +1,8 @@
+{
+    "ignore": {
+      "customPatterns": [
+        "src/content/blog/**",
+        "src/content/guides/**"
+      ]
+    }
+  }
