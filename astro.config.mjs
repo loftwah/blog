@@ -21,5 +21,4 @@ export default defineConfig({
       transformers: [addCopyButton({ toggle: 2000 })], // Add copy button with toggle option
     },
   },
-  trailingSlash: 'never',
 });
