@@ -23,11 +23,55 @@ const topCEOs: CEO[] = ceos as CEO[]; // Explicitly cast to the CEO array type
 <html lang="en">
   <head>
     <BaseHead title={`Top 50 HTMX CEOs - ${SITE_TITLE}`} description={`Explore the top 50 HTMX CEOs by Twitter/X followers. ${SITE_DESCRIPTION}`} />
+    <style>
+      /* Custom styles for the htmx CEOs page */
+      .ceo-card {
+        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        border-left: 3px solid transparent;
+      }
+      
+      .ceo-card:hover {
+        transform: translateY(-5px);
+        border-left-color: var(--accent);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      
+      .rank-badge {
+        background-color: var(--accent);
+        color: white;
+        border-radius: 9999px;
+        font-weight: bold;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        margin-right: 0.5rem;
+      }
+      
+      .top-10 {
+        background-color: var(--accent-dark);
+      }
+
+      /* Button styles with better contrast */
+      .profile-button {
+        border: 2px solid var(--accent);
+        background-color: transparent;
+        color: var(--accent);
+        transition: all 0.3s ease;
+      }
+
+      .profile-button:hover {
+        background-color: var(--accent);
+        color: white;
+        /* Ensure dark mode has good contrast */
+        .dark & {
+          color: var(--bg-primary);
+        }
+      }
+    </style>
   </head>
   <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
     <Header />
     <main class="prose mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
-      <h1 class="text-4xl font-bold mb-6 text-center text-gray-900 dark:text-white">Top 50 HTMX CEOs</h1>
+      <h1 class="text-4xl font-bold mb-6 text-center text-accent">Top 50 HTMX CEOs</h1>
 
       <p class="mb-8 text-center text-gray-700 dark:text-gray-300">
         This page showcases the top 50 HTMX CEOs, ranked by their Twitter/X followers.
@@ -36,26 +80,32 @@ const topCEOs: CEO[] = ceos as CEO[]; // Explicitly cast to the CEO array type
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {topCEOs.map((ceo, index) => (
           <div
-            class="flex flex-col items-center text-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+            class="ceo-card flex flex-col items-center text-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-6 rounded-lg shadow-md"
           >
             <img
               src={`/images/${ceo.imagePath}`}
               alt={`Profile of ${ceo.name}`}
-              class="w-24 h-24 rounded-full border border-gray-300 dark:border-gray-500 mb-4"
+              class="w-24 h-24 rounded-full border-2 border-accent mb-4"
             />
-            <h2 class="text-xl font-bold truncate mb-2 text-gray-900 dark:text-white" title={`#${index + 1}: ${ceo.name}`}>
-              #{index + 1}: {ceo.name}
-            </h2>
-            <p class="text-gray-500 dark:text-gray-400">@{ceo.screenName}</p>
+            <div class="flex items-center mb-2">
+              <span class={`rank-badge ${index < 10 ? 'top-10' : ''}`}>#{index + 1}</span>
+              <h2 class="text-xl font-bold truncate text-gray-900 dark:text-white" title={ceo.name}>
+                {ceo.name}
+              </h2>
+            </div>
+            <p class="text-accent dark:text-accent">@{ceo.screenName}</p>
             <p class="mt-2 text-gray-600 dark:text-gray-300">
-              Followers: <span class="font-bold">{ceo.followers.toLocaleString()}</span>
+              <span class="font-bold text-accent-dark dark:text-accent">{ceo.followers.toLocaleString()}</span> followers
             </p>
             <a
               href={ceo.twitter}
               target="_blank"
-              class="mt-4 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
+              class="mt-4 inline-flex items-center px-4 py-2 profile-button font-medium rounded-md transition-colors duration-300"
             >
-              Visit Twitter/X Profile →
+              Visit Twitter/X Profile
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
             </a>
           </div>
         ))}
