@@ -3,6 +3,9 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faXTwitter } from '@fortawesome/free-brands-svg-icons';
 
 // Define the type for CEO objects
 interface CEO {
@@ -86,9 +89,7 @@ const topCEOs: CEO[] = ceos as CEO[]; // Explicitly cast to the CEO array type
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {topCEOs.map((ceo, index) => (
-          <div
-            class="ceo-card flex flex-col items-center text-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-6 rounded-lg shadow-md"
-          >
+          <div class="ceo-card flex flex-col items-center text-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-6 rounded-lg shadow-md">
             <img
               src={`/images/${ceo.imagePath}`}
               alt={`Profile of ${ceo.name}`}
@@ -97,49 +98,51 @@ const topCEOs: CEO[] = ceos as CEO[]; // Explicitly cast to the CEO array type
             <div class="flex items-center mb-2">
               <span class={`rank-badge ${index < 10 ? 'top-10' : ''}`}>
                 {index < 3 ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                  </svg>
+                  <FontAwesomeIcon icon={faStar} className="h-4 w-4 mr-1" />
                 ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-                  </svg>
+                  <span class="font-bold">{index + 1}</span>
                 )}
-                #{index + 1}
               </span>
               <h2 class="text-xl font-bold truncate text-gray-900 dark:text-white" title={ceo.name}>
                 {ceo.name}
               </h2>
             </div>
             <p class="text-accent dark:text-accent flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-              </svg>
+              <FontAwesomeIcon icon={faXTwitter} className="h-4 w-4 mr-1" />
               @{ceo.screenName}
             </p>
             <p class="mt-2 text-gray-600 dark:text-gray-300 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 text-[var(--accent-dark)] dark:text-[var(--accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
+              <FontAwesomeIcon icon={faUserGroup} className="h-4 w-4 mr-1 text-[var(--accent-dark)] dark:text-[var(--accent)]" />
               <span class="font-bold text-accent-dark dark:text-accent">{ceo.followers.toLocaleString()}</span> followers
             </p>
-            <a
-              href={ceo.twitter}
-              target="_blank"
-              class="mt-4 inline-flex items-center px-4 py-2 profile-button font-medium rounded-md transition-colors duration-300"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-              </svg>
-              Visit Twitter/X Profile
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </a>
+            
+            <div class="mt-4 flex gap-2">
+              <a
+                href={`https://twitter.com/${ceo.screenName}`}
+                target="_blank"
+                class="inline-flex items-center px-4 py-2 profile-button font-medium rounded-md transition-colors duration-300"
+              >
+                <FontAwesomeIcon icon={faXTwitter} className="h-4 w-4 mr-2" />
+                X / Twitter
+              </a>
+            </div>
           </div>
         ))}
       </div>
     </main>
     <Footer />
+
+    <script>
+      // Need to add this script to initialize FontAwesome in Astro
+      import { library, dom } from '@fortawesome/fontawesome-svg-core';
+      import { faStar, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+      import { faXTwitter } from '@fortawesome/free-brands-svg-icons';
+      
+      // Add icons to the library
+      library.add(faStar, faUserGroup, faXTwitter);
+      
+      // Replace i tags with SVG
+      dom.watch();
+    </script>
   </body>
 </html>
