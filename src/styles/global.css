@@ -103,9 +103,16 @@ a, button, svg, path, .transition-colors {
   font-display: swap;
 }
 
+/* Code Block Styling */
 pre:has(code) {
   position: relative;
   @apply bg-gray-100 dark:bg-gray-800;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  overflow: auto;
+  border-left: 3px solid var(--accent);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
 }
 
 pre .copy {
@@ -113,15 +120,20 @@ pre .copy {
   right: 16px;
   top: 16px;
   font-size: 14px;
-  color: var(--accent, #9233ea);
+  color: var(--accent);
   font-weight: 500;
   cursor: pointer;
-  transition: color 0.3s;
-  text-decoration: none; /* Remove underline */
+  transition: color 0.3s, background-color 0.3s;
+  text-decoration: none;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 pre .copy:hover {
-  color: var(--accent-dark, #7a2bc6);
+  color: var(--accent-dark);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 pre .copy.copied {
@@ -134,6 +146,115 @@ pre .copy::after {
 
 pre .copy.copied::after {
   content: 'Copied'; /* Copied state */
+}
+
+/* Enhanced syntax highlighting */
+.astro-code {
+  background-color: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Override Material Theme colors with our custom accent colors */
+.custom-shiki {
+  --astro-code-color-text: #374151;
+  --astro-code-color-background: #f9fafb;
+  --astro-code-token-constant: var(--accent);
+  --astro-code-token-string: #2563eb;
+  --astro-code-token-comment: #6b7280;
+  --astro-code-token-keyword: var(--accent);
+  --astro-code-token-parameter: #1f2937;
+  --astro-code-token-function: var(--accent-dark);
+  --astro-code-token-string-expression: #2563eb;
+  --astro-code-token-punctuation: #4b5563;
+  --astro-code-token-link: var(--accent-dark);
+}
+
+.dark .custom-shiki {
+  --astro-code-color-text: #f3f4f6;
+  --astro-code-color-background: #1f2937;
+  --astro-code-token-constant: var(--accent);
+  --astro-code-token-string: #93c5fd;
+  --astro-code-token-comment: #9ca3af;
+  --astro-code-token-keyword: var(--accent);
+  --astro-code-token-parameter: #e5e7eb;
+  --astro-code-token-function: var(--accent-dark);
+  --astro-code-token-string-expression: #93c5fd;
+  --astro-code-token-punctuation: #d1d5db;
+  --astro-code-token-link: var(--accent-dark);
+}
+
+/* Syntax highlight customization - fallback for non-Shiki blocks */
+.astro-code .token.comment,
+.astro-code .token.prolog,
+.astro-code .token.doctype,
+.astro-code .token.cdata {
+  color: #6b7280;
+}
+
+.astro-code .token.punctuation {
+  color: #4b5563;
+}
+
+.astro-code .token.tag,
+.astro-code .token.attr-name,
+.astro-code .token.namespace,
+.astro-code .token.deleted {
+  color: var(--accent);
+}
+
+.astro-code .token.string,
+.astro-code .token.char,
+.astro-code .token.attr-value,
+.astro-code .token.regex,
+.astro-code .token.variable {
+  color: #2563eb;
+}
+
+.astro-code .token.boolean,
+.astro-code .token.number {
+  color: var(--accent);
+}
+
+.astro-code .token.function {
+  color: var(--accent-dark);
+}
+
+.astro-code .token.keyword,
+.astro-code .token.selector,
+.astro-code .token.important,
+.astro-code .token.atrule {
+  color: var(--accent);
+}
+
+.astro-code .token.operator,
+.astro-code .token.entity,
+.astro-code .token.url {
+  color: #4b5563;
+}
+
+.dark .astro-code .token.comment,
+.dark .astro-code .token.prolog,
+.dark .astro-code .token.doctype,
+.dark .astro-code .token.cdata {
+  color: #9ca3af;
+}
+
+.dark .astro-code .token.string,
+.dark .astro-code .token.char,
+.dark .astro-code .token.attr-value,
+.dark .astro-code .token.regex,
+.dark .astro-code .token.variable {
+  color: #93c5fd;
+}
+
+.dark .astro-code .token.operator,
+.dark .astro-code .token.entity,
+.dark .astro-code .token.url {
+  color: #d1d5db;
 }
 
 /* Accent color utilities */
@@ -159,5 +280,130 @@ pre .copy.copied::after {
 
 .hover\:text-accent:hover {
   color: var(--accent);
+}
+
+.hover\:bg-accent:hover {
+  background-color: var(--accent);
+}
+
+.hover\:border-accent:hover {
+  border-color: var(--accent);
+}
+
+.focus\:ring-accent:focus {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.focus\:border-accent:focus {
+  border-color: var(--accent);
+}
+
+/* Typography with accent colors */
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+  color: var(--text-base);
+}
+
+.prose h2, .prose h3 {
+  border-bottom: 1px solid rgba(var(--accent), 0.2);
+  padding-bottom: 0.3em;
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.prose a:hover {
+  color: var(--accent-dark);
+}
+
+.prose strong {
+  color: var(--accent-dark);
+}
+
+.prose blockquote {
+  border-left-color: var(--accent);
+  background-color: rgba(var(--accent), 0.05);
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0.25rem;
+}
+
+.prose blockquote p {
+  margin: 0;
+}
+
+.prose code {
+  color: var(--accent);
+  background-color: rgba(var(--accent), 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+.prose pre code {
+  color: inherit;
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+/* Guides styling */
+.guide-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.guide-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.guide-difficulty-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.guide-difficulty-beginner {
+  background-color: rgba(var(--accent), 0.2);
+  color: var(--accent);
+}
+
+.guide-difficulty-intermediate {
+  background-color: rgba(var(--accent), 0.4);
+  color: var(--accent);
+}
+
+.guide-difficulty-advanced {
+  background-color: rgba(var(--accent), 0.6);
+  color: var(--accent);
+}
+
+/* Blog post card styling */
+.blog-card {
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.3s;
+  border: 1px solid transparent;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: var(--accent);
+}
+
+.blog-date {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Custom selection color */
+::selection {
+  background-color: var(--accent);
+  color: white;
 }
 

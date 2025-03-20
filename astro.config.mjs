@@ -17,8 +17,16 @@ export default defineConfig({
   },
   markdown: {
     shikiConfig: {
-      theme: 'nord', // Use your preferred theme
-      transformers: [addCopyButton({ toggle: 2000 })], // Add copy button with toggle option
+      theme: 'material-theme',
+      transformers: [
+        addCopyButton({ toggle: 2000 }),
+        {
+          pre(node) {
+            node.properties.className = [...(node.properties.className || []), 'custom-shiki'];
+            return node;
+          }
+        }
+      ],
     },
   },
 });

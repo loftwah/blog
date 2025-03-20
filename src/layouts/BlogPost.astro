@@ -29,18 +29,18 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           </div>
         )}
         <div class="text-center mb-8">
-          <div class="text-gray-600 dark:text-gray-400 mb-2">
+          <div class="text-accent mb-2">
             <FormattedDate date={pubDate} />
             {updatedDate && (
-              <div class="italic">
+              <div class="italic text-gray-600 dark:text-gray-400">
                 Last updated on <FormattedDate date={updatedDate} />
               </div>
             )}
           </div>
           <h1 class="text-4xl font-bold mb-4 text-gray-900 dark:text-white">{title}</h1>
-          <hr class="my-4 border-gray-200 dark:border-gray-700" />
+          <hr class="my-4 border-accent/30" />
         </div>
-        <div class="w-full overflow-x-hidden prose dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-accent hover:prose-a:text-accent-dark">
+        <div class="w-full overflow-x-hidden prose dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-accent hover:prose-a:text-accent-dark prose-blockquote:border-l-accent prose-strong:text-accent-dark">
           <slot />
         </div>
       </article>
