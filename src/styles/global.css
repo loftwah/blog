@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --accent: #ff6f61;
-    --accent-dark: #e65c50;
+    --accent: #9233ea;
+    --accent-dark: #7a2bc6;
     --text-base: #333333;
     --text-muted: #6b7280;
     --bg-primary: #ffffff;
@@ -14,8 +14,8 @@
   }
 
   .dark {
-    --accent: #ff6f61;
-    --accent-dark: #ff8379; 
+    --accent: #a3fe0d;
+    --accent-dark: #8ce00b; 
     --text-base: #f3f4f6;
     --text-muted: #9ca3af;
     --bg-primary: #1f2937;
@@ -24,8 +24,30 @@
   }
 
   body {
-    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300;
   }
+}
+
+/* Theme toggle animation */
+.theme-toggle-icon {
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s ease;
+}
+
+.theme-toggle-icon.active {
+  transform: rotate(360deg) scale(1);
+  opacity: 1;
+}
+
+.theme-toggle-icon.inactive {
+  transform: rotate(0deg) scale(0.7);
+  opacity: 0;
+}
+
+/* Theme transition for all elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
 }
 
 @utility body {
@@ -81,7 +103,7 @@ pre .copy {
   right: 16px;
   top: 16px;
   font-size: 14px;
-  color: var(--accent, #ff6f61);
+  color: var(--accent, #9233ea);
   font-weight: 500;
   cursor: pointer;
   transition: color 0.3s;
@@ -89,7 +111,7 @@ pre .copy {
 }
 
 pre .copy:hover {
-  color: var(--accent-dark, #e65c50);
+  color: var(--accent-dark, #7a2bc6);
 }
 
 pre .copy.copied {
@@ -102,5 +124,30 @@ pre .copy::after {
 
 pre .copy.copied::after {
   content: 'Copied'; /* Copied state */
+}
+
+/* Accent color utilities */
+.text-accent {
+  color: var(--accent);
+}
+
+.text-accent-dark {
+  color: var(--accent-dark);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-accent-dark {
+  background-color: var(--accent-dark);
+}
+
+.border-accent {
+  border-color: var(--accent);
+}
+
+.hover\:text-accent:hover {
+  color: var(--accent);
 }
 

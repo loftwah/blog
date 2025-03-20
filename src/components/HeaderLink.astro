@@ -11,9 +11,9 @@ const isActive = href === pathname || href === pathname.replace(/\/$/, '');
 <a
   href={href}
   class:list={[
-    'text-gray-700 dark:text-gray-300 hover:text-accent dark:hover:text-accent transition-colors',
-    'relative after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:bg-accent',
-    isActive ? 'font-bold after:w-full' : 'after:w-0 hover:after:w-full after:transition-all',
+    'text-gray-700 dark:text-gray-300 hover:text-accent dark:hover:text-accent transition-colors duration-300',
+    'relative after:absolute after:bottom-[-2px] after:left-0 after:h-0.5 after:bg-accent after:duration-300',
+    isActive ? 'font-bold after:w-full text-accent dark:text-accent' : 'after:w-0 hover:after:w-full after:transition-all',
     className,
   ]}
   {...props}
