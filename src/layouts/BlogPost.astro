@@ -29,15 +29,27 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
           </div>
         )}
         <div class="text-center mb-8">
-          <div class="text-accent mb-2">
-            <FormattedDate date={pubDate} />
-            {updatedDate && (
-              <div class="italic text-gray-600 dark:text-gray-400">
-                Last updated on <FormattedDate date={updatedDate} />
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <img 
+              src="/images/loftwah_400x400.jpg" 
+              alt="Dean 'Loftwah' Lofts" 
+              class="w-12 h-12 rounded-full object-cover border border-accent" 
+            />
+            <div class="text-left">
+              <div class="font-medium text-gray-900 dark:text-white">Dean "Loftwah" Lofts</div>
+              <div class="text-accent text-sm">
+                <FormattedDate date={pubDate} />
               </div>
-            )}
+            </div>
           </div>
-          <h1 class="text-4xl font-bold mb-4 text-gray-900 dark:text-white">{title}</h1>
+          
+          {updatedDate && (
+            <div class="italic text-gray-600 dark:text-gray-400 text-sm">
+              Last updated on <FormattedDate date={updatedDate} />
+            </div>
+          )}
+          
+          <h1 class="text-4xl font-bold mt-4 mb-4 text-gray-900 dark:text-white">{title}</h1>
           <hr class="my-4 border-accent/30" />
         </div>
         <div class="w-full overflow-x-hidden prose dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-accent hover:prose-a:text-accent-dark prose-blockquote:border-l-accent prose-strong:text-accent-dark">

@@ -1,19 +1,23 @@
 ---
 import HeaderLink from './HeaderLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import { SITE_TITLE } from '../consts';
-
-// Split the site title to style differently
-const titleParts = SITE_TITLE.includes('Loftwah') 
-  ? { first: 'Loft', second: 'wah' }
-  : { first: SITE_TITLE, second: '' };
 ---
 
 <header class="sticky top-0 z-40 w-full bg-white/95 dark:bg-gray-900/95 shadow-md backdrop-blur transition-all duration-300">
   <nav class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
     <h2 class="m-0 text-xl font-bold">
-      <a href="/" class="transition-colors duration-300">
-        <span class="text-gray-900 dark:text-white">{titleParts.first}</span><span class="text-accent">{titleParts.second}</span>
+      <a href="/" class="flex items-center gap-3 transition-colors duration-300">
+        <div class="w-8 h-8 rounded-full border border-accent overflow-hidden flex-shrink-0">
+          <img 
+            src="/images/loftwah_400x400.jpg" 
+            alt="Loftwah Avatar" 
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <div class="flex items-center">
+          <span class="text-gray-900 dark:text-white font-bold">Loft</span>
+          <span class="text-accent font-bold">wah</span>
+        </div>
       </a>
     </h2>
     

@@ -14,11 +14,20 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
     <Header />
     <main>
       <div class="prose mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-sm">
-        <h1 class="text-4xl font-bold mb-6 text-gray-900 dark:text-white">👋 Hi there, I'm Dean "<span class="text-accent">Loft</span>wah" Lofts!</h1>
-        
-        <p class="mb-6 text-gray-700 dark:text-gray-300">
-          Welcome to my corner of the internet! I'm a <span class="text-accent font-medium">Senior DevOps Engineer</span>, tech enthusiast, and music producer with a passion for building efficient, scalable cloud infrastructures and creating impactful products. With expertise in AWS, Docker, Ruby, and Golang, I specialize in automation and optimization solutions for modern tech stacks. I'm all about solving complex technical challenges while driving innovation in cloud architecture.
-        </p>
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 mb-6">
+          <img 
+            src="/images/loftwah_400x400.jpg" 
+            alt="Dean 'Loftwah' Lofts" 
+            class="w-32 h-32 rounded-full object-cover border-2 border-accent shadow-md" 
+          />
+          <div>
+            <h1 class="text-4xl font-bold mb-6 text-gray-900 dark:text-white">👋 Hi there, I'm Dean "<span class="text-accent">Loft</span>wah" Lofts!</h1>
+            
+            <p class="mb-6 text-gray-700 dark:text-gray-300">
+              Welcome to my corner of the internet! I'm a <span class="text-accent font-medium">Senior DevOps Engineer</span>, tech enthusiast, and music producer with a passion for building efficient, scalable cloud infrastructures and creating impactful products. With expertise in AWS, Docker, Ruby, and Golang, I specialize in automation and optimization solutions for modern tech stacks. I'm all about solving complex technical challenges while driving innovation in cloud architecture.
+            </p>
+          </div>
+        </div>
         
         <p class="mb-6 text-gray-700 dark:text-gray-300">
           My journey in tech is fueled by curiosity and a drive to push boundaries. I've recently tackled projects like getting a legacy Rails application production-ready on ECS with Fargate, a challenge that took me two and a half years to master but now I can accomplish in days. This journey has honed my skills and deepened my understanding of DevOps and software development.
