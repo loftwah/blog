@@ -279,6 +279,30 @@ interface ScheduleRowProps {
   block: BlockedTime | undefined;
 }
 
+// Status icon mapping
+const getStatusIcon = (availability: AvailabilityType) => {
+  switch (availability) {
+    case 'unavailable':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      );
+    case 'flexible':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+        </svg>
+      );
+    case 'available':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      );
+  }
+};
+
 const ScheduleRow: React.FC<ScheduleRowProps> = ({
   melbourneTime,
   localTime,
@@ -296,21 +320,35 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
     }`}
   >
     <div className="block md:grid md:grid-cols-4 gap-1 items-center">
-      <div className="text-sm md:text-base font-medium text-[var(--accent-dark)] dark:text-[var(--accent)]">
+      <div className="text-sm md:text-base font-medium text-[var(--accent-dark)] dark:text-[var(--accent)] flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
         <span className="md:hidden font-bold">Melbourne: </span>
         {melbourneTime.toFormat('HH:mm')}
       </div>
-      <div className="text-sm md:text-base font-medium text-[var(--accent-dark)] dark:text-[var(--accent)]">
+      <div className="text-sm md:text-base font-medium text-[var(--accent-dark)] dark:text-[var(--accent)] flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
         <span className="md:hidden font-bold">Local: </span>
         {localTime.toFormat('HH:mm')}
       </div>
-      <div className="capitalize text-sm md:text-base">
+      <div className="capitalize text-sm md:text-base flex items-center">
+        {getStatusIcon(availability)}
         <span className="md:hidden font-bold">Status: </span>
         {statusLabel}
       </div>
-      <div className="text-sm md:text-base break-words">
-        <span className="md:hidden font-bold">Note: </span>
-        {block?.label || ''}
+      <div className="text-sm md:text-base break-words flex items-start">
+        {block?.label && (
+          <>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+            </svg>
+            <span className="md:hidden font-bold">Note: </span>
+            <span>{block.label}</span>
+          </>
+        )}
       </div>
     </div>
   </div>
