@@ -206,19 +206,19 @@ const TimezoneSelector: React.FC<TimezoneSelectorProps> = ({
   };
 
   return (
-    <div>
-      <label className="block mb-2 text-gray-800 dark:text-gray-200">Select Timezone:</label>
+    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded border-l-4 border-[var(--accent)]">
+      <label className="block mb-2 text-gray-800 dark:text-gray-200 font-medium">Select Timezone:</label>
       <input
         type="text"
         value={timezoneFilter}
         onChange={(e: ChangeEvent<HTMLInputElement>) => handleFilterChange(e.target.value)}
         placeholder="Search timezones..."
-        className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+        className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
       />
       <select
         value={selectedTimezone}
         onChange={(e: ChangeEvent<HTMLSelectElement>) => onTimezoneChange(e.target.value)}
-        className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+        className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
       >
         {timezones
           .filter((tz: string) =>
@@ -251,9 +251,9 @@ const DaySelector: React.FC<DaySelectorProps> = ({ dayNames, selectedDay, onSele
           type="button"
           className={`px-4 py-2 rounded transition-colors ${
             selectedDay === index
-              ? 'bg-blue-500 text-white'
+              ? 'bg-[var(--accent)] text-white dark:text-gray-900'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
-          } ${[5, 6].includes(index) ? 'border-l-4 border-purple-500' : ''}`}
+          } ${[5, 6].includes(index) ? 'border-l-4 border-[var(--accent)]' : ''}`}
         >
           {day}
         </button>
@@ -263,7 +263,7 @@ const DaySelector: React.FC<DaySelectorProps> = ({ dayNames, selectedDay, onSele
 );
 
 const ScheduleHeader: React.FC = () => (
-  <div className="grid grid-cols-4 gap-1 mb-2 font-medium bg-gray-100 dark:bg-gray-800 p-2 rounded hidden md:grid text-gray-800 dark:text-gray-200">
+  <div className="grid grid-cols-4 gap-1 mb-2 font-medium bg-gray-100 dark:bg-gray-800 p-2 rounded hidden md:grid text-gray-800 dark:text-gray-200 border-l-4 border-[var(--accent)]">
     <div>Melbourne Time</div>
     <div>Local Time</div>
     <div>Status</div>
@@ -289,10 +289,10 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   <div
     className={`p-2 rounded ${
       availability === 'unavailable'
-        ? 'bg-red-200 dark:bg-red-900 text-red-900 dark:text-red-100'
+        ? 'bg-red-200 dark:bg-red-900/60 text-red-900 dark:text-red-100 border-l-2 border-red-500'
         : availability === 'flexible'
-        ? 'bg-yellow-200 dark:bg-yellow-900 text-yellow-900 dark:text-yellow-100'
-        : 'bg-green-200 dark:bg-green-900 text-green-900 dark:text-green-100'
+        ? 'bg-yellow-200 dark:bg-yellow-900/60 text-yellow-900 dark:text-yellow-100 border-l-2 border-yellow-500'
+        : 'bg-green-200 dark:bg-green-900/60 text-green-900 dark:text-green-100 border-l-2 border-green-500'
     }`}
   >
     <div className="block md:grid md:grid-cols-4 gap-1 items-center">
@@ -360,8 +360,8 @@ const Schedule: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Your Availability Schedule</h1>
+    <div className="max-w-6xl mx-auto p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b-2 border-[var(--accent)] pb-2">Your Availability Schedule</h1>
 
       <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <TimezoneSelector
@@ -371,7 +371,7 @@ const Schedule: React.FC = () => {
           onTimezoneChange={setSelectedTimezone}
           onFilterChange={setTimezoneFilter}
         />
-        <div className="space-y-2">
+        <div className="space-y-2 p-3 bg-gray-50 dark:bg-gray-800 rounded border-l-4 border-[var(--accent)]">
           <p className="font-medium text-gray-800 dark:text-gray-200">Current Times:</p>
           <p className="text-gray-700 dark:text-gray-300">Your timezone: {currentTime.setZone(selectedTimezone).toFormat('fff')}</p>
           <p className="text-gray-700 dark:text-gray-300">Melbourne: {currentTime.setZone('Australia/Melbourne').toFormat('fff')}</p>
@@ -416,29 +416,29 @@ const Schedule: React.FC = () => {
         })}
       </div>
 
-      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <h2 className="font-bold mb-3 text-gray-900 dark:text-white">Schedule Information:</h2>
+      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <h2 className="font-bold mb-3 text-gray-900 dark:text-white border-b-2 border-[var(--accent)] pb-2">Schedule Information:</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <h3 className="font-medium text-gray-800 dark:text-gray-200">Availability Hours:</h3>
+          <div className="space-y-4 p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
+            <h3 className="font-medium text-gray-800 dark:text-gray-200 text-[var(--accent)]">Availability Hours:</h3>
             <div className="ml-4 space-y-2 text-gray-700 dark:text-gray-300">
               <p>📅 Sunday - Thursday: 10:00 AM - 11:00 PM AEST</p>
               <p>🌟 Friday - Saturday: 10:00 AM - 12:00 AM AEST</p>
             </div>
           </div>
-          <div className="space-y-4">
-            <h3 className="font-medium text-gray-800 dark:text-gray-200">Color Legend:</h3>
+          <div className="space-y-4 p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
+            <h3 className="font-medium text-gray-800 dark:text-gray-200 text-[var(--accent)]">Color Legend:</h3>
             <div className="grid gap-2">
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-red-200 dark:bg-red-900 mr-3 rounded"></div>
+                <div className="w-6 h-6 bg-red-200 dark:bg-red-900 mr-3 rounded border border-red-500"></div>
                 <span className="text-gray-700 dark:text-gray-300">Busy (Blocked)</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-yellow-200 dark:bg-yellow-900 mr-3 rounded"></div>
+                <div className="w-6 h-6 bg-yellow-200 dark:bg-yellow-900 mr-3 rounded border border-yellow-500"></div>
                 <span className="text-gray-700 dark:text-gray-300">Tentative (Preferred to avoid)</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-green-200 dark:bg-green-900 mr-3 rounded"></div>
+                <div className="w-6 h-6 bg-green-200 dark:bg-green-900 mr-3 rounded border border-green-500"></div>
                 <span className="text-gray-700 dark:text-gray-300">Available</span>
               </div>
             </div>

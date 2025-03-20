@@ -15,8 +15,8 @@ import ScheduleComponent from '../components/Schedule';
     <Header />
     <main class="container mx-auto p-6">
       <div class="max-w-3xl mx-auto">
-        <section class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
-          <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Schedule a Time with Me</h1>
+        <section class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+          <h1 class="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b-2 border-[var(--accent)] pb-2">Schedule a Time with Me</h1>
           <p class="mb-4 text-gray-700 dark:text-gray-300">
             This tool helps you view my schedule and easily book a time with me. 
             Please note that I prefer text-based communication and asynchronous interactions 
@@ -27,14 +27,28 @@ import ScheduleComponent from '../components/Schedule';
           <p class="mb-4 text-gray-700 dark:text-gray-300">
             Feel free to reach out through any of the following:
           </p>
-          <ul class="list-disc pl-6 mb-4 text-gray-700 dark:text-gray-300">
-            <li>Email: <a href="mailto:dean@deanlofts.xyz" class="text-blue-600 dark:text-blue-400 hover:underline">dean@deanlofts.xyz</a></li>
-            <li>Mobile: <a href="tel:+61423837782" class="text-blue-600 dark:text-blue-400 hover:underline">+61 423 837 782</a></li>
-            <li>Bluesky: <a href="https://bsky.app/profile/loftwah.com" class="text-blue-600 dark:text-blue-400 hover:underline">bsky.app/profile/loftwah.com</a></li>
-            <li>GitHub: <a href="https://github.com/loftwah" class="text-blue-600 dark:text-blue-400 hover:underline">github.com/loftwah</a></li>
-            <li>LinkedIn: <a href="https://www.linkedin.com/in/deanlofts" class="text-blue-600 dark:text-blue-400 hover:underline">linkedin.com/in/deanlofts</a></li>
-            <li>Linkarooie: <a href="https://linkarooie.com/loftwah" class="text-blue-600 dark:text-blue-400 hover:underline">linkarooie.com/loftwah</a></li>
-            <li>Twitter/X: <a href="https://twitter.com/loftwah" class="text-blue-600 dark:text-blue-400 hover:underline">twitter.com/loftwah</a></li>
+          <ul class="list-disc pl-6 mb-4 space-y-2">
+            <li class="text-gray-700 dark:text-gray-300">
+              Email: <a href="mailto:dean@deanlofts.xyz" class="text-[var(--accent)] hover:text-[var(--accent-dark)] hover:underline transition-colors">dean@deanlofts.xyz</a>
+            </li>
+            <li class="text-gray-700 dark:text-gray-300">
+              Mobile: <a href="tel:+61423837782" class="text-[var(--accent)] hover:text-[var(--accent-dark)] hover:underline transition-colors">+61 423 837 782</a>
+            </li>
+            <li class="text-gray-700 dark:text-gray-300">
+              Bluesky: <a href="https://bsky.app/profile/loftwah.com" class="text-[var(--accent)] hover:text-[var(--accent-dark)] hover:underline transition-colors">bsky.app/profile/loftwah.com</a>
+            </li>
+            <li class="text-gray-700 dark:text-gray-300">
+              GitHub: <a href="https://github.com/loftwah" class="text-[var(--accent)] hover:text-[var(--accent-dark)] hover:underline transition-colors">github.com/loftwah</a>
+            </li>
+            <li class="text-gray-700 dark:text-gray-300">
+              LinkedIn: <a href="https://www.linkedin.com/in/deanlofts" class="text-[var(--accent)] hover:text-[var(--accent-dark)] hover:underline transition-colors">linkedin.com/in/deanlofts</a>
+            </li>
+            <li class="text-gray-700 dark:text-gray-300">
+              Linkarooie: <a href="https://linkarooie.com/loftwah" class="text-[var(--accent)] hover:text-[var(--accent-dark)] hover:underline transition-colors">linkarooie.com/loftwah</a>
+            </li>
+            <li class="text-gray-700 dark:text-gray-300">
+              Twitter/X: <a href="https://twitter.com/loftwah" class="text-[var(--accent)] hover:text-[var(--accent-dark)] hover:underline transition-colors">twitter.com/loftwah</a>
+            </li>
           </ul>
         </section>
         <section class="mt-6">
