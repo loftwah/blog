@@ -296,11 +296,11 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
     }`}
   >
     <div className="block md:grid md:grid-cols-4 gap-1 items-center">
-      <div className="text-sm md:text-base">
+      <div className="text-sm md:text-base font-medium text-[var(--accent-dark)] dark:text-[var(--accent)]">
         <span className="md:hidden font-bold">Melbourne: </span>
         {melbourneTime.toFormat('HH:mm')}
       </div>
-      <div className="text-sm md:text-base">
+      <div className="text-sm md:text-base font-medium text-[var(--accent-dark)] dark:text-[var(--accent)]">
         <span className="md:hidden font-bold">Local: </span>
         {localTime.toFormat('HH:mm')}
       </div>
@@ -430,15 +430,15 @@ const Schedule: React.FC = () => {
             <h3 className="font-medium text-gray-800 dark:text-gray-200 text-[var(--accent)]">Color Legend:</h3>
             <div className="grid gap-2">
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-red-200 dark:bg-red-900 mr-3 rounded border border-red-500"></div>
+                <div className="w-6 h-6 bg-red-200 dark:bg-red-900/60 mr-3 rounded border border-red-500"></div>
                 <span className="text-gray-700 dark:text-gray-300">Busy (Blocked)</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-yellow-200 dark:bg-yellow-900 mr-3 rounded border border-yellow-500"></div>
+                <div className="w-6 h-6 bg-yellow-200 dark:bg-yellow-900/60 mr-3 rounded border border-yellow-500"></div>
                 <span className="text-gray-700 dark:text-gray-300">Tentative (Preferred to avoid)</span>
               </div>
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-green-200 dark:bg-green-900 mr-3 rounded border border-green-500"></div>
+                <div className="w-6 h-6 bg-green-200 dark:bg-green-900/60 mr-3 rounded border border-green-500"></div>
                 <span className="text-gray-700 dark:text-gray-300">Available</span>
               </div>
             </div>
