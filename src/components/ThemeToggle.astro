@@ -41,55 +41,75 @@
 </button>
 
 <script>
-  const themeToggle = document.getElementById('theme-toggle');
-  const sunIcon = document.getElementById('sun-icon');
-  const moonIcon = document.getElementById('moon-icon');
-  
-  // Set theme based on user preference or default to light
-  const setTheme = (theme: 'light' | 'dark') => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-      moonIcon?.classList.remove('active');
-      moonIcon?.classList.add('inactive');
-      sunIcon?.classList.remove('inactive');
-      sunIcon?.classList.add('active');
-    } else {
-      document.documentElement.classList.remove('dark');
-      sunIcon?.classList.remove('active');
-      sunIcon?.classList.add('inactive');
-      moonIcon?.classList.remove('inactive');
-      moonIcon?.classList.add('active');
-    }
-    localStorage.setItem('theme', theme);
-  };
-
-  // Get the initial theme from localStorage or system preference
-  const getTheme = (): 'light' | 'dark' => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme') as 'light' | 'dark';
-    }
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light';
-  };
-
-  // Initialize theme
-  const initialTheme = getTheme();
-  setTheme(initialTheme);
-
-  // Toggle theme when button is clicked
-  themeToggle?.addEventListener('click', () => {
-    const currentTheme = localStorage.getItem('theme') as 'light' | 'dark' || 'light';
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  // Theme toggle with improved transitions
+  document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.getElementById('theme-toggle');
+    const sunIcon = document.getElementById('sun-icon');
+    const moonIcon = document.getElementById('moon-icon');
     
-    // Add animation class
-    themeToggle?.classList.add('animate-pulse');
-    
-    // Set the theme with a slight delay for better animation effect
-    setTimeout(() => {
-      setTheme(newTheme);
-      themeToggle?.classList.remove('animate-pulse');
-    }, 150);
+    // Set theme based on user preference or default to light
+    const setTheme = (theme: 'light' | 'dark') => {
+      // Set data attribute first for immediate CSS access
+      document.documentElement.setAttribute('data-theme', theme);
+      
+      if (theme === 'dark') {
+        // Use requestAnimationFrame for better animation performance
+        requestAnimationFrame(() => {
+          document.documentElement.classList.add('dark');
+          moonIcon?.classList.remove('active');
+          moonIcon?.classList.add('inactive');
+          sunIcon?.classList.remove('inactive');
+          sunIcon?.classList.add('active');
+        });
+      } else {
+        requestAnimationFrame(() => {
+          document.documentElement.classList.remove('dark');
+          sunIcon?.classList.remove('active');
+          sunIcon?.classList.add('inactive');
+          moonIcon?.classList.remove('inactive');
+          moonIcon?.classList.add('active');
+        });
+      }
+      localStorage.setItem('theme', theme);
+    };
+
+    // Get the initial theme from localStorage or system preference
+    const getTheme = (): 'light' | 'dark' => {
+      if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+        return localStorage.getItem('theme') as 'light' | 'dark';
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      return 'light';
+    };
+
+    // Initialize theme
+    const initialTheme = getTheme();
+    setTheme(initialTheme);
+
+    // Toggle theme when button is clicked
+    themeToggle?.addEventListener('click', () => {
+      // Disable the button temporarily to prevent multiple clicks
+      if (themeToggle.hasAttribute('disabled')) return;
+      themeToggle.setAttribute('disabled', 'true');
+      
+      const currentTheme = getTheme();
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      // Add animation class
+      themeToggle?.classList.add('animate-pulse');
+      
+      // Set the theme with a delay for better animation effect
+      setTimeout(() => {
+        setTheme(newTheme);
+        
+        // Remove animation class after transition completes
+        setTimeout(() => {
+          themeToggle?.classList.remove('animate-pulse');
+          themeToggle.removeAttribute('disabled');
+        }, 400);
+      }, 200);
+    });
   });
 </script> 

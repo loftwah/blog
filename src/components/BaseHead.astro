@@ -46,22 +46,46 @@ const { title, description, image = '/og-image.jpg', author = 'loftwah' } = Astr
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={image ? new URL(image.startsWith('http') ? image : image.startsWith('/') ? image.slice(1) : image, Astro.site).toString() : new URL('/og-image.jpg', Astro.site).toString()} />
 
+<!-- Additional style to block transitions during theme initialization -->
+<style is:inline>
+  .transition-blocker * {
+    transition: none !important;
+  }
+</style>
+
 <!-- Dark mode initialization script -->
 <script is:inline>
-  // Initialize dark mode based on user preference
-  const theme = (() => {
-    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-      return localStorage.getItem('theme');
-    }
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light';
-  })();
+  // Immediate execution to avoid flash of unstyled content
+  (function() {
+    // Add transition blocker class
+    document.documentElement.classList.add('transition-blocker');
+    
+    // Initialize dark mode based on user preference
+    const theme = (() => {
+      if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+        return localStorage.getItem('theme');
+      }
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+      return 'light';
+    })();
 
-  if (theme === 'dark') {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-  }
+    // Set theme immediately
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+    
+    // Remove transition blocker after a short delay
+    // This prevents transitions on initial page load
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.documentElement.classList.remove('transition-blocker');
+      }, 0);
+    });
+  })();
 </script>
