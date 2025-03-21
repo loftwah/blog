@@ -429,34 +429,34 @@ const Schedule: React.FC = () => {
         <ul className="list-disc pl-6 space-y-2">
           <li className="flex items-start">
             <FontAwesomeIcon icon={faEnvelope} className="h-5 w-5 mr-2 text-[var(--accent)] mt-0.5 -ml-8" />
-            Email: <a href="mailto:dean@deanlofts.xyz" className="ml-2 text-[var(--accent)] hover:underline">dean@deanlofts.xyz</a>
+            Email: <a href="mailto:dean@deanlofts.xyz" className="ml-2 text-[var(--accent)] hover:underline break-all">dean@deanlofts.xyz</a>
           </li>
           <li className="flex items-start">
             <FontAwesomeIcon icon={faMobile} className="h-5 w-5 mr-2 text-[var(--accent)] mt-0.5 -ml-8" />
-            Mobile: <a href="tel:+61423837782" className="ml-2 text-[var(--accent)] hover:underline">+61 423 837 782</a>
+            Mobile: <a href="tel:+61423837782" className="ml-2 text-[var(--accent)] hover:underline break-all">+61 423 837 782</a>
           </li>
           <li className="flex items-start">
             <FontAwesomeIcon icon={faBluesky} className="h-5 w-5 mr-2 text-[var(--accent)] mt-0.5 -ml-8" />
-            Bluesky: <a href="https://bsky.app/profile/loftwah.com" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline">bsky.app/profile/loftwah.com</a>
+            Bluesky: <a href="https://bsky.app/profile/loftwah.com" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline break-all">bsky.app/profile/loftwah.com</a>
           </li>
           <li className="flex items-start">
             <FontAwesomeIcon icon={faGithub} className="h-5 w-5 mr-2 text-[var(--accent)] mt-0.5 -ml-8" />
-            GitHub: <a href="https://github.com/loftwah" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline">github.com/loftwah</a>
+            GitHub: <a href="https://github.com/loftwah" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline break-all">github.com/loftwah</a>
           </li>
           <li className="flex items-start">
             <FontAwesomeIcon icon={faLinkedin} className="h-5 w-5 mr-2 text-[var(--accent)] mt-0.5 -ml-8" />
-            LinkedIn: <a href="https://linkedin.com/in/deanlofts" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline">linkedin.com/in/deanlofts</a>
+            LinkedIn: <a href="https://linkedin.com/in/deanlofts" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline break-all">linkedin.com/in/deanlofts</a>
           </li>
           <li className="flex items-start">
             <svg className="h-5 w-5 mr-2 text-[var(--accent)] fill-current mt-0.5 -ml-8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path d="M10.5 14l4-2.5-4-2.5v5z"></path>
               <path d="M12 5.75a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-.75.75H6a.75.75 0 0 1-.75-.75V6.5A.75.75 0 0 1 6 5.75h6Zm.75 1.5h3.5a.75.75 0 0 1 .75.75v8.5a.75.75 0 0 1-.75.75h-8.5a.75.75 0 0 1-.75-.75v-3.5a.75.75 0 0 1 1.5 0v2.75h7V8.75h-2.75a.75.75 0 0 1 0-1.5Z"></path>
             </svg>
-            Linkarooie: <a href="https://linkarooie.com/loftwah" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline">linkarooie.com/loftwah</a>
+            Linkarooie: <a href="https://linkarooie.com/loftwah" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline break-all">linkarooie.com/loftwah</a>
           </li>
           <li className="flex items-start">
             <FontAwesomeIcon icon={faXTwitter} className="h-5 w-5 mr-2 text-[var(--accent)] mt-0.5 -ml-8" />
-            Twitter/X: <a href="https://twitter.com/loftwah" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline">twitter.com/loftwah</a>
+            Twitter/X: <a href="https://twitter.com/loftwah" target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)] hover:underline break-all">twitter.com/loftwah</a>
           </li>
         </ul>
       </div>
