@@ -22,21 +22,27 @@ Astroflare addresses this by leveraging two powerful technologies:
 The current release of Astroflare includes:
 
 ### 1. Cloudflare D1 Integration
+
 Built-in database support through Cloudflare D1 (SQLite at the edge), with a complete CRUD example implementation for an "items" collection. This demonstrates proper edge database patterns without the complexity of traditional database setups.
 
 ### 2. Edge Functions via Cloudflare Workers
+
 API endpoints built directly into the application with proper TypeScript typing and error handling. This eliminates the traditional API/frontend separation, allowing for a more cohesive development experience.
 
 ### 3. TailwindCSS 4 Integration
+
 The latest version of TailwindCSS for rapid UI development without the bloat of large CSS frameworks or component libraries. This ensures your applications remain lightweight while still looking great.
 
 ### 4. Simple Authentication System
+
 A basic auth system that can be easily extended for more complex authentication needs, demonstrating key security patterns for edge-deployed applications.
 
 ### 5. TypeScript Throughout
+
 Full TypeScript support from frontend to API endpoints, providing type safety and improved developer experience.
 
 ### 6. Comprehensive Testing Examples
+
 Built-in API testing capabilities that make it easy to verify your database connections and CRUD operations are working as expected.
 
 ## Coming Soon to Astroflare
@@ -52,8 +58,6 @@ Cloudflare R2 offers an S3-compatible object storage solution that works seamles
 - Public/private file access controls
 - Direct-to-R2 upload patterns for larger files
 
-This will replace traditional file storage systems that often become bottlenecks in web applications.
-
 ### 2. KV for High-Performance Data
 
 Cloudflare KV (Key-Value) store will be integrated for:
@@ -62,8 +66,6 @@ Cloudflare KV (Key-Value) store will be integrated for:
 - Feature flags and configuration
 - Cache storage
 - Rate limiting implementation
-
-The integration will include TypeScript helpers and proper abstraction layers to make working with KV intuitive.
 
 ### 3. Secrets Management
 
@@ -74,8 +76,6 @@ A robust secrets management system is in development that will:
 - Generate strongly-typed interfaces for your environment variables
 - Provide local development configurations that mirror production
 
-This will eliminate the common "it works on my machine" problems when dealing with environment variables.
-
 ### 4. Email Integration with Resend
 
 Sending emails shouldn't require standing up an entire email server. The upcoming Resend integration will provide:
@@ -84,8 +84,6 @@ Sending emails shouldn't require standing up an entire email server. The upcomin
 - Email verification flows
 - Newsletter/notification distribution
 - Email analytics and tracking
-
-All while maintaining the simplicity that makes Astroflare special.
 
 ## Database Design for Multi-Tenancy
 
@@ -121,64 +119,83 @@ Both systems will be modular, allowing you to use what you need for your specifi
 
 ## Astroflare Workflow
 
-The following sequence diagram shows the typical workflow when building and deploying an application with Astroflare:
+Astroflare is built to feel seamless across the development lifecycle. Instead of one giant diagram, here’s a breakdown of how it works — from development to production — with each phase shown clearly.
+
+### 🔁 Development Phase
 
 ```d2
 direction: right
 
 Dev: Developer
 Local: Local Dev Server
-Git: GitHub
-CF: Cloudflare Pages
-Edge: Edge Functions
-D1: D1 Database
-User: End User
-R2: R2 Storage (Planned)
-KV: KV Storage (Planned)
-Email: Resend Email (Planned)
 
-Development: {
-  Dev -> Local: Write code (Astro + TS + Tailwind)
-  Local -> Dev: Instant preview
-  Dev -> Local: Create API endpoints
-  Local -> Dev: Test endpoints locally
-}
-
-Deployment: {
-  Dev -> Git: Push changes
-  Git -> CF: Trigger deployment
-  CF -> CF: Build Astro site
-  CF -> Edge: Deploy Edge Functions
-  CF -> Dev: Deployment complete
-}
-
-Production: {
-  User -> CF: Request page
-  CF -> User: Serve static assets
-  User -> Edge: Call API endpoint
-  Edge -> D1: Query database
-  D1 -> Edge: Return data
-  Edge -> User: Send response
-}
-
-Future: {
-  User -> Edge: Upload file
-  Edge -> R2: Store in R2
-  User -> Edge: Authentication
-  Edge -> KV: Session data
-  Edge -> Email: Send email
-}
-
-Development -> Deployment -> Production -> Future
+Dev -> Local: Code UI (Astro + Tailwind)
+Dev -> Local: Define Edge API
+Local -> Dev: Live reload + test
 ```
 
-This diagram illustrates the three main phases of working with Astroflare:
+During development, you work locally with hot reloading, TypeScript, and Astro’s fast refresh loop. You define both frontend components and backend API routes together — no separate repos or stacks.
 
-1. **Development Phase**: Building your application locally with immediate feedback
-2. **Deployment Phase**: Pushing to GitHub and automatic deployment to Cloudflare
-3. **Production Usage**: How user requests flow through the system
+### 🚀 Deployment Phase
 
-The bottom section shows the planned extensions for file storage (R2), authentication (with KV), and email (via Resend).
+```d2
+direction: right
+
+Dev: Developer
+GitHub: GitHub Repo
+Cloudflare: Cloudflare Pages
+Edge: Cloudflare Edge Functions
+
+Dev -> GitHub: Push code
+GitHub -> Cloudflare: Trigger build
+Cloudflare -> Edge: Deploy edge functions
+Cloudflare -> Dev: Deployment success
+```
+
+Push to GitHub, and Cloudflare handles the rest — builds, deploys, and distributes your app globally via Cloudflare Pages and Edge Functions.
+
+### 🌍 Production Request Flow
+
+```d2
+direction: right
+
+User: End User
+CFPages: Cloudflare Pages
+Edge: Edge Function
+D1: D1 Database
+
+User -> CFPages: Request page
+CFPages -> User: Serve static content
+
+User -> Edge: Call API
+Edge -> D1: Fetch data
+D1 -> Edge: Return data
+Edge -> User: Respond with JSON
+```
+
+Once live, users interact with your app through globally distributed static pages and fast API calls handled at the edge. Data reads/writes go to D1, Cloudflare’s edge-local SQLite.
+
+### 🔮 Future Features (Planned)
+
+```d2
+direction: right
+
+User: User
+Edge: Edge Function
+R2: R2 Object Storage
+KV: Cloudflare KV Store
+Email: Resend Email Service
+
+User -> Edge: Upload file
+Edge -> R2: Store file
+
+User -> Edge: Auth request
+Edge -> KV: Manage session
+
+Edge -> Email: Send transactional email
+```
+
+Coming soon: file uploads with R2, session management with KV, and transactional emails with Resend — all handled at the edge for max performance, minimal setup.
 
 ## How Astroflare Works
 
@@ -189,6 +206,7 @@ Let me walk through a typical user journey in an Astroflare application:
 2. **Deployment**: With a simple `git push` or through CI/CD, your application is deployed to Cloudflare Pages, which distributes it globally across Cloudflare's edge network.
 
 3. **User Interaction**: When a user visits your application:
+
    - Static content is served instantly from the nearest edge location
    - Dynamic content is rendered through Astro's server-side rendering
    - API requests are handled by edge functions running close to the user
