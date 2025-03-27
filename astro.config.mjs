@@ -9,7 +9,13 @@ import d2 from 'astro-d2';
 export default defineConfig({
   site: 'https://blog.deanlofts.xyz',
   integrations: [
-    d2({output: "d2"}),
+    d2({
+      output: "d2",
+      theme: { light: '300', dark: '200' },
+      layout: 'dagre',
+      sketch: true,
+      diagramOptions: { zoom: true }
+    }),
     mdx(), 
     sitemap(), 
     react()
