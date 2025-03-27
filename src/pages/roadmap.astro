@@ -3,341 +3,405 @@ import Layout from "../layouts/BlogPost.astro";
 ---
 
 <Layout
-  title="My Comprehensive Roadmap for 2025"
-  description="A holistic roadmap focused on modernising Rails apps with AWS ECS/Fargate and Docker, deepening distributed systems knowledge, exploring AI-driven development, and refining Linux fundamentals while pushing for technical innovation."
-  pubDate={new Date("December 2024")}
+  title="My Updated Roadmap for 2025 (Q2-Q4)"
+  description="A revised roadmap reflecting Q1 accomplishments and future plans focused on AI/ML integration, Astro with Cloudflare, TypeScript development, and continued AWS expertise while maintaining a balance of professional work and innovative personal projects."
+  pubDate={new Date("March 2025")}
   heroImage="/images/roadmap.jpg"
 >
-  <h2>My Roadmap for 2025</h2>
+  <h2>My Updated Roadmap for 2025 (Q2-Q4)</h2>
   <p>
-    Over the last few years, I have evolved from a curious Ruby beginner to a DevOps-focused engineer deploying scalable, secure infrastructures. In 2024, I modernised a 13-year-old Rails application by migrating it from EC2 to ECS Fargate, learning firsthand how containerisation can streamline operations by eliminating the need for manual server management. Meanwhile, <strong>Linkarooie</strong>, my side project, has served as a proving ground for Rails upgrades and innovative deployment strategies.
-  </p>
-  <p>
-    As I look to 2025, my focus has sharpened. Alongside doubling down on <strong>AWS ECS/Fargate</strong> and refining my Docker container workflows, I am now diving deeper into distributed systems theory, advanced AWS architecture, and system design. I'm also committed to sharing my journey through technical writing and speaking engagements—steps that reflect my drive to become a recognised industry innovator.
+    Over the last few years, I have evolved from a curious Ruby beginner to a DevOps-focused engineer deploying scalable, secure infrastructures. As we enter Q2 of 2025, it's time to reflect on what I've accomplished in the first quarter and refine my focus for the remainder of the year.
   </p>
 
-  <h3>Immediate Focus (1–3 Months)</h3>
+  <h3>Q1 2025 Accomplishments & Pivot Decisions</h3>
   <ul>
     <li>
-      <strong>Linkarooie: Post-Rails 8 Upgrades and Feature Enhancements</strong>:
+      <strong><a href="https://linkarooie.com" target="_blank" class="text-accent hover:text-accent-dark">Linkarooie Migration</a></strong>: 
+      <p>
+        Completely pivoted from the original Rails 8 upgrade strategy by porting <a href="https://linkarooie.com" target="_blank" class="text-accent hover:text-accent-dark">Linkarooie</a> from Rails to Astro to reduce technical overhead and maintenance costs. While Linkarooie was always open source, this migration from Rails with Kamal to Astro on GitHub Pages eliminated the need for managing Ruby dependencies, complex database migrations, and Rails upgrade cycles. This strategic shift better aligns with my vision of creating low-maintenance, easily deployable tooling for the community.
+      </p>
+    </li>
+    <li>
+      <strong><a href="https://boganhustler.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Bogan Hustler Game Development</a></strong>: 
+      <p>
+        Created <a href="https://boganhustler.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Bogan Hustler</a>, a "Dopewars clone but Straya" using Vite, TypeScript (with strict types), Astro, GitHub Pages, Vitest, and Tailwind CSS. This project allowed me to apply modern TypeScript practices with strict typing while creating something fun and culturally relevant. I incorporated real-world Australian data and integrated SunoAI to generate a custom soundtrack that plays during gameplay, exploring the creative application of AI beyond just code assistance.
+      </p>
+    </li>
+    <li>
+      <strong><a href="https://blog.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Blog Modernization</a></strong>: 
+      <p>
+        Upgraded my <a href="https://blog.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">personal blog</a> to Astro 5.2 and Tailwind 4, embracing the latest web technologies. This move further consolidated my tech stack and eliminated the maintenance overhead of multiple frameworks, allowing me to focus more on content creation and less on technical maintenance.
+      </p>
+    </li>
+    <li>
+      <strong><a href="https://linuxforpirates.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Linux for Pirates Expansion</a></strong>: 
+      <p>
+        Significantly expanded and republished <a href="https://linuxforpirates.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Linux for Pirates</a>, growing it from 50 to approximately 300 pages. This comprehensive resource now covers significantly more ground in Linux fundamentals, containerization, and modern DevOps practices, fulfilling the "Deepening Linux and Ubuntu Fundamentals" goal from my original roadmap in a more structured, shareable format.
+      </p>
+    </li>
+    <li>
+      <strong>AI/ML Project Focus</strong>: 
+      <p>
+        Developed several AI and machine learning projects using <a href="https://github.com/loftwah/hoops-hustler" target="_blank" class="text-accent hover:text-accent-dark">Gradio and Streamlit</a>, including fantasy tools leveraging the NBA API and a game comparison tool using RAG. These projects allowed me to explore practical AI applications beyond the original roadmap's focus on Cursor for code assistance, shifting toward building end-user tools powered by AI rather than just using AI as a development aid.
+      </p>
+    </li>
+    <li>
+      <strong>Infrastructure Strategy Realignment</strong>: 
+      <p>
+        Made the decision to retire Kamal deployment strategies (mentioned in the original roadmap) in favor of a clearer separation: AWS ECS for professional work and Astro with Cloudflare (Functions, D1, KV, R2) for personal projects. This decision simplifies my tech stack by creating specialized tooling for different contexts rather than trying to maintain a single approach for all scenarios. For professional systems requiring containers, AWS ECS provides enterprise-grade orchestration, while Cloudflare's edge platform offers a perfect balance of simplicity and power for content-focused personal projects.
+      </p>
+    </li>
+  </ul>
+
+  <h3>Immediate Focus (Q2: April-June)</h3>
+  <ul>
+    <li>
+      <strong>AI/ML Development and Integration</strong>:
       <ul>
         <li>
           <p>
-            With OG image fixes and the Rails 8 upgrade complete, the next step is transitioning from invite-only signups to email validation, improving accessibility and maintaining security.
+            Continue expanding <a href="https://github.com/loftwah/hoops-hustler" target="_blank" class="text-accent hover:text-accent-dark">NBA fantasy tools</a> with additional predictive capabilities using Streamlit and RAG patterns, replacing my earlier focus on AI-assisted coding with more end-user focused AI applications.
           </p>
         </li>
         <li>
-          Leverage Docker container workflows with <strong>Kamal on DigitalOcean</strong> for deployments, harnessing a streamlined approach that eliminates the need for manual server management.
+          Develop more RAG-based applications using <a href="https://blog.deanlofts.xyz/blog/ollama/" target="_blank" class="text-accent hover:text-accent-dark">local model hosting with Ollama</a> for enhanced performance and privacy, moving beyond cloud-based AI services.
         </li>
         <li>
-          Scale performance with caching (Redis) and database optimisations so Linkarooie can handle an expanding user base.
+          Explore practical AI integrations for DevOps workflows and reporting to streamline operations and insights, building on my original goal of distinguishing truly beneficial AI-driven features from hype.
         </li>
         <li>
-          <strong>Upgrade Linkarooie to Ruby 3.4</strong>, taking advantage of new language features and performance improvements introduced in the latest release.
+          Combine AI tools with data visualization techniques to present complex information in accessible ways, creating more impactful tools for decision-making.
         </li>
       </ul>
     </li>
     <li>
-      <strong>Ubuntu Box Project</strong>:
+      <strong>Cloudflare & Astro Mastery</strong>:
       <ul>
         <li>
           <p>
-            I am enhancing my personal Ubuntu Box setup, which features Docker, Terraform, and <strong>1Password CLI</strong> to quickly stand up a production-like environment locally.
+            Continue developing my <a href="https://github.com/loftwah/astroflare" target="_blank" class="text-accent hover:text-accent-dark">Astroflare</a> starter template that combines Astro with Cloudflare Pages, Functions, D1, R2, and KV services, creating a comprehensive foundation for modern web applications without traditional backend requirements.
           </p>
         </li>
         <li>
-          Document installation scripts, security best practices, and secrets management so others can replicate a similar all-in-one dev environment.
+          Build an embeddable widget service with Astroflare that leverages Astro's partial hydration and Tailwind CSS to create efficient, stylish components that can be embedded on any website.
         </li>
         <li>
-          Emphasise hardened security from the ground up with SSH keys, firewall configs, and 1Password CLI for storing secrets.
+          Incorporate email functionality using Resend to add communication capabilities to Astroflare projects without complex backend setups.
         </li>
         <li>
-          Experiment with <strong>Docker Compose</strong> for local multi-service orchestration, ensuring a smooth transition from development to production.
+          Create technical content around Cloudflare's edge platform integration with Astro to help others adopt this powerful stack.
+        </li>
+        <li>
+          Implement comprehensive testing patterns with Vitest to ensure reliability across Astroflare projects.
         </li>
       </ul>
     </li>
     <li>
-      <strong>AI-Assisted Coding with Cursor</strong>:
+      <strong>AWS & DevOps Professional Work</strong>:
       <ul>
         <li>
           <p>
-            I am exploring <strong>Cursor</strong> to see how AI-driven coding suggestions accelerate development, especially for Rails and TypeScript codebases.
+            Further refine <a href="https://blog.deanlofts.xyz/guides/managing-terraform-ecs/" target="_blank" class="text-accent hover:text-accent-dark">ECS/Fargate deployments and container workflows</a> for enterprise-grade applications, continuing this core focus from my original roadmap.
           </p>
         </li>
         <li>
-          Integrate AI tools into my workflow for automated refactoring, debugging, and code reviews.
+          Document best practices for AWS architecture design and security based on production experiences, fulfilling the technical content creation goal from my original plan.
         </li>
         <li>
-          Evaluate Cursor's synergy with GitHub Actions and CI/CD pipelines for a smoother code release process.
+          Continue developing expertise in cost optimization and performance tuning for cloud workloads, building on my original plans for AWS mastery.
+        </li>
+        <li>
+          Maintain focus on <a href="https://github.com/loftwah/uv-fastapi-ecs" target="_blank" class="text-accent hover:text-accent-dark">infrastructure-as-code with Terraform</a> for consistent, repeatable deployments, which remains a cornerstone of my professional practice.
         </li>
       </ul>
     </li>
     <li>
-      <strong>Deepening Linux and Ubuntu Fundamentals</strong>:
+      <strong>Ubuntu Box & Linux Fundamentals</strong>:
       <ul>
         <li>
           <p>
-            I want to go further into Ubuntu internals, systemd, performance tuning, and shell scripting to solidify my expertise in day-to-day operations.
+            Continue enhancing my personal Ubuntu Box setup with Docker, Terraform, and 1Password CLI to support modern development workflows, carrying forward this original roadmap item.
           </p>
         </li>
         <li>
-          Produce reference scripts and resources that help automate typical tasks and easily replicate production-grade environments.
+          Share learnings from the expanded <a href="https://linuxforpirates.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Linux for Pirates</a> content through targeted tutorials and guides, amplifying the impact of this significantly expanded resource.
         </li>
-      </ul>
-    </li>
-    <li>
-      <strong>Technical Content and Community Engagement</strong>:
-      <ul>
         <li>
-          Start documenting AWS migration case studies, distributed systems learnings, and deployment strategies through detailed blog posts.
+          Develop additional scripts and tools to automate common development environment setup tasks, building on the "reference scripts and resources" goal from my original roadmap.
         </li>
       </ul>
     </li>
   </ul>
 
-  <h3>Mid-Term Goals (3–6 Months)</h3>
+  <h3>Mid-Term Goals (Q3: July-September)</h3>
   <ul>
     <li>
-      <strong>Legacy Application Migration and Modernisation</strong>:
+      <strong>Technical Content Creation</strong>:
       <ul>
         <li>
           <p>
-            As more teams move away from Heroku or older hosting setups, I want to formalise best practices for migrating legacy Rails or Node apps into AWS ECS Fargate. Containerisation removes server management overhead and offers scalability.
+            Publish a series of AWS migration case studies based on professional work and lessons learned, fulfilling the technical writing goals from my original roadmap.
           </p>
         </li>
         <li>
-          Outline Docker-based strategies for these apps and manage data migrations from Heroku Postgres to AWS RDS.
+          Develop comprehensive guides for distributed systems implementation, building on the distributed systems theory exploration planned in my original roadmap.
         </li>
         <li>
-          Build robust CI/CD pipelines integrating secrets management, logging, and monitoring for a smooth transition.
+          Start speaking at local meetups and tech conferences on AWS architecture and AI integration, directly addressing the community engagement goals from my original plan.
         </li>
         <li>
-          Begin speaking at local meetups and tech conferences, sharing insights on advanced AWS architectures and distributed systems.
+          Create educational content around migrations from Rails to Astro/Cloudflare, sharing the lessons from my own pivot away from Ruby-based infrastructure.
         </li>
       </ul>
     </li>
     <li>
-      <strong>Terraform and AWS Mastery</strong>:
+      <strong>Game Development Expansion</strong>:
       <ul>
         <li>
           <p>
-            Sharpening my Terraform skills ensures I can spin up AWS resources efficiently and securely. This is central to handling container orchestration, networking, and edge routing.
+            Enhance <a href="https://boganhustler.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Bogan Hustler</a> with new features and expanded gameplay—an entirely new direction not present in my original roadmap that emerged from my TypeScript exploration.
           </p>
         </li>
         <li>
-          Develop advanced Terraform modules for ECS, Fargate, and Cloudflare Workers, allowing me to quickly provision entire infrastructure stacks on demand.
+          Explore additional browser-based game projects using TypeScript and Vite to further refine skills and create engaging, educational content.
         </li>
         <li>
-          Experiment with cost-saving approaches like ECS auto-scaling, spot instances, and flexible networking setups.
+          Investigate AI integration for game mechanics and procedural generation, combining my interests in AI and game development in ways not anticipated in my original roadmap.
+        </li>
+        <li>
+          Document the game development process to help others build similar web-based games, extending my knowledge sharing approach to this new domain.
         </li>
       </ul>
     </li>
     <li>
-      <strong>Expanding Rails and Ruby Expertise</strong>:
+      <strong>Comprehensive TypeScript Expertise</strong>:
       <ul>
         <li>
           <p>
-            With Rails 8 in production, I want to master new features such as ActionCable and caching enhancements that drive performance and developer happiness.
+            Deepen TypeScript knowledge through additional <a href="https://blog.deanlofts.xyz/guides/typescript-exercises/" target="_blank" class="text-accent hover:text-accent-dark">strict-typed projects</a>, replacing my original focus on Ruby/Rails expertise with modern TypeScript development.
           </p>
         </li>
         <li>
-          Combine end-to-end tests (Playwright) with RSpec for deeper coverage, ensuring confidence in complex systems.
+          Create reusable TypeScript patterns for the <a href="https://github.com/loftwah/astroflare" target="_blank" class="text-accent hover:text-accent-dark">Astroflare</a> starter template, focusing on type-safe interactions with Cloudflare's services.
         </li>
         <li>
-          Stay alert for emerging Ruby language features that can streamline my day-to-day coding workflow.
+          Develop TypeScript training materials focused on practical application, contributing to the technical content creation goals from my original roadmap but with a different technology focus.
         </li>
         <li>
-          <strong>Adopt Ruby 3.4 across new and existing projects</strong> once tested in Linkarooie, maximising performance gains and staying current with the latest language improvements.
+          Explore advanced TypeScript features like conditional types and mapped types, deepening my expertise in modern web development paradigms.
         </li>
       </ul>
     </li>
     <li>
-      <strong>LLM and AI Integration</strong>:
+      <strong>Legacy Migration Expertise</strong>:
       <ul>
         <li>
           <p>
-            Beyond Cursor, I will continue building and testing internal tools using GPT-4 or Claude for advanced tasks like text summarisation, classification, and code introspection.
+            Continue formalizing best practices for migrating legacy applications (including Ruby on Rails apps) to modern cloud architectures, building on my own experience pivoting Linkarooie.
           </p>
         </li>
         <li>
-          Focus on practical automations such as automated DevOps reporting or environment configuration suggestions.
+          Develop migration patterns for transitioning from traditional frameworks to Jamstack approaches, documenting the process I've used to move away from Rails.
         </li>
         <li>
-          Distinguish between truly beneficial AI-driven features and those that are hype.
-        </li>
-      </ul>
-    </li>
-    <li>
-      <strong>Distributed Systems and System Design</strong>:
-      <ul>
-        <li>
-          Deep dive into distributed systems theory by studying key papers (Google's MapReduce, Amazon's Dynamo, Raft Consensus, etc.) and build prototypes such as a distributed cache or task queue.
+          Document successful migration case studies with metrics on performance improvements, maintenance reduction, and cost savings from both professional and personal projects.
         </li>
       </ul>
     </li>
   </ul>
 
-  <h3>Long-Term Exploration and Learning (6–12 Months)</h3>
+  <h3>Long-Term Vision (Q4: October-December)</h3>
   <ul>
     <li>
       <strong>Professional DevOps and Cloud Consulting</strong>:
       <ul>
         <li>
           <p>
-            By consolidating my experience in Rails, AWS ECS/Fargate, containerisation, and AI tooling, I plan to offer specialised consulting services for companies needing modern infrastructure solutions, particularly those transitioning away from Heroku or legacy systems.
+            Launch specialized consulting services for companies needing modern infrastructure solutions, building on the consulting service plans outlined in my original roadmap but with an updated technology focus.
           </p>
         </li>
         <li>
-          Define clear packages around <strong>Heroku-to-AWS</strong>, container migrations, and security-minded DevOps best practices.
+          Define clear packages for AWS migrations and containerization strategies, maintaining this core focus from my original plan but with refined methodologies based on 2025 experiences.
         </li>
         <li>
-          Publish success stories that showcase real-world improvements in cost, performance, and developer velocity.
+          Add new consulting offerings around Astro/Cloudflare migrations and AI integrations—areas not emphasized in my original roadmap but that have become central to my expertise.
         </li>
         <li>
-          Launch a dedicated landing page or microsite that highlights these consulting services alongside my personal projects, such as Linkarooie.
+          Create case studies highlighting real-world improvements in cost, performance, and developer experience, documenting the success of my pivoted approach.
         </li>
       </ul>
     </li>
     <li>
-      <strong>Cloudflare Workers and Edge Computing</strong>:
+      <strong>Community Leadership and Open Source</strong>:
       <ul>
         <li>
           <p>
-            While ECS and Fargate remain my go-to choices for container orchestration, I am also exploring the benefits of serverless edge solutions like Cloudflare Workers for real-time processing and reduced latency.
+            Expand contributions to key open-source projects in the DevOps/Cloud space, building on the community contribution principle from my original roadmap.
           </p>
         </li>
         <li>
-          Implement edge caching, auth offloading, and possible dynamic image manipulation for global apps.
+          Foster community around <a href="https://linuxforpirates.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Linux for Pirates</a> and my <a href="https://dly.to/3R9tSuu9oHB" target="_blank" class="text-accent hover:text-accent-dark">Linux for Pirates! daily.dev squad</a>, extending the impact of this significantly expanded resource.
         </li>
         <li>
-          Contribute to open-source demos or tutorials that help others adopt edge computing strategies effectively.
+          Establish mentorship opportunities for emerging developers transitioning from traditional frameworks to modern Jamstack approaches, sharing the lessons from my own technical pivot.
+        </li>
+        <li>
+          Create open standards and patterns for Astro/Cloudflare architectures, replacing my original focus on Rails patterns with guidance for the modern web stack I've adopted.
         </li>
       </ul>
     </li>
     <li>
-      <strong>Event-Driven Architectures and Observability</strong>:
+      <strong>Edge Computing and Distributed Systems</strong>:
       <ul>
         <li>
           <p>
-            Kafka, RabbitMQ, and AWS EventBridge are essential for building scalable, loosely coupled systems. I will keep refining my knowledge of these patterns to design robust microservices.
+            Continue developing <a href="https://github.com/loftwah/astroflare" target="_blank" class="text-accent hover:text-accent-dark">Astroflare</a> as a comprehensive template for edge-first applications using <a href="https://blog.deanlofts.xyz/guides/astro-cloudflare/" target="_blank" class="text-accent hover:text-accent-dark">Cloudflare's edge platform</a>, fulfilling the Cloudflare Workers exploration mentioned in my original roadmap but with a more structured, reusable approach.
           </p>
         </li>
         <li>
-          Build internal prototypes that handle real-time data streams or distributed events, capturing lessons learned in the process.
+          Build an embeddable widget service based on Astroflare that demonstrates the power of edge computing for content delivery across multiple domains.
         </li>
         <li>
-          Elevate observability with Prometheus, Grafana, Axiom, or other tools to ensure that performance metrics and error tracking are top-notch.
+          Document the transition from traditional backend services (like those I planned for Linkarooie) to edge functions and serverless architectures, highlighting the benefits and tradeoffs.
+        </li>
+        <li>
+          Develop reusable components and libraries for edge computing use cases that can be shared with the community, extending my planned contributions to modern web infrastructure.
         </li>
       </ul>
     </li>
     <li>
-      <strong>Advanced Database Optimisation and Scalability</strong>:
+      <strong>AI-Enhanced Development and Tools</strong>:
       <ul>
         <li>
           <p>
-            Whether it is Postgres or another relational DB, tuning for large-scale traffic remains a priority. Techniques like partitioning and read replicas can help me manage data growth without losing performance.
+            Expand beyond my original focus on Cursor and AI-assisted coding to create <a href="https://github.com/loftwah/auto-jira" target="_blank" class="text-accent hover:text-accent-dark">AI-powered developer tools</a> that solve real productivity challenges.
           </p>
         </li>
         <li>
-          Delve deeper into advanced Postgres configuration, indexing, concurrency, and replication to keep data flow efficient.
+          Further develop AI-enhanced fantasy sports tools like my <a href="https://github.com/loftwah/hoops-hustler" target="_blank" class="text-accent hover:text-accent-dark">Hoops Hustler</a> application, establishing a niche that wasn't part of my original roadmap.
         </li>
         <li>
-          Integrate real-time monitoring, alerting, and auto-failover strategies to mitigate downtime risks.
+          Create frameworks for integrating RAG patterns into conventional applications, building on my RAG experience with projects like my <a href="https://blog.deanlofts.xyz/blog/rag-product-catalog/" target="_blank" class="text-accent hover:text-accent-dark">product catalog explorer</a>.
         </li>
-      </ul>
-    </li>
-    <li>
-      <strong>Industry Influence and Thought Leadership</strong>:
-      <ul>
         <li>
-          Lead industry initiatives by publishing technical papers, delivering talks at major conferences, and developing tools that set best practices for DevOps and cloud architecture.
+          Research and document the balance between AI assistance and human expertise in software development, sharing insights from my journey transitioning from traditional development to AI-enhanced workflows.
         </li>
       </ul>
     </li>
   </ul>
 
-  <h3>Core Principles Guiding This Roadmap</h3>
-  <p>My journey is anchored by the following:</p>
+  <h3>Core Technical Focus Areas: What's Changed</h3>
+  <p>My technical focus has evolved significantly from the original roadmap, with some areas being deemphasized and new directions emerging:</p>
+  
   <ul>
     <li>
-      <strong>Continuous Learning</strong>:
+      <strong>AI/ML Integration (New Priority)</strong>: 
       <p>
-        I stay sharp by reading, experimenting, and embracing new tools such as Cursor as they emerge, remaining adaptable in a rapidly shifting tech landscape.
+        Practical applications of AI for developers and end-users, focusing on <a href="https://blog.deanlofts.xyz/blog/rag-product-catalog/" target="_blank" class="text-accent hover:text-accent-dark">RAG patterns</a>, <a href="https://blog.deanlofts.xyz/blog/ollama/" target="_blank" class="text-accent hover:text-accent-dark">local model hosting with Ollama</a>, and tools like Gradio and Streamlit. This expands far beyond my original focus on AI-assisted coding with Cursor to building full AI-powered applications.
       </p>
     </li>
     <li>
-      <strong>Practical Application</strong>:
+      <strong>TypeScript & Modern Web (Replaced Ruby/Rails)</strong>: 
       <p>
-        Everything I learn finds a home in real projects like Linkarooie, the Ubuntu Box, or client migrations, ensuring my knowledge remains grounded.
+        Advanced <a href="https://blog.deanlofts.xyz/guides/typescript-exercises/" target="_blank" class="text-accent hover:text-accent-dark">TypeScript patterns</a> and modern frontend architectures with Astro, focusing on type safety and performance. This represents a major pivot from my original roadmap's emphasis on Rails 8 and Ruby 3.4, embracing a more modern, type-safe ecosystem.
       </p>
     </li>
     <li>
-      <strong>Community Contribution</strong>:
+      <strong>AWS Architecture (Continuing Focus)</strong>: 
       <p>
-        Through blogging, open-source code, and mentoring, I help others grow while expanding my own skills through collaboration and feedback.
+        Distributed systems design and implementation on <a href="https://blog.deanlofts.xyz/guides/managing-terraform-ecs/" target="_blank" class="text-accent hover:text-accent-dark">AWS with ECS/Fargate</a>, maintaining this core professional focus from my original roadmap while refining methodologies and expanding expertise.
       </p>
     </li>
     <li>
-      <strong>Technical Innovation and Thought Leadership</strong>:
+      <strong>Cloudflare Edge Computing (Replaced Kamal/DigitalOcean)</strong>: 
       <p>
-        I am committed to not only implementing robust solutions but also influencing industry best practices through technical writing, speaking engagements, and innovative projects.
+        Serverless and edge computing patterns leveraging <a href="https://blog.deanlofts.xyz/guides/astro-cloudflare/" target="_blank" class="text-accent hover:text-accent-dark">Cloudflare Workers, D1, KV, and R2</a> for global applications, completely replacing my original plan to use Kamal on DigitalOcean for personal projects with a more scalable, maintenance-free approach.
       </p>
     </li>
   </ul>
-
-  <h3>Technical Career Assessment & Development Roadmap</h3>
-  <p>
-    My recent technical career assessment has clarified my direction:
-  </p>
+  
+  <h4>Technologies I'm Embracing vs. Retiring</h4>
+  
+  <p>As part of refining my roadmap, I've made clear decisions about technologies to focus on versus those I'm moving away from:</p>
+  
   <ul>
     <li>
-      <strong>Overall Score:</strong> 85/100
-    </li>
-    <li>
-      <strong>Immediate Priorities:</strong>
+      <strong>Embracing</strong>:
       <ul>
-        <li>Write technical papers on AWS migration methodologies.</li>
-        <li>Begin local speaking engagements and community meetups.</li>
-        <li>Deep dive into distributed systems theory and system design.</li>
-        <li>Create technical content that shares practical, real-world solutions.</li>
+        <li><a href="https://astro.build/" target="_blank" class="text-accent hover:text-accent-dark">Astro</a> - For performance-focused content sites with minimal JavaScript</li>
+        <li><a href="https://developers.cloudflare.com/" target="_blank" class="text-accent hover:text-accent-dark">Cloudflare</a> (Workers, D1, KV, R2) - For edge computing and global distribution</li>
+        <li><a href="https://github.com/loftwah/astroflare" target="_blank" class="text-accent hover:text-accent-dark">Astroflare</a> - My custom starter template combining Astro with Cloudflare services for rapid development</li>
+        <li><a href="https://www.typescriptlang.org/" target="_blank" class="text-accent hover:text-accent-dark">TypeScript</a> - For type-safe frontend and backend development</li>
+        <li><a href="https://aws.amazon.com/ecs/" target="_blank" class="text-accent hover:text-accent-dark">AWS ECS/Fargate</a> - For professional containerized applications</li>
+        <li><a href="https://tailwindcss.com/" target="_blank" class="text-accent hover:text-accent-dark">Tailwind CSS</a> - For rapid UI development with utility-first approach</li>
+        <li><a href="https://ollama.com/" target="_blank" class="text-accent hover:text-accent-dark">Ollama</a> - For running AI models locally</li>
+        <li><a href="https://streamlit.io/" target="_blank" class="text-accent hover:text-accent-dark">Streamlit</a> & <a href="https://gradio.app/" target="_blank" class="text-accent hover:text-accent-dark">Gradio</a> - For data-focused AI applications</li>
+        <li><a href="https://vitest.dev/" target="_blank" class="text-accent hover:text-accent-dark">Vitest</a> - For fast, modern testing of JavaScript applications</li>
+        <li><a href="https://resend.com/" target="_blank" class="text-accent hover:text-accent-dark">Resend</a> - For simplified email functionality in modern web applications</li>
       </ul>
     </li>
     <li>
-      <strong>Medium-Term Goals:</strong>
+      <strong>Retiring or Reducing Focus</strong>:
       <ul>
-        <li>Develop industry-specific tools for DevOps engineers.</li>
-        <li>Contribute to core infrastructure projects.</li>
-        <li>Expand my speaking circuit to regional conferences.</li>
-        <li>Publish comprehensive technical guides.</li>
-      </ul>
-    </li>
-    <li>
-      <strong>Long-Term Vision:</strong>
-      <ul>
-        <li>Lead industry-wide technical initiatives and shape innovative architectural approaches.</li>
-        <li>Establish myself as a thought leader through consistent technical content and open source contributions.</li>
-      </ul>
-    </li>
-    <li>
-      <strong>Key Learning Areas:</strong>
-      <ul>
-        <li>Computer Science Fundamentals and Data Structures</li>
-        <li>Distributed Systems and Consensus Algorithms</li>
-        <li>Advanced AWS Architecture and Infrastructure Automation</li>
-        <li>System Design and Scalable Patterns</li>
-        <li>Advanced Ruby/Rails Optimisation Techniques</li>
+        <li><a href="https://rubyonrails.org/" target="_blank" class="text-accent hover:text-accent-dark">Ruby on Rails</a> - Moving away from for personal projects due to maintenance overhead</li>
+        <li><a href="https://kamal-deploy.org/" target="_blank" class="text-accent hover:text-accent-dark">Kamal</a> - Replaced with more specialized deployment strategies</li>
+        <li><a href="https://www.digitalocean.com/" target="_blank" class="text-accent hover:text-accent-dark">DigitalOcean</a> - Replaced with Cloudflare for personal projects</li>
+        <li>Redis/Postgres direct management - Moving toward managed services or edge alternatives</li>
       </ul>
     </li>
   </ul>
 
-  <h3>Balancing Work and Life</h3>
+
+  <h3>Updated Project Philosophy</h3>
+  <ul>
+    <li>
+      <strong>Maintenance Reduction & Simplification</strong>: 
+      <p>
+        A new guiding principle that has emerged is the intentional reduction of maintenance overhead. By moving from Rails to Astro, from self-managed servers to Cloudflare edge, I'm systematically eliminating time spent on updates, patches, and infrastructure management. This philosophy wasn't explicitly stated in my original roadmap but has become central to my decision-making.
+      </p>
+    </li>
+    <li>
+      <strong>Practical Solutions</strong>: 
+      <p>
+        Continue to build tools that solve real problems rather than chasing technological fads, but with a stronger emphasis on tools that have staying power and don't require constant attention—like <a href="https://github.com/loftwah/grabit" target="_blank" class="text-accent hover:text-accent-dark">GRABIT.SH</a> and <a href="https://linuxforpirates.deanlofts.xyz" target="_blank" class="text-accent hover:text-accent-dark">Linux for Pirates</a>.
+      </p>
+    </li>
+    <li>
+      <strong>Knowledge Sharing & Community Growth</strong>: 
+      <p>
+        Document learnings comprehensively through expanded resources like the significantly enlarged Linux for Pirates guide and my <a href="https://dly.to/3R9tSuu9oHB" target="_blank" class="text-accent hover:text-accent-dark">daily.dev squad</a>, creating more substantial, lasting educational assets rather than just blog posts.
+      </p>
+    </li>
+    <li>
+      <strong>Decisive Technology Choices</strong>: 
+      <p>
+        Make clear, intentional decisions about which technologies to embrace versus retire, cutting through the noise of endless options to maintain focus and expertise in specific areas. This represents a maturation of my approach from my original roadmap, which tried to expand in many directions simultaneously.
+      </p>
+    </li>
+    <li>
+      <strong>Work-Life Balance Through Automation</strong>: 
+      <p>
+        Maintain balance between professional work, personal projects, and family life by actively automating repetitive tasks and choosing technologies that require less ongoing maintenance, freeing up time for both focused creative work and family priorities.
+      </p>
+    </li>
+  </ul>
+
+  <h3>Balancing Work and Life Through Technical Choices</h3>
   <p>
-    As a father, managing time and energy remains crucial. I focus on high-impact goals that can be achieved without sacrificing family life, trusting that well-defined constraints often fuel more efficient innovation.
+    As a father, managing time and energy remains crucial. My pivot toward lower-maintenance technologies directly supports this priority. By moving from Rails (with its upgrade cycles, dependency management, and security patches) to Astro (with its simpler deployment model and content-focused architecture), I've reduced the "background noise" of technical maintenance that was consuming evenings and weekends.
+  </p>
+  
+  <p>
+    Similarly, the shift from DigitalOcean with Kamal to Cloudflare's edge platform eliminates server management, security patches, and scaling concerns—all things that previously created unpredictable demands on my time. These technical choices aren't just about technology preferences; they're strategic decisions to reclaim time for family and focused creative work.
   </p>
 
-  <h3>Conclusion</h3>
+  <h3>Conclusion: From Implementation to Innovation</h3>
   <p>
-    This roadmap now reflects a refined focus on AWS ECS/Fargate, Docker, and the deep technical areas of distributed systems, system design, and advanced AWS practices. By committing to continuous learning, technical content creation, and community engagement, I am laying the foundation to transition from a skilled implementer to an industry innovator.
+    This updated roadmap reflects both what I've accomplished in Q1 2025 and the significant pivot in my technical direction. The original roadmap focused heavily on Ruby/Rails modernization, Kamal deployment on DigitalOcean, and gradual improvements to existing systems. The new direction embraces Astro, Cloudflare edge computing, TypeScript, and AI-powered tools—representing not just different technologies but a fundamentally different approach to building and maintaining systems.
+  </p>
+  
+  <p>
+    By intentionally reducing maintenance overhead, focusing on technologies with staying power, and building more substantial educational resources, I'm creating space for deeper innovation while maintaining a sustainable balance between work and personal life. The goal remains the same—transitioning from a skilled implementer to an industry innovator—but the path has been refined based on real-world experience and evolving priorities.
   </p>
 
   <h3>Get in Touch</h3>
@@ -354,7 +418,7 @@ import Layout from "../layouts/BlogPost.astro";
     </li>
     <li>
       <a
-        href="https://bsky.app/profile/loftwah.com"
+        href="https://bsky.app/profile/loftwah.bsky.social"
         target="_blank"
         class="text-accent hover:text-accent-dark"
       >
@@ -372,16 +436,25 @@ import Layout from "../layouts/BlogPost.astro";
     </li>
     <li>
       <a
-        href="https://www.youtube.com/loftwahthebeatsmiff"
+        href="https://linkedin.com/in/deanlofts"
         target="_blank"
         class="text-accent hover:text-accent-dark"
       >
-        YouTube
+        LinkedIn
       </a>
     </li>
     <li>
       <a
-        href="https://linkarooie.com/loftwah"
+        href="https://blog.deanlofts.xyz"
+        target="_blank"
+        class="text-accent hover:text-accent-dark"
+      >
+        My Blog
+      </a>
+    </li>
+    <li>
+      <a
+        href="https://linkarooie.com"
         target="_blank"
         class="text-accent hover:text-accent-dark"
       >

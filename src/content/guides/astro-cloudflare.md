@@ -616,4 +616,4 @@ Note that API routes in Astro are built in the `src/pages/api` directory, not in
 
 Enjoy your Astro + Cloudflare + D1 project! If you need any help, feel free to reach out.
 
-Please give the repository a star on [GitHub](https://github.com/loftwah/cloudflare-template)
+Please give the repository a star on [GitHub](https://github.com/loftwah/astroflare)
