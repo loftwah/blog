@@ -25,7 +25,7 @@ const guides = (await getCollection('guides')).sort(
         </p>
         <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
           {guides.map((guide) => (
-            <li class="guide-card bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden w-full transition-colors duration-200 border border-gray-100 dark:border-gray-700 hover:border-accent/50">
+            <li class="blog-card bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden w-full transition-colors duration-200">
               <a href={`/guides/${guide.slug}/`} class="block">
                 {guide.data.heroImage && (
                   <img 
@@ -51,6 +51,12 @@ const guides = (await getCollection('guides')).sort(
                       <span class="font-medium">Prerequisites:</span> {guide.data.prerequisites.join(', ')}
                     </div>
                   )}
+                  <div class="mt-3 inline-flex">
+                    <span class="text-accent text-sm font-medium hover:text-accent-dark">Read more</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </div>
                 </div>
               </a>
             </li>
