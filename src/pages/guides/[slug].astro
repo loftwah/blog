@@ -29,8 +29,8 @@ const { Content } = await guide.render();
 
   <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden transition-colors duration-200">
     <Header />
-    <main class="w-full overflow-x-hidden px-4 py-8">
-      <article class="prose dark:prose-invert mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm max-w-3xl w-full">
+    <main class="w-full px-4 py-8 sm:py-12">
+      <article class="max-w-6xl mx-auto">
         {guide.data.heroImage && (
           <div class="mb-8 w-full">
             <img 
@@ -42,7 +42,18 @@ const { Content } = await guide.render();
         )}
 
         <div class="text-center mb-8">
-          <h1 class="text-4xl font-bold mb-4 text-gray-900 dark:text-white">{guide.data.title}</h1>
+          <div class="flex items-center justify-center gap-2 mb-4">
+            <img 
+              src="/images/loftwah_400x400.jpg" 
+              alt="Dean 'Loftwah' Lofts" 
+              class="w-12 h-12 rounded-full object-cover border border-accent" 
+            />
+            <div class="text-left">
+              <div class="font-medium text-gray-900 dark:text-white">Dean "Loftwah" Lofts</div>
+            </div>
+          </div>
+          
+          <h1 class="text-4xl font-bold mt-4 mb-4 text-gray-900 dark:text-white">{guide.data.title}</h1>
           
           <div class="metadata flex flex-wrap justify-center gap-2 mb-4">
             <span class={`guide-difficulty-badge ${
@@ -62,7 +73,7 @@ const { Content } = await guide.render();
         </div>
 
         {guide.data.prerequisites && guide.data.prerequisites.length > 0 && (
-          <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6 border-l-4 border-accent">
+          <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg mb-6 border-l-4 border-accent max-w-4xl mx-auto">
             <h3 class="text-lg font-semibold text-accent mt-0">Prerequisites</h3>
             <ul class="mt-2 pl-5 text-gray-700 dark:text-gray-300">
               {guide.data.prerequisites.map(prereq => (
@@ -73,7 +84,7 @@ const { Content } = await guide.render();
         )}
 
         <!-- Guide content -->
-        <div class="w-full overflow-x-hidden prose dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-accent hover:prose-a:text-accent-dark prose-blockquote:border-l-accent prose-strong:text-accent-dark">
+        <div class="w-full overflow-x-hidden prose dark:prose-invert prose-headings:text-gray-900 dark:prose-headings:text-white prose-a:text-accent hover:prose-a:text-accent-dark prose-blockquote:border-l-accent prose-strong:text-accent-dark max-w-4xl mx-auto">
           <Content />
         </div>
       </article>
