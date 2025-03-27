@@ -17,8 +17,8 @@ jobs:
       - name: Checkout your repository using git
         uses: actions/checkout@v4   # Checks out your code
 
-      - name: Install Playwright browsers
-        run: npx playwright install chromium
+      - name: Install D2
+        run: curl -fsSL https://d2lang.com/install.sh | sh -s --
 
       - name: Install, build, and upload your site
         uses: withastro/action@v3   # Astro action to install dependencies and build the site

@@ -123,43 +123,53 @@ Both systems will be modular, allowing you to use what you need for your specifi
 
 The following sequence diagram shows the typical workflow when building and deploying an application with Astroflare:
 
-```mermaid
-sequenceDiagram
-    participant Dev as Developer
-    participant Local as Local Dev Server
-    participant Git as GitHub
-    participant CF as Cloudflare Pages
-    participant Edge as Edge Functions
-    participant D1 as D1 Database
-    participant User as End User
-    
-    Note over Dev,User: Development Phase
-    Dev->>Local: Write code (Astro + TypeScript + Tailwind)
-    Local->>Dev: Instant preview
-    Dev->>Local: Create API endpoints
-    Local->>Dev: Test endpoints locally
-    
-    Note over Dev,User: Deployment Phase
-    Dev->>Git: Push changes
-    Git->>CF: Trigger deployment
-    CF->>CF: Build Astro site
-    CF->>Edge: Deploy Edge Functions
-    CF->>Dev: Deployment complete
-    
-    Note over Dev,User: Production Usage
-    User->>CF: Request page
-    CF->>User: Serve static assets
-    User->>Edge: Call API endpoint
-    Edge->>D1: Query database
-    D1->>Edge: Return data
-    Edge->>User: Send response
-    
-    Note over Dev,User: Future Extensions
-    User->>Edge: Upload file
-    Edge->>R2: Store in R2 (planned)
-    User->>Edge: Authentication
-    Edge->>KV: Session data (planned)
-    Edge->>Email: Send email via Resend (planned)
+```d2
+direction: right
+
+Dev: Developer
+Local: Local Dev Server
+Git: GitHub
+CF: Cloudflare Pages
+Edge: Edge Functions
+D1: D1 Database
+User: End User
+R2: R2 Storage (Planned)
+KV: KV Storage (Planned)
+Email: Resend Email (Planned)
+
+Development: {
+  Dev -> Local: Write code (Astro + TS + Tailwind)
+  Local -> Dev: Instant preview
+  Dev -> Local: Create API endpoints
+  Local -> Dev: Test endpoints locally
+}
+
+Deployment: {
+  Dev -> Git: Push changes
+  Git -> CF: Trigger deployment
+  CF -> CF: Build Astro site
+  CF -> Edge: Deploy Edge Functions
+  CF -> Dev: Deployment complete
+}
+
+Production: {
+  User -> CF: Request page
+  CF -> User: Serve static assets
+  User -> Edge: Call API endpoint
+  Edge -> D1: Query database
+  D1 -> Edge: Return data
+  Edge -> User: Send response
+}
+
+Future: {
+  User -> Edge: Upload file
+  Edge -> R2: Store in R2
+  User -> Edge: Authentication
+  Edge -> KV: Session data
+  Edge -> Email: Send email
+}
+
+Development -> Deployment -> Production -> Future
 ```
 
 This diagram illustrates the three main phases of working with Astroflare:

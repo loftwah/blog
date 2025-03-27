@@ -28,3 +28,5 @@ package-lock.json
 scripts/
 
 repomix-output.txt
+# D2 generated diagrams
+public/d2/
