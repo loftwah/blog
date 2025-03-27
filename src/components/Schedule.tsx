@@ -228,19 +228,19 @@ const TimezoneSelector: React.FC<TimezoneSelectorProps> = ({
   };
 
   return (
-    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded border-l-4 border-[var(--accent)]">
-      <label className="block mb-2 text-gray-800 dark:text-gray-200 font-medium">Select Timezone:</label>
+    <div className="p-2 md:p-3 bg-gray-50 dark:bg-gray-800 rounded border-l-4 border-[var(--accent)]">
+      <label className="block mb-1 md:mb-2 text-gray-800 dark:text-gray-200 font-medium text-sm md:text-base">Select Timezone:</label>
       <input
         type="text"
         value={timezoneFilter}
         onChange={(e: ChangeEvent<HTMLInputElement>) => handleFilterChange(e.target.value)}
         placeholder="Search timezones..."
-        className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded mb-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
+        className="w-full border border-gray-300 dark:border-gray-600 p-1.5 md:p-2 rounded mb-1.5 md:mb-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent text-sm"
       />
       <select
         value={selectedTimezone}
         onChange={(e: ChangeEvent<HTMLSelectElement>) => onTimezoneChange(e.target.value)}
-        className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"
+        className="w-full border border-gray-300 dark:border-gray-600 p-1.5 md:p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent text-sm"
       >
         {timezones
           .filter((tz: string) =>
@@ -263,21 +263,22 @@ interface DaySelectorProps {
 }
 
 const DaySelector: React.FC<DaySelectorProps> = ({ dayNames, selectedDay, onSelect }) => (
-  <div className="mb-6">
-    <label className="block mb-2 text-gray-800 dark:text-gray-200">Select Day:</label>
-    <div className="flex flex-wrap gap-2">
+  <div className="mb-4 md:mb-6">
+    <label className="block mb-1 md:mb-2 text-sm md:text-base font-medium text-gray-800 dark:text-gray-200">Select Day:</label>
+    <div className="flex flex-wrap gap-1 md:gap-2">
       {dayNames.map((day: string, index: number) => (
         <button
           key={day}
           onClick={() => onSelect(index)}
           type="button"
-          className={`px-4 py-2 rounded transition-colors ${
+          className={`px-2 md:px-4 py-1 md:py-2 rounded transition-colors text-xs md:text-sm ${
             selectedDay === index
               ? 'bg-[var(--accent)] text-white dark:text-gray-900'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
           } ${[5, 6].includes(index) ? 'border-l-4 border-[var(--accent)]' : ''}`}
         >
-          {day}
+          {day.substring(0, 3)}
+          <span className="hidden md:inline">{day.substring(3)}</span>
         </button>
       ))}
     </div>
@@ -345,26 +346,26 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   >
     <div className="block md:grid md:grid-cols-4 gap-1 items-center">
       <div className="text-sm md:text-base font-medium text-[var(--accent-dark)] dark:text-[var(--accent)] flex items-center">
-        <FontAwesomeIcon icon={faClock} className="h-4 w-4 mr-1" />
-        <span className="md:hidden font-bold">Melbourne: </span>
+        <FontAwesomeIcon icon={faClock} className="h-4 w-4 mr-1 flex-shrink-0" />
+        <span className="md:hidden font-bold text-xs">MEL: </span>
         {melbourneTime.toFormat('HH:mm')}
       </div>
       <div className="text-sm md:text-base font-medium text-[var(--accent-dark)] dark:text-[var(--accent)] flex items-center">
-        <FontAwesomeIcon icon={faClock} className="h-4 w-4 mr-1" />
-        <span className="md:hidden font-bold">Local: </span>
+        <FontAwesomeIcon icon={faClock} className="h-4 w-4 mr-1 flex-shrink-0" />
+        <span className="md:hidden font-bold text-xs">Local: </span>
         {localTime.toFormat('HH:mm')}
       </div>
       <div className="capitalize text-sm md:text-base flex items-center">
         {getStatusIcon(availability)}
-        <span className="md:hidden font-bold">Status: </span>
+        <span className="md:hidden font-bold text-xs">Status: </span>
         {statusLabel}
       </div>
       <div className="text-sm md:text-base break-words flex items-start">
         {block?.label && (
           <>
-            <FontAwesomeIcon icon={faMessage} className="h-4 w-4 mr-1 mt-0.5" />
-            <span className="md:hidden font-bold">Note: </span>
-            <span>{block.label}</span>
+            <FontAwesomeIcon icon={faMessage} className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" />
+            <span className="md:hidden font-bold text-xs">Note: </span>
+            <span className="text-xs md:text-sm">{block.label}</span>
           </>
         )}
       </div>
@@ -416,17 +417,17 @@ const Schedule: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
-      <div className="mb-6 p-6 bg-gray-800 dark:bg-gray-800 rounded-lg text-white">
-        <h1 className="text-3xl font-bold mb-4 text-white border-b border-[var(--accent)] pb-2">
+    <div className="w-full mx-auto bg-white dark:bg-gray-900 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="mb-6 p-4 md:p-6 bg-gray-800 dark:bg-gray-800 rounded-lg text-white">
+        <h1 className="text-2xl md:text-3xl font-bold mb-4 text-white border-b border-[var(--accent)] pb-2">
           Schedule a Time with Me
         </h1>
         
-        <p className="mb-4">This tool helps you view my schedule and easily book a time with me. Please note that I prefer text-based communication and asynchronous interactions to ensure I can focus fully on the conversation's details. If we communicate in real time, I may be more focused on how I'm engaging rather than the specifics of the discussion.</p>
+        <p className="mb-4 text-sm md:text-base">This tool helps you view my schedule and easily book a time with me. Please note that I prefer text-based communication and asynchronous interactions to ensure I can focus fully on the conversation's details. If we communicate in real time, I may be more focused on how I'm engaging rather than the specifics of the discussion.</p>
         
-        <p className="mb-2">Feel free to reach out through any of the following:</p>
+        <p className="mb-2 text-sm md:text-base">Feel free to reach out through any of the following:</p>
         
-        <ul className="list-disc pl-6 space-y-2">
+        <ul className="list-disc pl-6 space-y-2 text-sm md:text-base">
           <li className="flex items-start">
             <FontAwesomeIcon icon={faEnvelope} className="h-5 w-5 mr-2 text-[var(--accent)] mt-0.5 -ml-8" />
             Email: <a href="mailto:dean@deanlofts.xyz" className="ml-2 text-[var(--accent)] hover:underline break-all">dean@deanlofts.xyz</a>
@@ -461,115 +462,117 @@ const Schedule: React.FC = () => {
         </ul>
       </div>
 
-      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b-2 border-[var(--accent)] pb-2 flex items-center">
-        <FontAwesomeIcon icon={faCalendarDay} className="h-6 w-6 mr-2 text-[var(--accent)]" />
-        Your Availability Schedule
-      </h2>
-
-      <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <TimezoneSelector
-          selectedTimezone={selectedTimezone}
-          timezones={timezones}
-          timezoneFilter={timezoneFilter}
-          onTimezoneChange={setSelectedTimezone}
-          onFilterChange={setTimezoneFilter}
-        />
-        <div className="space-y-2 p-3 bg-gray-50 dark:bg-gray-800 rounded border-l-4 border-[var(--accent)]">
-          <p className="font-medium text-gray-800 dark:text-gray-200 flex items-center">
-            <FontAwesomeIcon icon={faClock} className="h-5 w-5 mr-1 text-[var(--accent)]" />
-            Current Times:
-          </p>
-          <p className="text-gray-700 dark:text-gray-300 flex items-center pl-2">
-            <FontAwesomeIcon icon={faLocationDot} className="h-4 w-4 mr-1 text-[var(--accent-dark)] dark:text-[var(--accent)]" />
-            Your timezone: {currentTime.setZone(selectedTimezone).toFormat('fff')}
-          </p>
-          <p className="text-gray-700 dark:text-gray-300 flex items-center pl-2">
-            <FontAwesomeIcon icon={faLocationDot} className="h-4 w-4 mr-1 text-[var(--accent-dark)] dark:text-[var(--accent)]" />
-            Melbourne: {currentTime.setZone('Australia/Melbourne').toFormat('fff')}
-          </p>
-        </div>
-      </div>
-
-      <DaySelector dayNames={dayNames} selectedDay={selectedDay} onSelect={setSelectedDay} />
-
-      {/* Header visible on medium screens and up */}
-      <ScheduleHeader />
-
-      <div className="space-y-1">
-        {Array.from({ length: 48 }).map((_, index: number) => {
-          // Adjust selectedDay to Luxon weekday (Monday = 1, Sunday = 7)
-          const luxonWeekday: 1 | 2 | 3 | 4 | 5 | 6 | 7 =
-            selectedDay === 6 ? 7 : (selectedDay + 1) as 1 | 2 | 3 | 4 | 5 | 6 | 7;
-          const baseTime: DateTime = DateTime.now()
-            .startOf('day')
-            .plus({ minutes: index * 30 })
-            .set({ weekday: luxonWeekday });
-          const localTime: DateTime = baseTime.setZone(selectedTimezone);
-          const melbourneTime: DateTime = baseTime.setZone('Australia/Melbourne');
-          const availability: AvailabilityType = getAvailability(baseTime);
-          const statusLabel: string = statusLabels[availability];
-          // Compute the day index based on Melbourne time (using modulo for our schedules)
-          const dayIdx: DayIndex = (melbourneTime.weekday % 7) as DayIndex;
-          const block: BlockedTime | undefined = schedules[dayIdx].blockedTimes.find(
-            (b: BlockedTime) =>
-              melbourneTime.toFormat('HH:mm') >= b.start &&
-              melbourneTime.toFormat('HH:mm') < b.end
-          );
-          return (
-            <ScheduleRow
-              key={index}
-              melbourneTime={melbourneTime}
-              localTime={localTime}
-              availability={availability}
-              statusLabel={statusLabel}
-              block={block}
-            />
-          );
-        })}
-      </div>
-
-      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-        <h2 className="font-bold mb-3 text-gray-900 dark:text-white border-b-2 border-[var(--accent)] pb-2 flex items-center">
-          <FontAwesomeIcon icon={faInfoCircle} className="h-5 w-5 mr-1 text-[var(--accent)]" />
-          Schedule Information
+      <div className="px-4 md:px-6">
+        <h2 className="text-xl md:text-2xl font-bold mb-4 text-gray-900 dark:text-white border-b-2 border-[var(--accent)] pb-2 flex items-center">
+          <FontAwesomeIcon icon={faCalendarDay} className="h-5 w-5 mr-2 text-[var(--accent)]" />
+          Your Availability Schedule
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4 p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
-            <h3 className="font-medium text-gray-800 dark:text-gray-200 text-[var(--accent)] flex items-center">
-              <FontAwesomeIcon icon={faClock} className="h-4 w-4 mr-1" />
-              Availability Hours
-            </h3>
-            <div className="ml-4 space-y-2 text-gray-700 dark:text-gray-300">
-              <p>📅 Sunday - Thursday: 10:00 AM - 11:00 PM AEST</p>
-              <p>🌟 Friday - Saturday: 10:00 AM - 12:00 AM AEST</p>
-            </div>
+
+        <div className="mb-4 md:mb-6 grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+          <TimezoneSelector
+            selectedTimezone={selectedTimezone}
+            timezones={timezones}
+            timezoneFilter={timezoneFilter}
+            onTimezoneChange={setSelectedTimezone}
+            onFilterChange={setTimezoneFilter}
+          />
+          <div className="space-y-2 p-3 bg-gray-50 dark:bg-gray-800 rounded border-l-4 border-[var(--accent)]">
+            <p className="font-medium text-gray-800 dark:text-gray-200 flex items-center">
+              <FontAwesomeIcon icon={faClock} className="h-5 w-5 mr-1 text-[var(--accent)]" />
+              Current Times:
+            </p>
+            <p className="text-gray-700 dark:text-gray-300 flex items-center pl-2">
+              <FontAwesomeIcon icon={faLocationDot} className="h-4 w-4 mr-1 text-[var(--accent-dark)] dark:text-[var(--accent)]" />
+              Your timezone: {currentTime.setZone(selectedTimezone).toFormat('fff')}
+            </p>
+            <p className="text-gray-700 dark:text-gray-300 flex items-center pl-2">
+              <FontAwesomeIcon icon={faLocationDot} className="h-4 w-4 mr-1 text-[var(--accent-dark)] dark:text-[var(--accent)]" />
+              Melbourne: {currentTime.setZone('Australia/Melbourne').toFormat('fff')}
+            </p>
           </div>
-          <div className="space-y-4 p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
-            <h3 className="font-medium text-gray-800 dark:text-gray-200 text-[var(--accent)] flex items-center">
-              <FontAwesomeIcon icon={faPalette} className="h-4 w-4 mr-1" />
-              Color Legend
-            </h3>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <div className="w-6 h-6 bg-red-200 dark:bg-red-900/60 mr-3 rounded border border-red-500"></div>
-                <span className="text-gray-700 dark:text-gray-300 flex items-center">
-                  {getStatusIcon('unavailable')}
-                  Busy (Blocked)
-                </span>
+        </div>
+
+        <DaySelector dayNames={dayNames} selectedDay={selectedDay} onSelect={setSelectedDay} />
+
+        {/* Header visible on medium screens and up */}
+        <ScheduleHeader />
+
+        <div className="space-y-1">
+          {Array.from({ length: 48 }).map((_, index: number) => {
+            // Adjust selectedDay to Luxon weekday (Monday = 1, Sunday = 7)
+            const luxonWeekday: 1 | 2 | 3 | 4 | 5 | 6 | 7 =
+              selectedDay === 6 ? 7 : (selectedDay + 1) as 1 | 2 | 3 | 4 | 5 | 6 | 7;
+            const baseTime: DateTime = DateTime.now()
+              .startOf('day')
+              .plus({ minutes: index * 30 })
+              .set({ weekday: luxonWeekday });
+            const localTime: DateTime = baseTime.setZone(selectedTimezone);
+            const melbourneTime: DateTime = baseTime.setZone('Australia/Melbourne');
+            const availability: AvailabilityType = getAvailability(baseTime);
+            const statusLabel: string = statusLabels[availability];
+            // Compute the day index based on Melbourne time (using modulo for our schedules)
+            const dayIdx: DayIndex = (melbourneTime.weekday % 7) as DayIndex;
+            const block: BlockedTime | undefined = schedules[dayIdx].blockedTimes.find(
+              (b: BlockedTime) =>
+                melbourneTime.toFormat('HH:mm') >= b.start &&
+                melbourneTime.toFormat('HH:mm') < b.end
+            );
+            return (
+              <ScheduleRow
+                key={index}
+                melbourneTime={melbourneTime}
+                localTime={localTime}
+                availability={availability}
+                statusLabel={statusLabel}
+                block={block}
+              />
+            );
+          })}
+        </div>
+
+        <div className="mt-6 p-3 md:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <h2 className="text-lg md:text-xl font-bold mb-3 text-gray-900 dark:text-white border-b-2 border-[var(--accent)] pb-2 flex items-center">
+            <FontAwesomeIcon icon={faInfoCircle} className="h-4 w-4 mr-1 text-[var(--accent)]" />
+            Schedule Information
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div className="space-y-3 md:space-y-4 p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
+              <h3 className="font-medium text-gray-800 dark:text-gray-200 text-[var(--accent)] flex items-center text-sm md:text-base">
+                <FontAwesomeIcon icon={faClock} className="h-4 w-4 mr-1" />
+                Availability Hours
+              </h3>
+              <div className="ml-4 space-y-2 text-gray-700 dark:text-gray-300 text-xs md:text-sm">
+                <p>📅 Sunday - Thursday: 10:00 AM - 11:00 PM AEST</p>
+                <p>🌟 Friday - Saturday: 10:00 AM - 12:00 AM AEST</p>
               </div>
-              <div className="flex items-center">
-                <div className="w-6 h-6 bg-yellow-200 dark:bg-yellow-900/60 mr-3 rounded border border-yellow-500"></div>
-                <span className="text-gray-700 dark:text-gray-300 flex items-center">
-                  {getStatusIcon('flexible')}
-                  Tentative (Preferred to avoid)
-                </span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-6 h-6 bg-green-200 dark:bg-green-900/60 mr-3 rounded border border-green-500"></div>
-                <span className="text-gray-700 dark:text-gray-300 flex items-center">
-                  {getStatusIcon('available')}
-                  Available
-                </span>
+            </div>
+            <div className="space-y-3 md:space-y-4 p-3 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
+              <h3 className="font-medium text-gray-800 dark:text-gray-200 text-[var(--accent)] flex items-center text-sm md:text-base">
+                <FontAwesomeIcon icon={faPalette} className="h-4 w-4 mr-1" />
+                Color Legend
+              </h3>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-red-200 dark:bg-red-900/60 mr-3 rounded border border-red-500"></div>
+                  <span className="text-gray-700 dark:text-gray-300 flex items-center">
+                    {getStatusIcon('unavailable')}
+                    Busy (Blocked)
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-yellow-200 dark:bg-yellow-900/60 mr-3 rounded border border-yellow-500"></div>
+                  <span className="text-gray-700 dark:text-gray-300 flex items-center">
+                    {getStatusIcon('flexible')}
+                    Tentative (Preferred to avoid)
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-green-200 dark:bg-green-900/60 mr-3 rounded border border-green-500"></div>
+                  <span className="text-gray-700 dark:text-gray-300 flex items-center">
+                    {getStatusIcon('available')}
+                    Available
+                  </span>
+                </div>
               </div>
             </div>
           </div>
