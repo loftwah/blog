@@ -4,6 +4,8 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLink, faMagnifyingGlass, faTerminal, faPeopleRobbery, faLock, faCloud } from '@fortawesome/free-solid-svg-icons';
+import { faGithub, faXTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 ---
 
 <!doctype html>
@@ -109,7 +111,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
             <div class="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
               <div class="p-5">
                 <div class="flex items-center mb-3">
-                  <span class="text-accent text-2xl mr-2"><i class="fas fa-link"></i></span>
+                  <span class="text-accent text-2xl mr-2"><FontAwesomeIcon icon={faLink} className="text-2xl" /></span>
                   <h3 class="text-xl font-bold text-gray-900 dark:text-white">Linkarooie</h3>
                 </div>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">A minimal, single-user Astro alternative to Linktree for sharing all your important links.</p>
@@ -123,7 +125,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
             <div class="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
               <div class="p-5">
                 <div class="flex items-center mb-3">
-                  <span class="text-accent text-2xl mr-2"><i class="fas fa-magnifying-glass"></i></span>
+                  <span class="text-accent text-2xl mr-2"><FontAwesomeIcon icon={faMagnifyingGlass} className="text-2xl" /></span>
                   <h3 class="text-xl font-bold text-gray-900 dark:text-white">GRABIT.SH</h3>
                 </div>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">A CLI tool for gathering and summarizing key information from Git repositories.</p>
@@ -137,7 +139,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
             <div class="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
               <div class="p-5">
                 <div class="flex items-center mb-3">
-                  <span class="text-accent text-2xl mr-2"><i class="fas fa-terminal"></i></span>
+                  <span class="text-accent text-2xl mr-2"><FontAwesomeIcon icon={faTerminal} className="text-2xl" /></span>
                   <h3 class="text-xl font-bold text-gray-900 dark:text-white">Linux for Pirates!</h3>
                 </div>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">A fun and comprehensive guide to learning Linux and Ruby on Rails with Docker.</p>
@@ -151,7 +153,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
             <div class="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow">
               <div class="p-5">
                 <div class="flex items-center mb-3">
-                  <span class="text-accent text-2xl mr-2"><i class="fas fa-people-robbery"></i></span>
+                  <span class="text-accent text-2xl mr-2"><FontAwesomeIcon icon={faPeopleRobbery} className="text-2xl" /></span>
                   <h3 class="text-xl font-bold text-gray-900 dark:text-white">Bogan Hustler</h3>
                 </div>
                 <p class="text-gray-600 dark:text-gray-300 mb-4">A remake of Dope Wars but with an Australian twist.</p>
@@ -173,7 +175,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
             <!-- Achievement Item: Mashable -->
             <div class="flex items-start">
               <div class="flex-shrink-0 h-12 w-12 rounded-full bg-accent/20 flex items-center justify-center text-accent">
-                <i class="fas fa-lock text-xl"></i>
+                <FontAwesomeIcon icon={faLock} className="text-xl" />
               </div>
               <div class="ml-4">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white"><a href="https://mashable.com/article/crowdstrike-outage-reactions" target="_blank" class="hover:text-accent transition-colors">Featured in Mashable</a></h3>
@@ -188,7 +190,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
             <!-- Achievement Item: Terraform -->
             <div class="flex items-start">
               <div class="flex-shrink-0 h-12 w-12 rounded-full bg-accent/20 flex items-center justify-center text-accent">
-                <i class="fas fa-cloud text-xl"></i>
+                <FontAwesomeIcon icon={faCloud} className="text-xl" />
               </div>
               <div class="ml-4">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white"><a href="https://www.credly.com/badges/0e437888-1deb-4a2d-8b82-cefb6b87b35d/public_url" target="_blank" class="hover:text-accent transition-colors">HashiCorp Certified: Terraform Associate (003)</a></h3>
@@ -248,22 +250,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
           
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <a href="https://github.com/loftwah" target="_blank" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-              <i class="fab fa-github text-3xl mb-2 text-accent"></i>
+              <FontAwesomeIcon icon={faGithub} className="text-3xl mb-2 text-accent" />
               <span class="text-gray-900 dark:text-white font-medium">GitHub</span>
             </a>
             
             <a href="https://twitter.com/loftwah" target="_blank" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-              <i class="fab fa-x-twitter text-3xl mb-2 text-accent"></i>
+              <FontAwesomeIcon icon={faXTwitter} className="text-3xl mb-2 text-accent" />
               <span class="text-gray-900 dark:text-white font-medium">Twitter/X</span>
             </a>
             
             <a href="https://bsky.app/profile/loftwah.bsky.social" target="_blank" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-              <i class="fas fa-cloud text-3xl mb-2 text-accent"></i>
+              <FontAwesomeIcon icon={faCloud} className="text-3xl mb-2 text-accent" />
               <span class="text-gray-900 dark:text-white font-medium">Bluesky</span>
             </a>
             
             <a href="https://linkedin.com/in/deanlofts" target="_blank" class="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-              <i class="fab fa-linkedin text-3xl mb-2 text-accent"></i>
+              <FontAwesomeIcon icon={faLinkedin} className="text-3xl mb-2 text-accent" />
               <span class="text-gray-900 dark:text-white font-medium">LinkedIn</span>
             </a>
           </div>
