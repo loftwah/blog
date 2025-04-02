@@ -19,7 +19,7 @@ prerequisites:
 
 Alright, legend, let's take it up a notch! We're going to automate data collection to track who’s following and who’s being followed by specific Twitter/X accounts—every single week. Using the SocialData API with Bash, we’re setting up an automated process that runs weekly via cron, collects the data for multiple accounts (including Loftwah, ThePrimeagen, DanielW_Kiwi, and Theo), and outputs CSV files for analysis. The goal? To find new, interesting accounts to follow and to observe any common trends or relationships.
 
-This guide builds on earlier scripts that focus on [collecting followers](/guides/curl-x-followers-csv) and [collecting following](/guides/curl-x-following-csv) data for Twitter/X users using Bash and SocialData API. If you haven't checked those out yet, take a look—they’ll help you understand the basics that we’re expanding upon here.
+This guide builds on earlier scripts that focus on [collecting followers](/guides/curl-x-followers-csv) data for Twitter/X users using Bash and SocialData API. If you haven't checked it out yet, take a look and it will help you understand the basics that we’re expanding upon here.
 
 This guide will show you how to combine those scripts and use cron to automate the process, ultimately saving the output in a structured directory for easy data analysis.
 
