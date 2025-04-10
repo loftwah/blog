@@ -162,6 +162,6 @@ Visit [linkarooie.com](https://linkarooie.com) to see it in action, then fork th
 - [Fork on GitHub](https://github.com/loftwah/linkarooie-3/fork)
 - [View Demo](https://linkarooie.com)
 
-*Created by [Dean Lofts (Loftwah)](https://github.com/loftwah) — "Only the vibe coder remains."*
+*Created by [Dean Lofts (Loftwah)](https://github.com/loftwah)*
 
 Claim your corner of the internet. Define your own narrative. Build your Linkarooie today.
