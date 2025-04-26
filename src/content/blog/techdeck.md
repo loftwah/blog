@@ -19,7 +19,7 @@ TechDeck creates stylized, high-signal snapshots of tech Twitter/X profiles, cap
 - Recent activity analysis
 - Linked content evaluation
 
-The result? A unique trading card complete with custom attack & defense stats, buffs, weaknesses, special moves, and topic tags based on your online persona. It's your digital presence, gamified and collectible.
+The result? A unique trading card complete with custom attack & defense stats, buffs, weaknesses, special moves, and topic tags based on your online persona. It's your digital presence, gamified and collectible. For a great example, check out [Loftwah's card](https://techdeck.life/profile/loftwah)!
 
 **[Check out our directory](https://techdeck.life/directory)** to see examples of cards we've already created for influential tech personalities!
 
