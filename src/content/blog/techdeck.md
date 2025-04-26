@@ -44,7 +44,7 @@ Our custom AI pipeline goes to work, analyzing profile data, tweets, and linked 
 
 ### 3. Directory Entry & API
 
-Your generated card joins our searchable directory at [TechDeck Directory](https://techdeck.life/directory) and becomes available through the TechDeck API. This makes profiles discoverable by tags, vibes, and styles—and allows developers to build with our data.
+Your generated card joins our searchable directory at [TechDeck Directory](https://techdeck.life/directory) and becomes available through the TechDeck API. This makes profiles discoverable by tags, vibes, and styles - and allows developers to build with our data.
 
 ### 4. Collectible Cards & Merchandise
 
@@ -119,7 +119,7 @@ Yes. Once you request removal and we verify ownership, your Twitter/X handle is 
 
 ![TechDeck Academy](/images/techdeck-academy.jpg)
 
-Taking the TechDeck ecosystem a step further, we're excited to introduce **TechDeck Academy**—your personal AI tech learning system built to accelerate your growth as a developer or technologist.
+Taking the TechDeck ecosystem a step further, we're excited to introduce **TechDeck Academy** - your personal AI tech learning system built to accelerate your growth as a developer or technologist.
 
 ### What is TechDeck Academy?
 
