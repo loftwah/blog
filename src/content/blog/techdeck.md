@@ -31,7 +31,7 @@ The journey from Twitter/X profile to collectible card happens in four seamless 
 
 Submit any Twitter/X handle for $3.50. This small fee isn't about creating paywalls - it's about adding just enough friction to filter signal from noise. No applications or gatekeeping required; anyone valuable can join TechDeck.
 
-**[Get notified when submissions open](https://techdeck.life/submit)** - initial submissions will be FREE during our launch period!
+**[Bookmark the submission page](https://techdeck.life/submit)** - initial submissions will be FREE during our launch period!
 
 ### 2. AI-Powered Generation
 
