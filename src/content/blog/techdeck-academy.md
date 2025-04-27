@@ -61,27 +61,42 @@ Based on the code you've provided, here's exactly how to get TechDeck Academy up
 
 ```
 Greetings,
+
 Welcome to TechDeck Academy!
-I'll be your Linus Torvalds mentor for your journey in learning typescript, javascript, python, docker, kubernetes, ci-cd, terraform, github-actions, cloudflare, scaling-strategies, aws-ec2, aws-rds, aws-s3, security-hardening, aws-iam-policies.
+
+I'll be your Linus Torvalds mentor for your journey in learning
+typescript, javascript, python, docker, kubernetes, ci-cd,
+terraform, github-actions, cloudflare, scaling-strategies,
+aws-ec2, aws-rds, aws-s3, security-hardening, aws-iam-policies.
 
 How This Works
-Challenges: Based on your configuration, you'll receive challenges on Mondays, Wednesdays, and Fridays.
-Submissions: When you complete a challenge, save your solution in the submissions/ directory with the challenge ID in the filename.
-Feedback: After you submit, I'll review your work and provide feedback based on my teaching style (Direct, technically focused, sometimes blunt, emphasizes practicality and correctness., Authoritative, critical (but fair), occasionally sarcastic.) and your progress.
-Questions: If you have questions, place a markdown file in the letters/to-mentor/ directory. I'll respond promptly.
+- Challenges: Based on your configuration, you'll receive challenges
+  on Mondays, Wednesdays, and Fridays.
+- Submissions: When you complete a challenge, save your solution in
+  the submissions/ directory with the challenge ID in the filename.
+- Feedback: After you submit, I'll review your work and provide
+  feedback based on my teaching style (Direct, technically focused,
+  sometimes blunt, emphasizes practicality and correctness.
+  Authoritative, critical (but fair), occasionally sarcastic.)
+  and your progress.
+- Questions: If you have questions, place a markdown file in the
+  letters/to-mentor/ directory. I'll respond promptly.
 
 About Me
-Direct, brutally honest, technically focused feedback in the style of Linus Torvalds.
+Direct, brutally honest, technically focused feedback in the style
+of Linus Torvalds.
 
-My expertise areas include: Linux Kernel, Git, C, Operating Systems, Software Development Principles.
+My expertise areas include: Linux Kernel, Git, C, Operating Systems,
+Software Development Principles.
 
 Next Steps
-Please send me a letter: Place a markdown file in letters/to-mentor/ telling me about:
+Please send me a letter: Place a markdown file in letters/to-mentor/
+telling me about:
+- Your current skills
+- What you want to learn
+- How you prefer to learn
+- Any specific areas you want to focus on
 
-Your current skills
-What you want to learn
-How you prefer to learn
-Any specific areas you want to focus on
 I'll use this to tailor your learning experience.
 
 Looking forward to working with you!
@@ -93,20 +108,23 @@ TechDeck Academy - AI-Powered Learning Platform
    - Create a markdown file in the `letters/to-mentor/` directory
    - Here's a sample introduction:
 
-```markdown
+```
 # To Linus
 
 Hi,
 
-I'm Dean.  
-I'm a Senior DevOps Engineer focused on infrastructure, automation, and scaling.  
-I'm here to sharpen my skills and push into more advanced architecture and security.
+I'm Dean.
+I'm a Senior DevOps Engineer focused on infrastructure, automation,
+and scaling.
+I'm here to sharpen my skills and push into more advanced
+architecture and security.
 
 ## Current skills
 
 - Strong with TypeScript, JavaScript, and Docker
 - Working knowledge of Python, Kubernetes, Terraform, and GitHub Actions
-- Comfortable with AWS basics (EC2, RDS, S3) but want to level up around scaling and hardening
+- Comfortable with AWS basics (EC2, RDS, S3) but want to level up
+  around scaling and hardening
 
 ## What I want to learn
 
@@ -133,7 +151,7 @@ I'm here to sharpen my skills and push into more advanced architecture and secur
 
 Looking forward to getting properly battle-tested.
 
-Thanks,  
+Thanks,
 Dean
 ```
 
@@ -143,28 +161,38 @@ Dean
 
 ```
 Greetings,
+
 I received your letter regarding:
 
 # To Linus...
+
 Here are my thoughts:
 
-Right, Dean. So you're a DevOps engineer, huh? 'Senior' you say. We'll see about that.
+Right, Dean. So you're a DevOps engineer, huh? 'Senior' you say.
+We'll see about that.
 
-Your list of skills and goals isn't exactly groundbreaking – it's the standard DevOps boilerplate.
+Your list of skills and goals isn't exactly groundbreaking – it's
+the standard DevOps boilerplate.
 
-But I'll give you this: you at least know what you *don't* know, which is more than I can say for most.
+But I'll give you this: you at least know what you *don't* know,
+which is more than I can say for most.
 
 No fluffy introductions, you want the hard stuff. Fine.
 
-Your focus on production systems, scalable AWS, and robust CI/CD is...acceptable.
+Your focus on production systems, scalable AWS, and robust CI/CD
+is...acceptable.
 
 Don't expect hand-holding. I'm not here to teach you the basics.
 
-Your self-assessment appears mostly accurate, though 'comfortable' with AWS is a weak statement; we'll find out how comfortable you really are.
+Your self-assessment appears mostly accurate, though 'comfortable'
+with AWS is a weak statement; we'll find out how comfortable you
+really are.
 
-I'll send you some proper challenges shortly. Prepare to be tested. Don't disappoint me.
+I'll send you some proper challenges shortly. Prepare to be tested.
+Don't disappoint me.
 
-And for the love of all that is holy, keep your code clean. Anything less is unacceptable.
+And for the love of all that is holy, keep your code clean.
+Anything less is unacceptable.
 
 Best regards,
 
@@ -178,19 +206,34 @@ Linus Torvalds
 
 ```
 Greetings,
+
 Secure and Scalable Web App Deployment with Terraform and Kubernetes
-Create a Terraform configuration to deploy a simple web application to AWS using Kubernetes. The application should be containerized using Docker, and the deployment should include security best practices and demonstrate basic scaling capabilities.
 
-Requirements
-Create a Dockerfile for a simple Node.js web application (you can use a 'Hello World' example).
-Use Terraform to provision the following AWS resources: EC2 instance(s) for Kubernetes nodes (minimum 2, auto-scaling desired), an EKS cluster, an AWS RDS PostgreSQL database instance, an AWS S3 bucket for application assets.
-Deploy the containerized application to the EKS cluster using a Kubernetes Deployment and Service.
-Implement persistent storage for the application using the AWS RDS database.
-Secure the deployment by implementing appropriate IAM policies, network security groups, and Kubernetes RBAC.
-Include a basic autoscaling mechanism (Horizontal Pod Autoscaler) based on CPU utilization.
+Create a Terraform configuration to deploy a simple web application
+to AWS using Kubernetes. The application should be containerized
+using Docker, and the deployment should include security best
+practices and demonstrate basic scaling capabilities.
 
-Examples
-Example IAM policy should restrict access to only necessary AWS services and resources.
+Requirements:
+- Create a Dockerfile for a simple Node.js web application
+  (you can use a 'Hello World' example).
+- Use Terraform to provision the following AWS resources:
+  EC2 instance(s) for Kubernetes nodes (minimum 2, auto-scaling
+  desired), an EKS cluster, an AWS RDS PostgreSQL database instance,
+  an AWS S3 bucket for application assets.
+- Deploy the containerized application to the EKS cluster using a
+  Kubernetes Deployment and Service.
+- Implement persistent storage for the application using the AWS
+  RDS database.
+- Secure the deployment by implementing appropriate IAM policies,
+  network security groups, and Kubernetes RBAC.
+- Include a basic autoscaling mechanism (Horizontal Pod Autoscaler)
+  based on CPU utilization.
+
+Examples:
+Example IAM policy should restrict access to only necessary AWS
+services and resources.
+
 Example Dockerfile:
 FROM node:16
 WORKDIR /app
@@ -199,16 +242,21 @@ RUN npm install
 COPY . .
 CMD [ "node", "index.js" ]
 
-Hints
-Consider using Terraform modules to simplify the infrastructure definition.
-Utilize Kubernetes best practices for deployment and scaling.
-Ensure proper network configuration to allow communication between the application and the database.
-Review AWS documentation on security best practices for EKS and related services.
+Hints:
+- Consider using Terraform modules to simplify the infrastructure
+  definition.
+- Utilize Kubernetes best practices for deployment and scaling.
+- Ensure proper network configuration to allow communication between
+  the application and the database.
+- Review AWS documentation on security best practices for EKS and
+  related services.
 
-Submission Instructions
-Create your solution (filename should include the challenge ID: CC-1745713161571)
-Save it in the submissions/ directory
-Commit and push your changes
+Submission Instructions:
+- Create your solution (filename should include the challenge ID:
+  CC-1745713161571)
+- Save it in the submissions/ directory
+- Commit and push your changes
+
 Good luck!
 ```
 
@@ -327,18 +375,31 @@ Here's an actual challenge from the system:
 ```
 Secure and Scalable Web App Deployment with Terraform and Kubernetes
 
-Create a Terraform configuration to deploy a simple web application to AWS using Kubernetes. The application should be containerized using Docker, and the deployment should include security best practices and demonstrate basic scaling capabilities.
+Create a Terraform configuration to deploy a simple web application
+to AWS using Kubernetes. The application should be containerized
+using Docker, and the deployment should include security best
+practices and demonstrate basic scaling capabilities.
 
 Requirements:
-- Create a Dockerfile for a simple Node.js web application (you can use a 'Hello World' example).
-- Use Terraform to provision the following AWS resources: EC2 instance(s) for Kubernetes nodes (minimum 2, auto-scaling desired), an EKS cluster, an AWS RDS PostgreSQL database instance, an AWS S3 bucket for application assets.
-- Deploy the containerized application to the EKS cluster using a Kubernetes Deployment and Service.
-- Implement persistent storage for the application using the AWS RDS database.
-- Secure the deployment by implementing appropriate IAM policies, network security groups, and Kubernetes RBAC.
-- Include a basic autoscaling mechanism (Horizontal Pod Autoscaler) based on CPU utilization.
+- Create a Dockerfile for a simple Node.js web application
+  (you can use a 'Hello World' example).
+- Use Terraform to provision the following AWS resources:
+  EC2 instance(s) for Kubernetes nodes (minimum 2, auto-scaling
+  desired), an EKS cluster, an AWS RDS PostgreSQL database instance,
+  an AWS S3 bucket for application assets.
+- Deploy the containerized application to the EKS cluster using a
+  Kubernetes Deployment and Service.
+- Implement persistent storage for the application using the AWS
+  RDS database.
+- Secure the deployment by implementing appropriate IAM policies,
+  network security groups, and Kubernetes RBAC.
+- Include a basic autoscaling mechanism (Horizontal Pod Autoscaler)
+  based on CPU utilization.
 
 Examples:
-Example IAM policy should restrict access to only necessary AWS services and resources.
+Example IAM policy should restrict access to only necessary AWS
+services and resources.
+
 Example Dockerfile:
 FROM node:16
 WORKDIR /app
@@ -348,10 +409,13 @@ COPY . .
 CMD [ "node", "index.js" ]
 
 Hints:
-- Consider using Terraform modules to simplify the infrastructure definition.
+- Consider using Terraform modules to simplify the infrastructure
+  definition.
 - Utilize Kubernetes best practices for deployment and scaling.
-- Ensure proper network configuration to allow communication between the application and the database.
-- Review AWS documentation on security best practices for EKS and related services.
+- Ensure proper network configuration to allow communication between
+  the application and the database.
+- Review AWS documentation on security best practices for EKS and
+  related services.
 ```
 
 This challenge tests multiple skills simultaneously while maintaining focus on production-ready infrastructure - exactly the kind of experience that translates directly to real-world work.
