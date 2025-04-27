@@ -5,7 +5,7 @@ pubDate: "Apr 27 2025"
 heroImage: "/images/techdeck-academy.jpg"
 ---
 
-# TechDeck Academy: A Revolution in Personalized Tech Learning
+# [TechDeck Academy](https://techdeck.life/academy): A Revolution in Personalized Tech Learning
 
 In today's rapidly evolving tech landscape, keeping your skills sharp and relevant is more critical than ever. Traditional learning platforms often fall short, offering either overly generic content or rigid structures that don't adapt to your unique learning style and schedule. That's why I'm excited to introduce **TechDeck Academy**: a groundbreaking AI-powered learning system that evolves with you.
 
@@ -149,6 +149,7 @@ I received your letter regarding:
 Here are my thoughts:
 
 Right, Dean. So you're a DevOps engineer, huh? 'Senior' you say. We'll see about that. Your list of skills and goals isn't exactly groundbreaking – it's the standard DevOps boilerplate. But I'll give you this: you at least know what you *don't* know, which is more than I can say for most. No fluffy introductions, you want the hard stuff. Fine. Your focus on production systems, scalable AWS, and robust CI/CD is...acceptable. Don't expect hand-holding. I'm not here to teach you the basics. Your self-assessment appears mostly accurate, though 'comfortable' with AWS is a weak statement; we'll find out how comfortable you really are. I'll send you some proper challenges shortly. Prepare to be tested. Don't disappoint me. And for the love of all that is holy, keep your code clean. Anything less is unacceptable.
+
 Best regards,
 
 Linus Torvalds
@@ -271,7 +272,11 @@ If you prefer a fully-managed experience that integrates directly with your Tech
 - **Expanded mentor personalities** to choose from
 - **Community features** to connect with other learners
 
-[Join the waitlist](https://techdeck.life/academy) to be among the first to experience the fully integrated version!
+The hosted version will transform your TechDeck card into a dynamic record of your learning journey. Your card will display verified skills and progress directly from your Academy work, making it more than just a static representation of your abilities.
+
+As stated on the TechDeck website: "The fully integrated **hosted version** is coming soon, designed to complement your TechDeck card and transform it into a dynamic record of your learning journey." This tight integration with the TechDeck ecosystem is what sets the upcoming hosted version apart from the open-source option.
+
+[Join the waitlist now](https://techdeck.life/academy) to be among the first to experience the fully integrated version!
 
 ## Choose Your Learning Style with AI Mentor Profiles
 
@@ -350,9 +355,11 @@ Why wait to accelerate your tech skills growth? The open-source version of TechD
 
 **[Fork the Repository Now](https://github.com/loftwah/techdeck-academy)**
 
-Or if you prefer to wait for the fully-managed experience:
+Or if you prefer to wait for the fully-managed experience with TechDeck card integration:
 
 **[Join the Hosted Version Waitlist](https://techdeck.life/academy)**
+
+As the TechDeck website states: "Joining TechDeck Academy? Just link your GitHub profile – that's all we need! Academy members get an exclusive, enhanced TechDeck card. This dynamic card showcases your verified skills and learning progress directly from the Academy, visible only to those with a linked GitHub account."
 
 Either way, take the first step toward a more personalized, effective, and engaging learning experience today! With TechDeck Academy, you're not just learning technology, you're developing the practical skills that will set you apart in your career.
 
