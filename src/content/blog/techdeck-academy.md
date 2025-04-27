@@ -148,7 +148,23 @@ I received your letter regarding:
 # To Linus...
 Here are my thoughts:
 
-Right, Dean. So you're a DevOps engineer, huh? 'Senior' you say. We'll see about that. Your list of skills and goals isn't exactly groundbreaking – it's the standard DevOps boilerplate. But I'll give you this: you at least know what you *don't* know, which is more than I can say for most. No fluffy introductions, you want the hard stuff. Fine. Your focus on production systems, scalable AWS, and robust CI/CD is...acceptable. Don't expect hand-holding. I'm not here to teach you the basics. Your self-assessment appears mostly accurate, though 'comfortable' with AWS is a weak statement; we'll find out how comfortable you really are. I'll send you some proper challenges shortly. Prepare to be tested. Don't disappoint me. And for the love of all that is holy, keep your code clean. Anything less is unacceptable.
+Right, Dean. So you're a DevOps engineer, huh? 'Senior' you say. We'll see about that.
+
+Your list of skills and goals isn't exactly groundbreaking – it's the standard DevOps boilerplate.
+
+But I'll give you this: you at least know what you *don't* know, which is more than I can say for most.
+
+No fluffy introductions, you want the hard stuff. Fine.
+
+Your focus on production systems, scalable AWS, and robust CI/CD is...acceptable.
+
+Don't expect hand-holding. I'm not here to teach you the basics.
+
+Your self-assessment appears mostly accurate, though 'comfortable' with AWS is a weak statement; we'll find out how comfortable you really are.
+
+I'll send you some proper challenges shortly. Prepare to be tested. Don't disappoint me.
+
+And for the love of all that is holy, keep your code clean. Anything less is unacceptable.
 
 Best regards,
 
