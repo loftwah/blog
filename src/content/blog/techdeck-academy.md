@@ -29,9 +29,9 @@ The beauty of TechDeck Academy lies in its elegant simplicity. The learning loop
 
 5. **Track Progress**: Regular digests summarize your growth, identify patterns, and suggest focus areas, helping you see your evolution and stay motivated.
 
-## Detailed Implementation: Step By Step
+## Getting Started with TechDeck Academy: A Step-by-Step Guide
 
-Based on the code you've provided, here's exactly how to get TechDeck Academy up and running:
+Here's exactly how to get started with TechDeck Academy:
 
 1. **Initial Setup**:
 
