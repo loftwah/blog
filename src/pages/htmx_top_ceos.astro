@@ -26,108 +26,90 @@ const topCEOs: CEO[] = ceos as CEO[]; // Explicitly cast to the CEO array type
 <html lang="en">
   <head>
     <BaseHead title={`Top 50 HTMX CEOs - ${SITE_TITLE}`} description={`Explore the top 50 HTMX CEOs by Twitter/X followers. ${SITE_DESCRIPTION}`} />
-    <style>
-      /* Custom styles for the htmx CEOs page */
-      .ceo-card {
-        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        border-left: 3px solid transparent;
-      }
-      
-      .ceo-card:hover {
-        transform: translateY(-5px);
-        border-left-color: var(--accent);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      }
-      
-      .rank-badge {
-        background-color: var(--accent);
-        color: white;
-        border-radius: 9999px;
-        font-weight: bold;
-        padding: 0.25rem 0.75rem;
-        font-size: 0.875rem;
-        margin-right: 0.5rem;
-        display: flex;
-        align-items: center;
-      }
-      
-      .top-10 {
-        background-color: var(--accent-dark);
-      }
-
-      /* Button styles with better contrast */
-      .profile-button {
-        border: 2px solid var(--accent);
-        background-color: transparent;
-        color: var(--accent);
-        transition: all 0.3s ease;
-      }
-
-      .profile-button:hover {
-        background-color: var(--accent);
-        color: white;
-        /* Ensure dark mode has good contrast */
-        .dark & {
-          color: var(--bg-primary);
-        }
-      }
-    </style>
   </head>
   <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200">
     <Header />
-    <main class="prose mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
-      <h1 class="text-4xl font-bold mb-6 text-center text-accent flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-        </svg>
-        Top 50 HTMX CEOs
-      </h1>
-
-      <p class="mb-8 text-center text-gray-700 dark:text-gray-300">
-        This page showcases the top 50 HTMX CEOs, ranked by their Twitter/X followers.
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {topCEOs.map((ceo, index) => (
-          <div class="ceo-card flex flex-col items-center text-center bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 p-6 rounded-lg shadow-md">
-            <img
-              src={`/images/${ceo.imagePath}`}
-              alt={`Profile of ${ceo.name}`}
-              class="w-24 h-24 rounded-full border-2 border-accent mb-4"
-            />
-            <div class="flex items-center mb-2">
-              <span class={`rank-badge ${index < 10 ? 'top-10' : ''}`}>
-                {index < 3 ? (
-                  <FontAwesomeIcon icon={faStar} className="h-4 w-4 mr-1" />
-                ) : (
-                  <span class="font-bold">{index + 1}</span>
-                )}
-              </span>
-              <h2 class="text-xl font-bold truncate text-gray-900 dark:text-white" title={ceo.name}>
-                {ceo.name}
-              </h2>
+    <main>
+      <!-- Hero Section -->
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8 mb-8">
+          <div class="text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
             </div>
-            <p class="text-accent dark:text-accent flex items-center justify-center">
-              <FontAwesomeIcon icon={faXTwitter} className="h-4 w-4 mr-1" />
-              @{ceo.screenName}
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Top 50 <span class="text-accent">HTMX</span> CEOs
+            </h1>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Discover the most influential HTMX CEOs ranked by their Twitter/X following
             </p>
-            <p class="mt-2 text-gray-600 dark:text-gray-300 flex items-center justify-center">
-              <FontAwesomeIcon icon={faUserGroup} className="h-4 w-4 mr-1 text-[var(--accent-dark)] dark:text-[var(--accent)]" />
-              <span class="font-bold text-accent-dark dark:text-accent">{ceo.followers.toLocaleString()}</span> followers
-            </p>
-            
-            <div class="mt-4 flex gap-2">
-              <a
-                href={`https://twitter.com/${ceo.screenName}`}
-                target="_blank"
-                class="inline-flex items-center px-4 py-2 profile-button font-medium rounded-md transition-colors duration-300"
-              >
-                <FontAwesomeIcon icon={faXTwitter} className="h-4 w-4 mr-2" />
-                X / Twitter
-              </a>
-            </div>
           </div>
-        ))}
+        </div>
+
+        <!-- CEO Grid -->
+        <div class="space-y-4">
+          {topCEOs.map((ceo, index) => (
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700">
+              <div class="flex items-center space-x-4">
+                <!-- Rank Badge -->
+                <div class={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md ${
+                  index < 3 
+                    ? 'bg-gradient-to-r from-yellow-400 to-orange-500' 
+                    : index < 10 
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500'
+                    : 'bg-gradient-to-r from-gray-400 to-gray-500'
+                }`}>
+                  {index < 3 ? (
+                    <FontAwesomeIcon icon={faStar} className="h-5 w-5" />
+                  ) : (
+                    <span>{index + 1}</span>
+                  )}
+                </div>
+
+                <!-- Profile Image -->
+                <div class="flex-shrink-0">
+                  <img
+                    src={`/images/${ceo.imagePath}`}
+                    alt={`Profile of ${ceo.name}`}
+                    class="w-16 h-16 rounded-full border-2 border-purple-200 dark:border-purple-700 object-cover"
+                  />
+                </div>
+
+                <!-- CEO Info -->
+                <div class="flex-grow min-w-0">
+                  <h2 class="text-xl font-bold text-gray-900 dark:text-white truncate" title={ceo.name}>
+                    {ceo.name}
+                  </h2>
+                  <div class="flex items-center text-purple-600 dark:text-purple-400 mt-1">
+                    <FontAwesomeIcon icon={faXTwitter} className="h-4 w-4 mr-2" />
+                    <span class="font-medium">@{ceo.screenName}</span>
+                  </div>
+                  <div class="flex items-center text-gray-600 dark:text-gray-300 mt-1">
+                    <FontAwesomeIcon icon={faUserGroup} className="h-4 w-4 mr-2 text-purple-500" />
+                    <span class="font-bold text-purple-600 dark:text-purple-400">
+                      {ceo.followers.toLocaleString()}
+                    </span>
+                    <span class="ml-1">followers</span>
+                  </div>
+                </div>
+
+                <!-- Action Button -->
+                <div class="flex-shrink-0">
+                  <a
+                    href={`https://twitter.com/${ceo.screenName}`}
+                    target="_blank"
+                    class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+                  >
+                    <FontAwesomeIcon icon={faXTwitter} className="h-4 w-4 mr-2" />
+                    <span class="hidden sm:inline">Follow</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </main>
     <Footer />
