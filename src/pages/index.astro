@@ -1,41 +1,675 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import { SITE_TITLE } from '../consts';
+const links = [
+  'https://fm.loftwah.com',
+  'https://linkedin.com/in/deanlofts',
+  'https://pizza.deanlofts.xyz',
+  'https://github.com/loftwah',
+  'https://github.com/loftwah/react-pizza-demo',
+];
 
-const pageTitle = `${SITE_TITLE} — On pause`;
-const pageDescription = 'This site is quiet for now.';
+const pageTitle = 'Dean Lofts // Signal Locked';
+const pageDescription =
+  'Single-screen signal page for Dean Lofts: Software Engineer, DevOps Engineer, Cloud Architect, Melbourne, Australia.';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={pageTitle} description={pageDescription} />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#050505" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={pageTitle} />
+    <meta property="twitter:description" content={pageDescription} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <style is:inline>
+      @font-face {
+        font-family: 'Atkinson Signal';
+        src: url('/fonts/atkinson-regular.woff') format('woff');
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: 'Atkinson Signal';
+        src: url('/fonts/atkinson-bold.woff') format('woff');
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+      }
+
+      :root {
+        --void: #050505;
+        --ink: rgba(245, 247, 244, 0.94);
+        --muted: rgba(208, 213, 210, 0.66);
+        --signal: #00ffaa;
+        --signal-glow: rgba(0, 255, 170, 0.22);
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-right: env(safe-area-inset-right, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+        --safe-left: env(safe-area-inset-left, 0px);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--void);
+        color-scheme: dark;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100svh;
+        overflow: hidden;
+        color: var(--ink);
+        font-family: 'Atkinson Signal', sans-serif;
+        background:
+          radial-gradient(circle at 50% 42%, rgba(20, 20, 20, 0.96) 0%, rgba(10, 10, 10, 0.98) 34%, rgba(5, 5, 5, 1) 72%),
+          var(--void);
+      }
+
+      ::selection {
+        background: rgba(0, 255, 170, 0.22);
+        color: #f6fff9;
+      }
+
+      .filters {
+        position: absolute;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+      }
+
+      .signal-page {
+        position: relative;
+        min-height: 100svh;
+        isolation: isolate;
+        overflow: hidden;
+      }
+
+      .signal-field,
+      .scanlines,
+      .grain-overlay {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .signal-field {
+        z-index: 1;
+        opacity: 0.84;
+      }
+
+      .grain-overlay {
+        z-index: 3;
+        opacity: 0.06;
+        mix-blend-mode: soft-light;
+      }
+
+      .scanlines {
+        z-index: 4;
+        background:
+          repeating-linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.04) 0,
+            rgba(255, 255, 255, 0.04) 1px,
+            transparent 1px,
+            transparent 4px
+          );
+        opacity: 0.065;
+        mix-blend-mode: soft-light;
+      }
+
+      .content {
+        position: relative;
+        z-index: 5;
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding:
+          calc(1.35rem + var(--safe-top))
+          calc(1.2rem + var(--safe-right))
+          calc(7rem + var(--safe-bottom))
+          calc(1.2rem + var(--safe-left));
+      }
+
+      .status {
+        margin: 0 0 clamp(0.7rem, 1.8vh, 1.4rem);
+        font-size: clamp(0.68rem, 0.95vw, 0.92rem);
+        font-weight: 700;
+        letter-spacing: 0.42em;
+        line-height: 1.3;
+        text-transform: uppercase;
+        color: rgba(224, 231, 226, 0.76);
+        text-shadow: 0 0 0.8rem rgba(0, 255, 170, 0.14);
+        animation: slow-drift 12s ease-in-out infinite, rare-flicker 18s linear infinite;
+      }
+
+      .status .accent,
+      .identity .accent {
+        color: var(--signal);
+        text-shadow: 0 0 0.7rem rgba(0, 255, 170, 0.18);
+      }
+
+      .name {
+        margin: 0;
+        max-width: min(100%, 11.4ch);
+        font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        font-size: clamp(4rem, 14vw, 13rem);
+        font-weight: 900;
+        line-height: 0.82;
+        letter-spacing: -0.11em;
+        text-transform: uppercase;
+        color: #f4f8f5;
+        filter: url(#signal-distort);
+        text-shadow:
+          0 0 0.025em rgba(255, 255, 255, 0.22),
+          0 0 0.18em rgba(0, 255, 170, 0.14),
+          0 0 0.32em rgba(0, 255, 170, 0.07);
+        animation: signal-breathe 9s ease-in-out infinite, rare-flicker 24s linear infinite;
+        text-wrap: balance;
+      }
+
+      .name span {
+        display: block;
+      }
+
+      .name span:last-child {
+        padding-left: 0.56ch;
+      }
+
+      .identity {
+        margin: clamp(0.95rem, 2.1vh, 1.6rem) 0 0;
+        max-width: min(96vw, 1200px);
+        font-size: clamp(0.68rem, 0.95vw, 0.95rem);
+        font-weight: 400;
+        letter-spacing: 0.28em;
+        line-height: 1.58;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .link-row {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 6;
+        display: flex;
+        align-items: center;
+        gap: clamp(1rem, 2vw, 1.8rem);
+        padding:
+          0
+          calc(1.2rem + var(--safe-right))
+          calc(1.2rem + var(--safe-bottom))
+          calc(1.2rem + var(--safe-left));
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        mask-image: linear-gradient(
+          to right,
+          transparent 0,
+          black 1.4rem,
+          black calc(100% - 1.4rem),
+          transparent 100%
+        );
+      }
+
+      .link-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .link-row a {
+        color: rgba(224, 229, 226, 0.72);
+        font-size: clamp(0.66rem, 0.86vw, 0.82rem);
+        letter-spacing: 0.12em;
+        line-height: 1;
+        text-decoration: none;
+        transition:
+          color 180ms ease,
+          opacity 180ms ease,
+          text-shadow 180ms ease;
+      }
+
+      .link-row:hover a {
+        opacity: 0.6;
+      }
+
+      .link-row a:hover,
+      .link-row a:focus-visible {
+        opacity: 1;
+        color: #f5fff9;
+        text-shadow: 0 0 0.9rem rgba(0, 255, 170, 0.34);
+        outline: none;
+      }
+
+      @keyframes signal-breathe {
+        0%,
+        100% {
+          opacity: 0.986;
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+
+        50% {
+          opacity: 1;
+          transform: translate3d(0, 0.12rem, 0) scale(1.005);
+        }
+      }
+
+      @keyframes slow-drift {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0);
+        }
+
+        50% {
+          transform: translate3d(0, 0.14rem, 0);
+        }
+      }
+
+      @keyframes rare-flicker {
+        0%,
+        11.98%,
+        12.1%,
+        39.7%,
+        39.9%,
+        67.95%,
+        68.08%,
+        100% {
+          opacity: 1;
+        }
+
+        12.03% {
+          opacity: 0.9;
+        }
+
+        39.82% {
+          opacity: 0.94;
+        }
+
+        68.01% {
+          opacity: 0.88;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .content {
+          padding-bottom: calc(7.6rem + var(--safe-bottom));
+        }
+
+        .status {
+          letter-spacing: 0.34em;
+        }
+
+        .identity {
+          letter-spacing: 0.22em;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .content {
+          padding-top: calc(1rem + var(--safe-top));
+          padding-bottom: calc(8.1rem + var(--safe-bottom));
+        }
+
+        .status {
+          font-size: 0.68rem;
+          letter-spacing: 0.28em;
+        }
+
+        .name {
+          font-size: clamp(4rem, 18vw, 7.25rem);
+          letter-spacing: -0.105em;
+        }
+
+        .name span:last-child {
+          padding-left: 0.44ch;
+        }
+
+        .identity {
+          font-size: 0.68rem;
+          line-height: 1.68;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .status,
+        .name {
+          animation: none;
+        }
+
+        .grain-overlay {
+          opacity: 0.038;
+        }
+
+        .link-row a {
+          transition: none;
+        }
+      }
+    </style>
   </head>
-  <body class="bg-gray-950 text-gray-50">
-    <main class="relative min-h-screen flex items-center justify-center px-6 py-16">
-      <div class="absolute inset-0">
-        <img
-          src="/images/loftwah_banner.jpg"
-          alt=""
-          class="w-full h-full object-cover"
-        />
-        <div class="absolute inset-0 bg-black/65"></div>
+
+  <body>
+    <svg class="filters" aria-hidden="true" focusable="false">
+      <defs>
+        <filter id="signal-distort" x="-8%" y="-16%" width="116%" height="132%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.001 0.016"
+            numOctaves="2"
+            seed="17"
+            result="noise"
+          >
+            <animate
+              attributeName="baseFrequency"
+              dur="16s"
+              values="0.001 0.016;0.0016 0.021;0.0011 0.013;0.001 0.016"
+              repeatCount="indefinite"
+            />
+          </feTurbulence>
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="3.4"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          >
+            <animate
+              attributeName="scale"
+              dur="12s"
+              values="2.2;4.6;2.8;3.4;2.2"
+              repeatCount="indefinite"
+            />
+          </feDisplacementMap>
+        </filter>
+
+        <filter id="film-grain" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.78"
+            numOctaves="3"
+            stitchTiles="stitch"
+            result="noise"
+          >
+            <animate
+              attributeName="baseFrequency"
+              dur="12s"
+              values="0.78;0.86;0.81;0.78"
+              repeatCount="indefinite"
+            />
+          </feTurbulence>
+          <feColorMatrix in="noise" type="saturate" values="0" result="mono" />
+          <feComponentTransfer in="mono" result="grain">
+            <feFuncA type="table" tableValues="0 0.18" />
+          </feComponentTransfer>
+        </filter>
+      </defs>
+    </svg>
+
+    <main class="signal-page">
+      <canvas class="signal-field" data-signal-field aria-hidden="true"></canvas>
+
+      <svg
+        class="grain-overlay"
+        aria-hidden="true"
+        focusable="false"
+        preserveAspectRatio="none"
+        viewBox="0 0 100 100"
+      >
+        <rect width="100" height="100" filter="url(#film-grain)" fill="#ffffff"></rect>
+      </svg>
+
+      <div class="scanlines" aria-hidden="true"></div>
+
+      <div class="content">
+        <p class="status"><span class="accent">Signal Locked</span> // New DevOps Role Live</p>
+
+        <h1 class="name" aria-label="Dean Lofts">
+          <span>Dean</span>
+          <span>Lofts</span>
+        </h1>
+
+        <p class="identity">
+          Software Engineer / DevOps Engineer / Cloud Architect / <span class="accent">LoftwahFM</span> /
+          Melbourne, Australia
+        </p>
       </div>
 
-      <section class="relative z-10 max-w-xl text-center">
-        <div class="mx-auto mb-6 h-24 w-24 rounded-full overflow-hidden border border-white/30 shadow-lg">
-          <img
-            src="/android-chrome-512x512.png"
-            alt="Dean Loftwah Lofts"
-            class="h-full w-full object-cover"
-          />
-        </div>
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight">Taking a pause.</h1>
-        <p class="mt-4 text-base sm:text-lg text-white/85">
-          I lost my job and it made me rethink everything, including tech. This space is quiet for now.
-        </p>
-        <p class="mt-6 text-sm text-white/70">Thanks for stopping by.</p>
-      </section>
+      <nav class="link-row" aria-label="Dean Lofts links">
+        {
+          links.map((link) => (
+            <a href={link} target="_blank" rel="noreferrer">
+              {link}
+            </a>
+          ))
+        }
+      </nav>
     </main>
+
+    <script is:inline>
+      (() => {
+        const canvas = document.querySelector('[data-signal-field]');
+        if (!(canvas instanceof HTMLCanvasElement)) return;
+
+        const context = canvas.getContext('2d');
+        if (!context) return;
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const coarsePointer = window.matchMedia('(pointer: coarse)');
+        const narrowViewport = window.matchMedia('(max-width: 720px)');
+
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+        let nodes = [];
+        let animationFrame = 0;
+        let resizeFrame = 0;
+        let active = true;
+
+        const random = (min, max) => min + Math.random() * (max - min);
+
+        const getNodeCount = () => {
+          if (reducedMotion.matches) return 92;
+          if (window.innerWidth < 520) return 124;
+          if (window.innerWidth < 960 || coarsePointer.matches) return 148;
+          return 188;
+        };
+
+        const buildNodes = () => {
+          const count = getNodeCount();
+          const columns = Math.max(10, Math.round(Math.sqrt(count * (width / Math.max(height, 1)))));
+          const rows = Math.max(8, Math.ceil(count / columns));
+          const gapX = width / columns;
+          const gapY = height / rows;
+
+          nodes = Array.from({ length: count }, (_, index) => {
+            const column = index % columns;
+            const row = Math.floor(index / columns);
+            const x = (column + 0.5) * gapX + random(-gapX * 0.45, gapX * 0.45);
+            const y = (row + 0.5) * gapY + random(-gapY * 0.45, gapY * 0.45);
+            const angle = random(-0.72, 0.72);
+            const drift = reducedMotion.matches ? random(0.004, 0.014) : random(0.015, 0.05);
+
+            return {
+              x,
+              y,
+              vx: Math.cos(angle) * drift,
+              vy: Math.sin(angle) * drift * 0.68,
+              radius: random(0.55, 1.75),
+              alpha: random(0.18, 0.42),
+              phase: random(0, Math.PI * 2),
+              band: random(0.84, 1.18),
+            };
+          });
+        };
+
+        const resize = () => {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          dpr = Math.min(window.devicePixelRatio || 1, 1.8);
+
+          canvas.width = Math.round(width * dpr);
+          canvas.height = Math.round(height * dpr);
+          canvas.style.width = width + 'px';
+          canvas.style.height = height + 'px';
+
+          context.setTransform(dpr, 0, 0, dpr, 0, 0);
+          buildNodes();
+        };
+
+        const wrap = (node) => {
+          const margin = 80;
+
+          if (node.x < -margin) node.x = width + margin;
+          if (node.x > width + margin) node.x = -margin;
+          if (node.y < -margin) node.y = height + margin;
+          if (node.y > height + margin) node.y = -margin;
+        };
+
+        const render = (time) => {
+          if (!active) return;
+
+          const seconds = time * 0.001;
+          const travel = reducedMotion.matches ? 11 : narrowViewport.matches ? 26 : 32;
+          const pulseX = ((seconds * travel) % (width + 320)) - 160;
+          const maxDistance = narrowViewport.matches ? 92 : 116;
+          const maxDistanceSquared = maxDistance * maxDistance;
+
+          context.clearRect(0, 0, width, height);
+          context.globalCompositeOperation = 'source-over';
+
+          for (let index = 0; index < nodes.length; index += 1) {
+            const node = nodes[index];
+            const motion = reducedMotion.matches ? 0.008 : 0.028;
+
+            node.x += node.vx + Math.sin(seconds * 0.18 * node.band + node.phase) * motion;
+            node.y += node.vy + Math.cos(seconds * 0.14 * node.band + node.phase) * motion * 0.82;
+            wrap(node);
+          }
+
+          context.lineWidth = 0.72;
+
+          for (let outer = 0; outer < nodes.length; outer += 1) {
+            const a = nodes[outer];
+
+            for (let inner = outer + 1; inner < nodes.length; inner += 1) {
+              const b = nodes[inner];
+              const dx = b.x - a.x;
+              const dy = b.y - a.y;
+              const distanceSquared = dx * dx + dy * dy;
+
+              if (distanceSquared > maxDistanceSquared) continue;
+
+              const distance = Math.sqrt(distanceSquared);
+              const proximity = 1 - distance / maxDistance;
+              const midX = (a.x + b.x) * 0.5;
+              const wave = Math.max(0, 1 - Math.abs(midX - pulseX) / 210);
+              const shimmer = 0.44 + ((Math.sin(seconds * 0.52 + a.phase + b.phase) + 1) * 0.28);
+              const alpha = proximity * (0.012 + wave * 0.072) * shimmer;
+
+              if (alpha < 0.012) continue;
+
+              context.strokeStyle = `rgba(0, 255, 170, ${Math.min(alpha, 0.115).toFixed(3)})`;
+              context.beginPath();
+              context.moveTo(a.x, a.y);
+              context.lineTo(b.x, b.y);
+              context.stroke();
+            }
+          }
+
+          context.globalCompositeOperation = 'lighter';
+
+          for (let index = 0; index < nodes.length; index += 1) {
+            const node = nodes[index];
+            const wave = Math.max(0, 1 - Math.abs(node.x - pulseX) / 170);
+            const glowRadius = node.radius + wave * 1.5;
+            const coreRadius = node.radius + wave * 0.52;
+            const glowAlpha = 0.02 + wave * 0.12;
+            const coreAlpha = Math.min(node.alpha + wave * 0.22, 0.72);
+
+            if (wave > 0.14) {
+              context.fillStyle = `rgba(0, 255, 170, ${glowAlpha.toFixed(3)})`;
+              context.beginPath();
+              context.arc(node.x, node.y, glowRadius, 0, Math.PI * 2);
+              context.fill();
+            }
+
+            context.fillStyle = `rgba(224, 255, 247, ${coreAlpha.toFixed(3)})`;
+            context.beginPath();
+            context.arc(node.x, node.y, coreRadius, 0, Math.PI * 2);
+            context.fill();
+          }
+
+          animationFrame = window.requestAnimationFrame(render);
+        };
+
+        const start = () => {
+          active = true;
+          window.cancelAnimationFrame(animationFrame);
+          animationFrame = window.requestAnimationFrame(render);
+        };
+
+        const stop = () => {
+          active = false;
+          window.cancelAnimationFrame(animationFrame);
+        };
+
+        const queueResize = () => {
+          window.cancelAnimationFrame(resizeFrame);
+          resizeFrame = window.requestAnimationFrame(() => {
+            resize();
+          });
+        };
+
+        const onVisibilityChange = () => {
+          if (document.hidden) {
+            stop();
+          } else {
+            resize();
+            start();
+          }
+        };
+
+        const onMediaChange = () => {
+          resize();
+          start();
+        };
+
+        const bindMedia = (mediaQuery) => {
+          if (typeof mediaQuery.addEventListener === 'function') {
+            mediaQuery.addEventListener('change', onMediaChange);
+            return;
+          }
+
+          mediaQuery.addListener(onMediaChange);
+        };
+
+        resize();
+        start();
+
+        window.addEventListener('resize', queueResize, { passive: true });
+        document.addEventListener('visibilitychange', onVisibilityChange);
+        bindMedia(reducedMotion);
+        bindMedia(coarsePointer);
+        bindMedia(narrowViewport);
+      })();
+    </script>
   </body>
 </html>
