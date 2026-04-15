@@ -103,8 +103,7 @@ const pageDescription =
 
       .signal-field,
       .scanlines,
-      .grain-overlay,
-      .portrait-shell {
+      .grain-overlay {
         position: absolute;
         inset: 0;
         pointer-events: none;
@@ -117,41 +116,8 @@ const pageDescription =
         opacity: 0.7;
       }
 
-      .portrait-shell {
-        z-index: 2;
-        inset: 8svh 0 12svh auto;
-        width: min(40vw, 34rem);
-        height: min(76svh, 48rem);
-        overflow: hidden;
-      }
-
-      .portrait-shell::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-          linear-gradient(to left, rgba(5, 5, 5, 0.1), rgba(5, 5, 5, 0.7) 62%, rgba(5, 5, 5, 1)),
-          radial-gradient(circle at 58% 40%, rgba(0, 255, 170, 0.09), rgba(0, 255, 170, 0) 44%);
-      }
-
-      .portrait {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        opacity: 0.2;
-        mix-blend-mode: screen;
-        filter: saturate(0.84) brightness(0.6) contrast(1.08);
-        mask-image:
-          linear-gradient(to left, black 24%, rgba(0, 0, 0, 0.74) 55%, transparent 100%),
-          linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
-        animation: portrait-drift 16s ease-in-out infinite;
-      }
-
       .grain-overlay {
-        z-index: 4;
+        z-index: 3;
         width: 100%;
         height: 100%;
         opacity: 0.045;
@@ -159,7 +125,7 @@ const pageDescription =
       }
 
       .scanlines {
-        z-index: 5;
+        z-index: 4;
         background:
           repeating-linear-gradient(
             to bottom,
@@ -174,7 +140,7 @@ const pageDescription =
 
       .content {
         position: relative;
-        z-index: 6;
+        z-index: 5;
         display: flex;
         align-items: center;
         min-height: 100svh;
@@ -247,7 +213,7 @@ const pageDescription =
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 7;
+        z-index: 6;
         display: flex;
         align-items: center;
         gap: clamp(1rem, 2vw, 1.8rem);
@@ -311,23 +277,7 @@ const pageDescription =
         }
       }
 
-      @keyframes portrait-drift {
-        0%,
-        100% {
-          transform: translate3d(0, 0, 0) scale(1.02);
-        }
-
-        50% {
-          transform: translate3d(-0.35rem, 0.3rem, 0) scale(1.035);
-        }
-      }
-
       @media (max-width: 980px) {
-        .portrait-shell {
-          width: min(46vw, 30rem);
-          opacity: 0.92;
-        }
-
         .content {
           padding-bottom: calc(7.8rem + var(--safe-bottom));
         }
@@ -338,16 +288,6 @@ const pageDescription =
       }
 
       @media (max-width: 720px) {
-        .portrait-shell {
-          inset: 16svh -14vw 18svh auto;
-          width: 70vw;
-          height: 52svh;
-        }
-
-        .portrait {
-          opacity: 0.14;
-        }
-
         .name {
           font-size: clamp(4rem, 18vw, 7.8rem);
           letter-spacing: -0.1em;
@@ -379,17 +319,10 @@ const pageDescription =
         .name span:last-child {
           padding-left: 0.46ch;
         }
-
-        .portrait-shell {
-          inset: 10svh -26vw auto auto;
-          width: 92vw;
-          height: 46svh;
-        }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .name,
-        .portrait {
+        .name {
           animation: none;
         }
 
@@ -463,10 +396,6 @@ const pageDescription =
 
     <main class="signal-page">
       <canvas class="signal-field" data-signal-field aria-hidden="true"></canvas>
-
-      <div class="portrait-shell" aria-hidden="true">
-        <img class="portrait" src="/images/loftwah-avatar.jpg" alt="" loading="eager" decoding="async" />
-      </div>
 
       <svg
         class="grain-overlay"
