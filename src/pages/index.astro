@@ -1,15 +1,15 @@
 ---
 const links = [
-  'https://fm.loftwah.com',
-  'https://linkedin.com/in/deanlofts',
-  'https://pizza.deanlofts.xyz',
-  'https://github.com/loftwah',
-  'https://github.com/loftwah/react-pizza-demo',
+  { href: 'https://fm.loftwah.com', label: 'LoftwahFM' },
+  { href: 'https://linkedin.com/in/deanlofts', label: 'LinkedIn' },
+  { href: 'https://pizza.deanlofts.xyz', label: 'Pizza' },
+  { href: 'https://github.com/loftwah', label: 'GitHub' },
+  { href: 'https://github.com/loftwah/react-pizza-demo', label: 'React Pizza Demo' },
 ];
 
-const pageTitle = 'Dean Lofts // Signal Locked';
+const pageTitle = 'Dean Lofts';
 const pageDescription =
-  'Single-screen signal page for Dean Lofts: Software Engineer, DevOps Engineer, Cloud Architect, Melbourne, Australia.';
+  'Dean Lofts is a software engineer based in Melbourne, Australia, working across DevOps, cloud systems, automation, and LoftwahFM.';
 ---
 
 <!doctype html>
@@ -50,10 +50,10 @@ const pageDescription =
 
       :root {
         --void: #050505;
-        --ink: rgba(245, 247, 244, 0.94);
-        --muted: rgba(208, 213, 210, 0.66);
+        --ink: rgba(244, 247, 244, 0.95);
+        --muted: rgba(199, 206, 202, 0.67);
+        --soft: rgba(157, 168, 162, 0.42);
         --signal: #00ffaa;
-        --signal-glow: rgba(0, 255, 170, 0.22);
         --safe-top: env(safe-area-inset-top, 0px);
         --safe-right: env(safe-area-inset-right, 0px);
         --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -76,13 +76,15 @@ const pageDescription =
         color: var(--ink);
         font-family: 'Atkinson Signal', sans-serif;
         background:
-          radial-gradient(circle at 50% 42%, rgba(20, 20, 20, 0.96) 0%, rgba(10, 10, 10, 0.98) 34%, rgba(5, 5, 5, 1) 72%),
+          radial-gradient(circle at 18% 32%, rgba(14, 22, 18, 0.68) 0%, rgba(5, 5, 5, 0) 34%),
+          radial-gradient(circle at 72% 48%, rgba(10, 16, 13, 0.9) 0%, rgba(5, 5, 5, 0) 46%),
+          radial-gradient(circle at 50% 42%, rgba(19, 19, 19, 0.96) 0%, rgba(9, 9, 9, 0.98) 38%, rgba(5, 5, 5, 1) 74%),
           var(--void);
       }
 
       ::selection {
-        background: rgba(0, 255, 170, 0.22);
-        color: #f6fff9;
+        background: rgba(0, 255, 170, 0.18);
+        color: #f7fff9;
       }
 
       .filters {
@@ -101,87 +103,119 @@ const pageDescription =
 
       .signal-field,
       .scanlines,
-      .grain-overlay {
+      .grain-overlay,
+      .portrait-shell {
         position: absolute;
         inset: 0;
-        width: 100%;
-        height: 100%;
         pointer-events: none;
       }
 
       .signal-field {
         z-index: 1;
-        opacity: 0.84;
+        width: 100%;
+        height: 100%;
+        opacity: 0.7;
+      }
+
+      .portrait-shell {
+        z-index: 2;
+        inset: 8svh 0 12svh auto;
+        width: min(40vw, 34rem);
+        height: min(76svh, 48rem);
+        overflow: hidden;
+      }
+
+      .portrait-shell::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(to left, rgba(5, 5, 5, 0.1), rgba(5, 5, 5, 0.7) 62%, rgba(5, 5, 5, 1)),
+          radial-gradient(circle at 58% 40%, rgba(0, 255, 170, 0.09), rgba(0, 255, 170, 0) 44%);
+      }
+
+      .portrait {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        opacity: 0.2;
+        mix-blend-mode: screen;
+        filter: saturate(0.84) brightness(0.6) contrast(1.08);
+        mask-image:
+          linear-gradient(to left, black 24%, rgba(0, 0, 0, 0.74) 55%, transparent 100%),
+          linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
+        animation: portrait-drift 16s ease-in-out infinite;
       }
 
       .grain-overlay {
-        z-index: 3;
-        opacity: 0.06;
+        z-index: 4;
+        width: 100%;
+        height: 100%;
+        opacity: 0.045;
         mix-blend-mode: soft-light;
       }
 
       .scanlines {
-        z-index: 4;
+        z-index: 5;
         background:
           repeating-linear-gradient(
             to bottom,
-            rgba(255, 255, 255, 0.04) 0,
-            rgba(255, 255, 255, 0.04) 1px,
+            rgba(255, 255, 255, 0.028) 0,
+            rgba(255, 255, 255, 0.028) 1px,
             transparent 1px,
             transparent 4px
           );
-        opacity: 0.065;
+        opacity: 0.05;
         mix-blend-mode: soft-light;
       }
 
       .content {
         position: relative;
-        z-index: 5;
-        min-height: 100svh;
+        z-index: 6;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        align-items: center;
+        min-height: 100svh;
         padding:
-          calc(1.35rem + var(--safe-top))
-          calc(1.2rem + var(--safe-right))
+          calc(1.4rem + var(--safe-top))
+          calc(1.35rem + var(--safe-right))
           calc(7rem + var(--safe-bottom))
-          calc(1.2rem + var(--safe-left));
+          calc(1.35rem + var(--safe-left));
       }
 
-      .status {
-        margin: 0 0 clamp(0.7rem, 1.8vh, 1.4rem);
-        font-size: clamp(0.68rem, 0.95vw, 0.92rem);
+      .copy {
+        position: relative;
+        width: min(100%, 72rem);
+      }
+
+      .eyebrow {
+        margin: 0 0 clamp(0.8rem, 1.8vh, 1.3rem);
+        font-size: clamp(0.68rem, 0.88vw, 0.86rem);
         font-weight: 700;
-        letter-spacing: 0.42em;
-        line-height: 1.3;
+        letter-spacing: 0.34em;
+        line-height: 1.4;
         text-transform: uppercase;
-        color: rgba(224, 231, 226, 0.76);
-        text-shadow: 0 0 0.8rem rgba(0, 255, 170, 0.14);
-        animation: slow-drift 12s ease-in-out infinite, rare-flicker 18s linear infinite;
-      }
-
-      .status .accent,
-      .identity .accent {
-        color: var(--signal);
-        text-shadow: 0 0 0.7rem rgba(0, 255, 170, 0.18);
+        color: rgba(225, 231, 227, 0.7);
+        text-shadow: 0 0 0.7rem rgba(0, 255, 170, 0.1);
       }
 
       .name {
         margin: 0;
-        max-width: min(100%, 11.4ch);
+        max-width: min(100%, 8.6ch);
         font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-        font-size: clamp(4rem, 14vw, 13rem);
+        font-size: clamp(4rem, 14vw, 12.5rem);
         font-weight: 900;
-        line-height: 0.82;
-        letter-spacing: -0.11em;
+        line-height: 0.83;
+        letter-spacing: -0.105em;
         text-transform: uppercase;
-        color: #f4f8f5;
+        color: #f5f8f5;
         filter: url(#signal-distort);
         text-shadow:
-          0 0 0.025em rgba(255, 255, 255, 0.22),
-          0 0 0.18em rgba(0, 255, 170, 0.14),
-          0 0 0.32em rgba(0, 255, 170, 0.07);
-        animation: signal-breathe 9s ease-in-out infinite, rare-flicker 24s linear infinite;
+          0 0 0.02em rgba(255, 255, 255, 0.18),
+          0 0 0.12em rgba(0, 255, 170, 0.09);
+        animation: name-breathe 10s ease-in-out infinite;
         text-wrap: balance;
       }
 
@@ -190,18 +224,22 @@ const pageDescription =
       }
 
       .name span:last-child {
-        padding-left: 0.56ch;
+        padding-left: 0.54ch;
       }
 
       .identity {
-        margin: clamp(0.95rem, 2.1vh, 1.6rem) 0 0;
-        max-width: min(96vw, 1200px);
-        font-size: clamp(0.68rem, 0.95vw, 0.95rem);
+        margin: clamp(1rem, 2vh, 1.55rem) 0 0;
+        max-width: min(92vw, 58rem);
+        font-size: clamp(0.7rem, 0.98vw, 0.98rem);
         font-weight: 400;
-        letter-spacing: 0.28em;
-        line-height: 1.58;
+        letter-spacing: 0.22em;
+        line-height: 1.7;
         text-transform: uppercase;
         color: var(--muted);
+      }
+
+      .identity .accent {
+        color: var(--signal);
       }
 
       .link-row {
@@ -209,15 +247,15 @@ const pageDescription =
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 6;
+        z-index: 7;
         display: flex;
         align-items: center;
         gap: clamp(1rem, 2vw, 1.8rem);
         padding:
           0
-          calc(1.2rem + var(--safe-right))
-          calc(1.2rem + var(--safe-bottom))
-          calc(1.2rem + var(--safe-left));
+          calc(1.35rem + var(--safe-right))
+          calc(1.25rem + var(--safe-bottom))
+          calc(1.35rem + var(--safe-left));
         overflow-x: auto;
         overflow-y: hidden;
         white-space: nowrap;
@@ -237,9 +275,9 @@ const pageDescription =
       }
 
       .link-row a {
-        color: rgba(224, 229, 226, 0.72);
-        font-size: clamp(0.66rem, 0.86vw, 0.82rem);
-        letter-spacing: 0.12em;
+        color: rgba(224, 229, 226, 0.7);
+        font-size: clamp(0.66rem, 0.84vw, 0.82rem);
+        letter-spacing: 0.14em;
         line-height: 1;
         text-decoration: none;
         transition:
@@ -249,114 +287,114 @@ const pageDescription =
       }
 
       .link-row:hover a {
-        opacity: 0.6;
+        opacity: 0.58;
       }
 
       .link-row a:hover,
       .link-row a:focus-visible {
         opacity: 1;
-        color: #f5fff9;
-        text-shadow: 0 0 0.9rem rgba(0, 255, 170, 0.34);
+        color: #f6fff9;
+        text-shadow: 0 0 0.85rem rgba(0, 255, 170, 0.28);
         outline: none;
       }
 
-      @keyframes signal-breathe {
+      @keyframes name-breathe {
         0%,
         100% {
-          opacity: 0.986;
+          opacity: 0.99;
           transform: translate3d(0, 0, 0) scale(1);
         }
 
         50% {
           opacity: 1;
-          transform: translate3d(0, 0.12rem, 0) scale(1.005);
+          transform: translate3d(0, 0.1rem, 0) scale(1.004);
         }
       }
 
-      @keyframes slow-drift {
+      @keyframes portrait-drift {
         0%,
         100% {
-          transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0) scale(1.02);
         }
 
         50% {
-          transform: translate3d(0, 0.14rem, 0);
+          transform: translate3d(-0.35rem, 0.3rem, 0) scale(1.035);
         }
       }
 
-      @keyframes rare-flicker {
-        0%,
-        11.98%,
-        12.1%,
-        39.7%,
-        39.9%,
-        67.95%,
-        68.08%,
-        100% {
-          opacity: 1;
+      @media (max-width: 980px) {
+        .portrait-shell {
+          width: min(46vw, 30rem);
+          opacity: 0.92;
         }
 
-        12.03% {
-          opacity: 0.9;
-        }
-
-        39.82% {
-          opacity: 0.94;
-        }
-
-        68.01% {
-          opacity: 0.88;
-        }
-      }
-
-      @media (max-width: 860px) {
         .content {
-          padding-bottom: calc(7.6rem + var(--safe-bottom));
-        }
-
-        .status {
-          letter-spacing: 0.34em;
+          padding-bottom: calc(7.8rem + var(--safe-bottom));
         }
 
         .identity {
-          letter-spacing: 0.22em;
+          max-width: 38rem;
         }
       }
 
-      @media (max-width: 620px) {
-        .content {
-          padding-top: calc(1rem + var(--safe-top));
-          padding-bottom: calc(8.1rem + var(--safe-bottom));
+      @media (max-width: 720px) {
+        .portrait-shell {
+          inset: 16svh -14vw 18svh auto;
+          width: 70vw;
+          height: 52svh;
         }
 
-        .status {
-          font-size: 0.68rem;
-          letter-spacing: 0.28em;
+        .portrait {
+          opacity: 0.14;
         }
 
         .name {
-          font-size: clamp(4rem, 18vw, 7.25rem);
-          letter-spacing: -0.105em;
-        }
-
-        .name span:last-child {
-          padding-left: 0.44ch;
+          font-size: clamp(4rem, 18vw, 7.8rem);
+          letter-spacing: -0.1em;
         }
 
         .identity {
-          font-size: 0.68rem;
-          line-height: 1.68;
+          font-size: 0.69rem;
+          letter-spacing: 0.18em;
+          line-height: 1.78;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .content {
+          align-items: flex-end;
+          padding-top: calc(1rem + var(--safe-top));
+          padding-bottom: calc(8.25rem + var(--safe-bottom));
+        }
+
+        .copy {
+          width: 100%;
+        }
+
+        .eyebrow {
+          font-size: 0.66rem;
+          letter-spacing: 0.26em;
+        }
+
+        .name span:last-child {
+          padding-left: 0.46ch;
+        }
+
+        .portrait-shell {
+          inset: 10svh -26vw auto auto;
+          width: 92vw;
+          height: 46svh;
         }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .status,
-        .name {
+        .name,
+        .portrait {
           animation: none;
         }
 
         .grain-overlay {
-          opacity: 0.038;
+          opacity: 0.03;
         }
 
         .link-row a {
@@ -369,32 +407,32 @@ const pageDescription =
   <body>
     <svg class="filters" aria-hidden="true" focusable="false">
       <defs>
-        <filter id="signal-distort" x="-8%" y="-16%" width="116%" height="132%">
+        <filter id="signal-distort" x="-6%" y="-14%" width="112%" height="128%">
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.001 0.016"
+            baseFrequency="0.0012 0.014"
             numOctaves="2"
             seed="17"
             result="noise"
           >
             <animate
               attributeName="baseFrequency"
-              dur="16s"
-              values="0.001 0.016;0.0016 0.021;0.0011 0.013;0.001 0.016"
+              dur="18s"
+              values="0.0012 0.014;0.0015 0.018;0.0011 0.012;0.0012 0.014"
               repeatCount="indefinite"
             />
           </feTurbulence>
           <feDisplacementMap
             in="SourceGraphic"
             in2="noise"
-            scale="3.4"
+            scale="2.4"
             xChannelSelector="R"
             yChannelSelector="G"
           >
             <animate
               attributeName="scale"
-              dur="12s"
-              values="2.2;4.6;2.8;3.4;2.2"
+              dur="14s"
+              values="1.8;2.8;2.1;2.4;1.8"
               repeatCount="indefinite"
             />
           </feDisplacementMap>
@@ -403,21 +441,21 @@ const pageDescription =
         <filter id="film-grain" x="-20%" y="-20%" width="140%" height="140%">
           <feTurbulence
             type="fractalNoise"
-            baseFrequency="0.78"
+            baseFrequency="0.76"
             numOctaves="3"
             stitchTiles="stitch"
             result="noise"
           >
             <animate
               attributeName="baseFrequency"
-              dur="12s"
-              values="0.78;0.86;0.81;0.78"
+              dur="14s"
+              values="0.76;0.84;0.8;0.76"
               repeatCount="indefinite"
             />
           </feTurbulence>
           <feColorMatrix in="noise" type="saturate" values="0" result="mono" />
           <feComponentTransfer in="mono" result="grain">
-            <feFuncA type="table" tableValues="0 0.18" />
+            <feFuncA type="table" tableValues="0 0.16" />
           </feComponentTransfer>
         </filter>
       </defs>
@@ -425,6 +463,10 @@ const pageDescription =
 
     <main class="signal-page">
       <canvas class="signal-field" data-signal-field aria-hidden="true"></canvas>
+
+      <div class="portrait-shell" aria-hidden="true">
+        <img class="portrait" src="/images/loftwah-avatar.jpg" alt="" loading="eager" decoding="async" />
+      </div>
 
       <svg
         class="grain-overlay"
@@ -439,24 +481,26 @@ const pageDescription =
       <div class="scanlines" aria-hidden="true"></div>
 
       <div class="content">
-        <p class="status"><span class="accent">Signal Locked</span> // New DevOps Role Live</p>
+        <div class="copy">
+          <p class="eyebrow">Melbourne, Australia</p>
 
-        <h1 class="name" aria-label="Dean Lofts">
-          <span>Dean</span>
-          <span>Lofts</span>
-        </h1>
+          <h1 class="name" aria-label="Dean Lofts">
+            <span>Dean</span>
+            <span>Lofts</span>
+          </h1>
 
-        <p class="identity">
-          Software Engineer / DevOps Engineer / Cloud Architect / <span class="accent">LoftwahFM</span> /
-          Melbourne, Australia
-        </p>
+          <p class="identity">
+            Software Engineer / DevOps Engineer / Cloud Architect / Infrastructure / Automation /
+            <span class="accent">LoftwahFM</span>
+          </p>
+        </div>
       </div>
 
       <nav class="link-row" aria-label="Dean Lofts links">
         {
-          links.map((link) => (
-            <a href={link} target="_blank" rel="noreferrer">
-              {link}
+          links.map(({ href, label }) => (
+            <a href={href} target="_blank" rel="noreferrer">
+              {label}
             </a>
           ))
         }
@@ -486,34 +530,34 @@ const pageDescription =
         const random = (min, max) => min + Math.random() * (max - min);
 
         const getNodeCount = () => {
-          if (reducedMotion.matches) return 92;
-          if (window.innerWidth < 520) return 124;
-          if (window.innerWidth < 960 || coarsePointer.matches) return 148;
-          return 188;
+          if (reducedMotion.matches) return 74;
+          if (window.innerWidth < 520) return 104;
+          if (window.innerWidth < 960 || coarsePointer.matches) return 128;
+          return 164;
         };
 
         const buildNodes = () => {
           const count = getNodeCount();
-          const columns = Math.max(10, Math.round(Math.sqrt(count * (width / Math.max(height, 1)))));
-          const rows = Math.max(8, Math.ceil(count / columns));
+          const columns = Math.max(9, Math.round(Math.sqrt(count * (width / Math.max(height, 1)))));
+          const rows = Math.max(7, Math.ceil(count / columns));
           const gapX = width / columns;
           const gapY = height / rows;
 
           nodes = Array.from({ length: count }, (_, index) => {
             const column = index % columns;
             const row = Math.floor(index / columns);
-            const x = (column + 0.5) * gapX + random(-gapX * 0.45, gapX * 0.45);
-            const y = (row + 0.5) * gapY + random(-gapY * 0.45, gapY * 0.45);
+            const x = (column + 0.5) * gapX + random(-gapX * 0.42, gapX * 0.42);
+            const y = (row + 0.5) * gapY + random(-gapY * 0.42, gapY * 0.42);
             const angle = random(-0.72, 0.72);
-            const drift = reducedMotion.matches ? random(0.004, 0.014) : random(0.015, 0.05);
+            const drift = reducedMotion.matches ? random(0.003, 0.012) : random(0.011, 0.036);
 
             return {
               x,
               y,
               vx: Math.cos(angle) * drift,
-              vy: Math.sin(angle) * drift * 0.68,
-              radius: random(0.55, 1.75),
-              alpha: random(0.18, 0.42),
+              vy: Math.sin(angle) * drift * 0.66,
+              radius: random(0.5, 1.55),
+              alpha: random(0.14, 0.34),
               phase: random(0, Math.PI * 2),
               band: random(0.84, 1.18),
             };
@@ -535,7 +579,7 @@ const pageDescription =
         };
 
         const wrap = (node) => {
-          const margin = 80;
+          const margin = 72;
 
           if (node.x < -margin) node.x = width + margin;
           if (node.x > width + margin) node.x = -margin;
@@ -547,9 +591,9 @@ const pageDescription =
           if (!active) return;
 
           const seconds = time * 0.001;
-          const travel = reducedMotion.matches ? 11 : narrowViewport.matches ? 26 : 32;
-          const pulseX = ((seconds * travel) % (width + 320)) - 160;
-          const maxDistance = narrowViewport.matches ? 92 : 116;
+          const travel = reducedMotion.matches ? 8 : narrowViewport.matches ? 19 : 24;
+          const pulseX = ((seconds * travel) % (width + 240)) - 120;
+          const maxDistance = narrowViewport.matches ? 82 : 104;
           const maxDistanceSquared = maxDistance * maxDistance;
 
           context.clearRect(0, 0, width, height);
@@ -557,14 +601,14 @@ const pageDescription =
 
           for (let index = 0; index < nodes.length; index += 1) {
             const node = nodes[index];
-            const motion = reducedMotion.matches ? 0.008 : 0.028;
+            const motion = reducedMotion.matches ? 0.006 : 0.018;
 
-            node.x += node.vx + Math.sin(seconds * 0.18 * node.band + node.phase) * motion;
-            node.y += node.vy + Math.cos(seconds * 0.14 * node.band + node.phase) * motion * 0.82;
+            node.x += node.vx + Math.sin(seconds * 0.16 * node.band + node.phase) * motion;
+            node.y += node.vy + Math.cos(seconds * 0.13 * node.band + node.phase) * motion * 0.74;
             wrap(node);
           }
 
-          context.lineWidth = 0.72;
+          context.lineWidth = 0.7;
 
           for (let outer = 0; outer < nodes.length; outer += 1) {
             const a = nodes[outer];
@@ -580,13 +624,12 @@ const pageDescription =
               const distance = Math.sqrt(distanceSquared);
               const proximity = 1 - distance / maxDistance;
               const midX = (a.x + b.x) * 0.5;
-              const wave = Math.max(0, 1 - Math.abs(midX - pulseX) / 210);
-              const shimmer = 0.44 + ((Math.sin(seconds * 0.52 + a.phase + b.phase) + 1) * 0.28);
-              const alpha = proximity * (0.012 + wave * 0.072) * shimmer;
+              const wave = Math.max(0, 1 - Math.abs(midX - pulseX) / 180);
+              const alpha = proximity * (0.008 + wave * 0.05);
 
-              if (alpha < 0.012) continue;
+              if (alpha < 0.009) continue;
 
-              context.strokeStyle = `rgba(0, 255, 170, ${Math.min(alpha, 0.115).toFixed(3)})`;
+              context.strokeStyle = `rgba(0, 255, 170, ${Math.min(alpha, 0.075).toFixed(3)})`;
               context.beginPath();
               context.moveTo(a.x, a.y);
               context.lineTo(b.x, b.y);
@@ -598,20 +641,20 @@ const pageDescription =
 
           for (let index = 0; index < nodes.length; index += 1) {
             const node = nodes[index];
-            const wave = Math.max(0, 1 - Math.abs(node.x - pulseX) / 170);
-            const glowRadius = node.radius + wave * 1.5;
-            const coreRadius = node.radius + wave * 0.52;
-            const glowAlpha = 0.02 + wave * 0.12;
-            const coreAlpha = Math.min(node.alpha + wave * 0.22, 0.72);
+            const wave = Math.max(0, 1 - Math.abs(node.x - pulseX) / 150);
+            const glowRadius = node.radius + wave * 1.2;
+            const coreRadius = node.radius + wave * 0.36;
+            const glowAlpha = 0.015 + wave * 0.08;
+            const coreAlpha = Math.min(node.alpha + wave * 0.18, 0.56);
 
-            if (wave > 0.14) {
+            if (wave > 0.18) {
               context.fillStyle = `rgba(0, 255, 170, ${glowAlpha.toFixed(3)})`;
               context.beginPath();
               context.arc(node.x, node.y, glowRadius, 0, Math.PI * 2);
               context.fill();
             }
 
-            context.fillStyle = `rgba(224, 255, 247, ${coreAlpha.toFixed(3)})`;
+            context.fillStyle = `rgba(228, 255, 247, ${coreAlpha.toFixed(3)})`;
             context.beginPath();
             context.arc(node.x, node.y, coreRadius, 0, Math.PI * 2);
             context.fill();
