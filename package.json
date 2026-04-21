@@ -20,7 +20,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@types/luxon": "^3.4.2",
-    "astro": "^5.5.2",
+    "astro": "^6.1.8",
     "astro-compress": "^2.3.5",
     "astro-d2": "^0.7.0",
     "luxon": "^3.5.0",
